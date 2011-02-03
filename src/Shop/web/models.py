@@ -1,6 +1,83 @@
-### models.py
 from django.db import models
+from django.utils.datetime_safe import datetime
+from django.template.defaultfilters import default
+from django.contrib.admin.models import User
+from django.db.models.signals import post_save
 
+##
+# Model: User
+# 
+# Uses the built in django.contrib.auth to manage users and athentication.
+# Adds fields to manage the postal information of the user.
+#
+# user             references the built in user class of django.
+# postal_address   The street, number and flat to deliver the product.
+# postal_code      The zip or postal code.
+# postal_city      The city.
+# postal_country   The country.
+class UserProfile( models.Model ):
+    user           = models.ForeignKey( User, unique=True )
+    postal_address = models.CharField( max_length=160 )
+    postal_code    = models.CharField( max_length=5 )
+    postal_city    = models.CharField( max_length=20 )
+    postal_country = models.CharField( max_length=20 )
+    
+    def __unicode__(self):
+        return self.user.name
+
+##
+# Activates the create_user_profile handler when a new user is saved.
+User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+
+##
+# Model: Transaction
+#
+# product          The item sold.
+# user             Who buy the item.
+# payment_date     When the user pays for the products.
+# quantity         The number of products that the user bought.
+# unit_price       The price that the user pays for the product, only for 1.
+# rate             Once the user buy the product he can rate it.
+# postal_address   The street, number and flat to deliver the product.
+# postal_code      The zip or postal code.
+# postal_city      The city.
+# postal_country   The country.
+class Transaction( models.Model ):
+    product        = models.ForeignKey( Product )
+    user           = models.ForeignKey( User )
+    payment_date   = models.DateTimeField( default=datetime.now )
+    quantity       = models.IntegerField( default=1 )
+    unit_price     = models.FloatField( default=product_id.price) 
+    rate           = models.IntegerField()
+    postal_address = models.CharField( max_length=160 )
+    postal_code    = models.CharField( max_length=5 )
+    postal_city    = models.CharField( max_length=20 )
+    postal_country = models.CharField( max_length=20 )
+    
+    def __unicode__(self):
+        return self.user.name + ": " + self.product.name + "(" + self.quantity + ")"
+
+
+##
+# Model: Shop stats
+# 
+# Stores daily info of the webshop
+# In order to avoid several operation each time that statistical are render, at the end of the day 
+# the application saves all the information.
+#
+# date                 Day of the stats.
+# number_new_users     Number of new registered users this day.
+# number_sold_products Number of products sold this day.
+# number_new_comments  Number of comments wrote this day.
+# number_new_products  Number of new products added to the shop this day.
+class ShopStats():
+    date = models.DateTimeField( default=datetime.now(), unique=True )
+    number_visits        = models.IntegerField( default=0 )
+    number_new_users     = models.IntegerField( default=0 )
+    number_sold_products = models.IntegerField( default=0 )
+    number_new_comments  = models.IntegerField( default=0 )
+    number_new_products  = models.IntegerField( default=0 )
+      
 
 ##
 # Model: Comment
