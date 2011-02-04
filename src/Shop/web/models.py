@@ -1,8 +1,10 @@
+## necessary libraries
 from django.db import models
 from django.utils.datetime_safe import datetime
 from django.template.defaultfilters import default
 from django.contrib.admin.models import User
 from django.db.models.signals import post_save
+
 
 ##
 # Model: User
@@ -28,6 +30,7 @@ class UserProfile( models.Model ):
 ##
 # Activates the create_user_profile handler when a new user is saved.
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+
 
 ##
 # Model: Transaction
@@ -99,10 +102,59 @@ class ShopStats():
 class Comment(models.Model):
     product_id = models.ForeignKey(Product)
     user_id    = models.ForeignKey(User)
-    timestamp  = models.DateTimeField()
-    parent_id  = models.ForeignKey(Comment)
-    positives  = models.PositiveIntegerField()
-    negatives  = models.NegativeIntegerField()
+    timestamp  = models.DateTimeField( default=datetime.now, blank=False )
+    parent_id  = models.ForeignKey(Comment, default = -1)
+    positives  = models.PositiveIntegerField( default = 0 )
+    negatives  = models.NegativeIntegerField( default = 0 )
+
+    # accessors
+    def getProduct(self):
+        return self.product_id
+
+    def setProduct(self, p):
+        self.product_id = p
+
+    def getUser(self):
+        return self.user_id
+
+    def setUser(self, u):
+        self.user_id = u
+
+    def getDate(self):
+        return self.timestamp
+
+    def setDate(self, d):
+        self.timestamp = d
+
+    def getParent(self):
+        return self.parent_id
+
+    def setParent(self, pid):
+        self.parent_id = pid
+
+    def getPos(self):
+        return self.positives
+
+    def setPos(self, p):
+        self.positives = p
+
+    def incPos(self):
+        self.positives += 1
+
+    def decPos(self):
+        self.positives -= 1
+
+    def getNeg(self):
+        return self.negatives
+
+    def setNeg(self, n):
+        self.negatives = n
+
+    def incNeg(self):
+        self.negatives += 1
+
+    def decNeg(self):
+        self.negatives -= 1
 
 
 ##
@@ -121,10 +173,35 @@ class Comment(models.Model):
 # icon        string with the path to the icon associated to the category
 # parent_id   ID of the parent category, if any (i.e. subcategory)
 class Category(models.Model):
-    name        = models.CharField()
-    description = models.CharField()
-    icon        = models.CharField()
-    parent_id   = models.ForeignKey(Category) 
+    name        = models.CharField( blank = False )
+    description = models.CharField( default = '' )
+    icon        = models.CharField( deafult = 'icons/unknown.png' )
+    parent_id   = models.ForeignKey(Category, default = -1) 
+
+    # accessors
+    def getName(self):
+        return self.name
+
+    def setName(self, n):
+        self.name = n
+
+    def getDesc(self):
+        return self.description
+
+    def setDesc(self, d):
+        self.description = d
+
+    def getIconPath(self):
+        return self.icon
+
+    def setIconPath(self, ip):
+        self.icon = ip
+
+    def getParent(self):
+        return self.parent_id
+
+    def setParent(self, pid):
+        self.parent_id = pid
 
 
 ##
@@ -140,4 +217,11 @@ class Category(models.Model):
 # id          implicit ID field (automatically generated)
 # name        name of the tag
 class Tag(models.Model):
-    name        = models.CharField()
+    name        = models.CharField( blank=False )
+
+    # accessors
+    def getName(self):
+        return self.name
+
+    def setName(self, n):
+        self.name = n
