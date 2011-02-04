@@ -175,7 +175,7 @@ class Comment(models.Model):
 class Category(models.Model):
     name        = models.CharField( blank = False )
     description = models.CharField( default = '' )
-    icon        = models.CharField( deafult = 'icons/unknown.png' )
+    icon        = models.CharField( deafult = 'images/categories/unknown.png' )
     parent_id   = models.ForeignKey(Category, default = -1) 
 
     # accessors
