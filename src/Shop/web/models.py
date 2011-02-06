@@ -46,11 +46,11 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 # postal_city      The city.
 # postal_country   The country.
 class Transaction( models.Model ):
-    product        = models.ForeignKey( Product )
+    #product        = models.ForeignKey( Product )
     user           = models.ForeignKey( User )
     payment_date   = models.DateTimeField( default=datetime.now )
     quantity       = models.IntegerField( default=1 )
-    unit_price     = models.FloatField( default=product_id.price) 
+    #unit_price     = models.FloatField( default=product_id.price) 
     rate           = models.IntegerField()
     postal_address = models.CharField( max_length=160 )
     postal_code    = models.CharField( max_length=5 )
@@ -100,12 +100,12 @@ class ShopStats():
 # might be useless comments and useful comments, and hence users should be able
 # to also rate comments.
 class Comment(models.Model):
-    product_id = models.ForeignKey(Product)
+    #product_id = models.ForeignKey(Product)
     user_id    = models.ForeignKey(User)
     timestamp  = models.DateTimeField( default=datetime.now, blank=False )
-    parent_id  = models.ForeignKey(Comment, default = -1)
-    positives  = models.PositiveIntegerField( default = 0 )
-    negatives  = models.NegativeIntegerField( default = 0 )
+    #parent_id  = models.ForeignKey(Comment, default = -1)
+    #positives  = models.PositiveIntegerField( default = 0 )
+    #negatives  = models.NegativeIntegerField( default = 0 )
 
     # accessors
     def getProduct(self):
@@ -173,10 +173,10 @@ class Comment(models.Model):
 # icon        string with the path to the icon associated to the category
 # parent_id   ID of the parent category, if any (i.e. subcategory)
 class Category(models.Model):
-    name        = models.CharField( blank = False )
-    description = models.CharField( default = '' )
-    icon        = models.CharField( deafult = 'images/categories/unknown.png' )
-    parent_id   = models.ForeignKey(Category, default = -1) 
+    name        = models.CharField( max_length=20, blank = False )
+    description = models.CharField( max_length=100, default = '' )
+    #icon        = models.CharField( deafult = 'images/categories/unknown.png' )
+    #parent_id   = models.ForeignKey(Category, default = -1) 
 
     # accessors
     def getName(self):
@@ -217,7 +217,7 @@ class Category(models.Model):
 # id          implicit ID field (automatically generated)
 # name        name of the tag
 class Tag(models.Model):
-    name        = models.CharField( blank=False )
+    name        = models.CharField( max_length=20, blank=False )
 
     # accessors
     def getName(self):

@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html> 
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel=stylesheet href="static/css/style.css" type="text/css" />
+    	<title>{% block title %}{% endblock %}</title>
+    	{% block extra_head %}{% endblock %}
+  	</head> 
+  	
+  	<body> 
+  		{% block header %}
+  		<div id="nav-menu">
+	  		<ul id="nav"> 
+				<li class="logo"><div id="logo"><img src="static/images/logo.png" /></div></li>
+				<li class="search">
+					<form class="searchform"> 
+						<input class="searchfield" type="text" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
+						<input class="searchbutton" type="submit" value="Go" /> 
+					</form>
+				</li>
+				
+				<!--Un logged user-->
+				<li><a href="#">Log in</a></li>
+				<li id="nav-separator"></li>
+				<li><a href="#">Register</a></li>
+				<!--end-->
+			
+				<!--Logged user-->
+				<li><a href="#">Javier</a> 
+					<ul> 
+						<li><a href="#">My cart</a></li> 
+						<li><a href="#">My account</a></li> 
+						<li><a href="#">Log out</a></li> 
+					</ul> 
+				</li> 
+				<li><a href="#"><img  id="cart" src="static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
+				<!--end-->
+			</ul> 
+  		</div>
+  		{% endblock %}
+  		{% block main_content %}{% endblock %}
+  		{% block footer %}{% endblock %}
+  	</body> 
+</html> 
