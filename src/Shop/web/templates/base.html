@@ -2,7 +2,7 @@
 <html> 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel=stylesheet href="static/css/style.css" type="text/css" />
+		<link rel=stylesheet href="/static/css/style.css" type="text/css" />
     	<title>{% block title %}{% endblock %}</title>
     	{% block extra_head %}{% endblock %}
   	</head> 
@@ -11,7 +11,7 @@
   		{% block header %}
   		<div id="nav-menu">
 	  		<ul id="nav"> 
-				<li class="logo"><div id="logo"><img src="static/images/logo.png" /></div></li>
+				<li class="logo"><div id="logo"><img src="/static/images/logo.png" /></div></li>
 				<li class="search">
 					<form class="searchform"> 
 						<input class="searchfield" type="text" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
@@ -33,12 +33,27 @@
 						<li><a href="#">Log out</a></li> 
 					</ul> 
 				</li> 
-				<li><a href="#"><img  id="cart" src="static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
+				<li><a href="#"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
 				<!--end-->
 			</ul> 
   		</div>
   		{% endblock %}
-  		{% block main_content %}{% endblock %}
+  		
+  		<div id="main-content">
+  		
+	  		<div id="side_bar">
+	  		{% block side_bar %}
+				<p>hola</p>
+	  		{% endblock %}
+	  		</div>
+	  		
+	  		<div id="content">
+	  		{% block main_content %}{% endblock %}
+	  		</div>
+  		</div>
+  		
+  		<div id="footer">
   		{% block footer %}{% endblock %}
+  		</div
   	</body> 
 </html> 

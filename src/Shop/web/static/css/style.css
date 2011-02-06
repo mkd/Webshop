@@ -214,7 +214,7 @@ html[xmlns] #nav {
 	background: #fff;
 	padding: 3px 3px 3px 4px;
 	width: 202px;
-	border: solid 1px #bcbbbb;
+	border: solid 1px #7a7a7a;
 	outline: none;
  
 	-webkit-border-radius: 2em;
@@ -265,5 +265,32 @@ html[xmlns] #nav {
 	font-size: 10px;
 	height: 25px;
 	width: 25px;
- 
 }
+
+#side_bar{
+	float:left; 	
+	
+	background: #ddd; /* for non-css3 browsers */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#cfcfcf)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #fff,  #cfcfcf); /* for firefox 3.6+ */
+
+	margin-top: 10px;
+	padding: 0;
+	width: 185px;
+	
+	border: solid 1px #b4b4b4;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+}
+
+#content{
+	width: 700px;
+	margin-top: 10px;
+	float: right; 
+}
+
