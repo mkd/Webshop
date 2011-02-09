@@ -42,35 +42,6 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 
 ##
-# Model: Transaction
-#
-# product          The item sold.
-# user             Who buy the item.
-# payment_date     When the user pays for the products.
-# quantity         The number of products that the user bought.
-# unit_price       The price that the user pays for the product, only for 1.
-# rate             Once the user buy the product he can rate it.
-# postal_address   The street, number and flat to deliver the product.
-# postal_code      The zip or postal code.
-# postal_city      The city.
-# postal_country   The country.
-class Transaction( models.Model ):
-    product        = models.ForeignKey( Product )
-    user           = models.ForeignKey( User )
-    payment_date   = models.DateTimeField( default=datetime.now )
-    quantity       = models.IntegerField( default=1 )
-    unit_price     = models.FloatField( default=product_id.price) 
-    rate           = models.IntegerField()
-    postal_address = models.CharField( max_length=160 )
-    postal_code    = models.CharField( max_length=5 )
-    postal_city    = models.CharField( max_length=20 )
-    postal_country = models.CharField( max_length=20 )
-    
-    def __unicode__(self):
-        return self.user.name + ": " + self.product.name + "(" + self.quantity + ")"
-
-
-##
 # Model: Shop stats
 # 
 # Stores daily info of the webshop
@@ -90,80 +61,6 @@ class ShopStats():
     number_new_comments  = models.IntegerField( default=0 )
     number_new_products  = models.IntegerField( default=0 )
       
-
-##
-# Model: Comment
-#
-# This model represents a comment from a user.
-#
-# id         implicit ID field (automatically generated)
-# product_id ID of the product to which the comment is attached
-# user_id    ID of the user who wrote the comment
-# timestamp  date and time when the comment was written
-# parent_id  ID of the parent to this comment, if any (i.e. reply)
-# positives  number of positive votes to this comment
-# negatives  number of negative votes to this comment
-#
-# Positives and negatives are votes for comments. This is an extra feature that
-# can give reliability to certain users, depending on their comments. There
-# might be useless comments and useful comments, and hence users should be able
-# to also rate comments.
-class Comment(models.Model):
-    product_id = models.ForeignKey(Product)
-    user_id    = models.ForeignKey(User)
-    timestamp  = models.DateTimeField( default=datetime.now, blank=False )
-    #parent_id  = models.ForeignKey(Comment, default = -1)
-    #positives  = models.PositiveIntegerField( default = 0 )
-    #negatives  = models.NegativeIntegerField( default = 0 )
-
-    # accessors
-    def getProduct(self):
-        return self.product_id
-
-    def setProduct(self, p):
-        self.product_id = p
-
-    def getUser(self):
-        return self.user_id
-
-    def setUser(self, u):
-        self.user_id = u
-
-    def getDate(self):
-        return self.timestamp
-
-    def setDate(self, d):
-        self.timestamp = d
-
-    def getParent(self):
-        return self.parent_id
-
-    def setParent(self, pid):
-        self.parent_id = pid
-
-    def getPos(self):
-        return self.positives
-
-    def setPos(self, p):
-        self.positives = p
-
-    def incPos(self):
-        self.positives += 1
-
-    def decPos(self):
-        self.positives -= 1
-
-    def getNeg(self):
-        return self.negatives
-
-    def setNeg(self, n):
-        self.negatives = n
-
-    def incNeg(self):
-        self.negatives += 1
-
-    def decNeg(self):
-        self.negatives -= 1
 
 
 ##
@@ -258,9 +155,9 @@ class Tag(models.Model):
 class Product(models.Model):
     tag_id          = models.ManyToManyField(Tag, db_table='jt_product_tag')
     category_id     = models.ForeignKey(Category)
-    name            = models.CharField( max_lenght=20 )
+    name            = models.CharField( max_length=20 )
     description     = models.CharField( max_length=100, default = '' )
-    price           = models.DecimalField(max_digits=10, decimal_places=2)
+    price           = models.FloatField( default=1 )
     stock_count     = models.IntegerField( default=0 )
     sold_count      = models.IntegerField( default=0 )
     comment_count   = models.IntegerField( default=0 )
@@ -313,9 +210,113 @@ class CartProduct(models.Model):
 # sold_count      number of sold products in the given time
 # comment_count   number of user comments for the product in the given time
 class ItemStats(models.Model):
-    product_id      = models.ForeignKe(Product)
+    product_id      = models.ForeignKey(Product)
     date            = models.DateTimeField( default=datetime.now)
     visit_count     = models.IntegerField( default=0 )
     sold_count      = models.IntegerField( default=0 )
     comment_count   = models.IntegerField( default=0 )
+
+
+##
+# Model: Transaction
+#
+# product          The item sold.
+# user             Who buy the item.
+# payment_date     When the user pays for the products.
+# quantity         The number of products that the user bought.
+# unit_price       The price that the user pays for the product, only for 1.
+# rate             Once the user buy the product he can rate it.
+# postal_address   The street, number and flat to deliver the product.
+# postal_code      The zip or postal code.
+# postal_city      The city.
+# postal_country   The country.
+class Transaction( models.Model ):
+    product        = models.ForeignKey(Product)
+    user           = models.ForeignKey(User)
+    payment_date   = models.DateTimeField( default=datetime.now )
+    quantity       = models.IntegerField( default=1 )
+#    unit_price     = models.FloatField( default=product_id.price) 
+    rate           = models.IntegerField()
+    postal_address = models.CharField( max_length=160 )
+    postal_code    = models.CharField( max_length=5 )
+    postal_city    = models.CharField( max_length=20 )
+    postal_country = models.CharField( max_length=20 )
+    
+    def __unicode__(self):
+        return self.user.name + ": " + self.product.name + "(" + self.quantity + ")"
+
+
+##
+# Model: Comment
+#
+# This model represents a comment from a user.
+#
+# id         implicit ID field (automatically generated)
+# product_id ID of the product to which the comment is attached
+# user_id    ID of the user who wrote the comment
+# timestamp  date and time when the comment was written
+# parent_id  ID of the parent to this comment, if any (i.e. reply)
+# positives  number of positive votes to this comment
+# negatives  number of negative votes to this comment
+#
+# Positives and negatives are votes for comments. This is an extra feature that
+# can give reliability to certain users, depending on their comments. There
+# might be useless comments and useful comments, and hence users should be able
+# to also rate comments.
+class Comment(models.Model):
+    product_id = models.ForeignKey(Product)
+    user_id    = models.ForeignKey(User)
+    timestamp  = models.DateTimeField( default=datetime.now, blank=False )
+    #parent_id  = models.ForeignKey(Comment, default = -1)
+    #positives  = models.PositiveIntegerField( default = 0 )
+    #negatives  = models.NegativeIntegerField( default = 0 )
+
+    # accessors
+    def getProduct(self):
+        return self.product_id
+
+    def setProduct(self, p):
+        self.product_id = p
+
+    def getUser(self):
+        return self.user_id
+
+    def setUser(self, u):
+        self.user_id = u
+
+    def getDate(self):
+        return self.timestamp
+
+    def setDate(self, d):
+        self.timestamp = d
+
+    def getParent(self):
+        return self.parent_id
+
+    def setParent(self, pid):
+        self.parent_id = pid
+
+    def getPos(self):
+        return self.positives
+
+    def setPos(self, p):
+        self.positives = p
+
+    def incPos(self):
+        self.positives += 1
+
+    def decPos(self):
+        self.positives -= 1
+
+    def getNeg(self):
+        return self.negatives
+
+    def setNeg(self, n):
+        self.negatives = n
+
+    def incNeg(self):
+        self.negatives += 1
+
+    def decNeg(self):
+        self.negatives -= 1
 
