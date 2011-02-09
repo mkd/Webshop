@@ -7,6 +7,6 @@ urlpatterns = patterns('',
     #(r'^user/profile/(?P<user_id>)', 'web.views.profile'),
     (r'^index$', 'web.views.index'),
     (r'^$', 'web.views.index'),
-    
+    (r'^signup$', 'web.views.signup'),
 )
     
