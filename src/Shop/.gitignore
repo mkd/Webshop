@@ -1,1 +1,4 @@
 /manage.py
+/__init__.py
+/settings.py
+/urls.py
