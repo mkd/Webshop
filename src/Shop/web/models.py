@@ -59,8 +59,7 @@ class ShopStats():
     number_new_users     = models.IntegerField( default=0 )
     number_sold_products = models.IntegerField( default=0 )
     number_new_comments  = models.IntegerField( default=0 )
-    number_new_products  = models.IntegerField( default=0 )
-      
+    number_new_products  = models.IntegerField( default=0 ) 
 
 
 ##
@@ -163,6 +162,7 @@ class Product(models.Model):
     comment_count   = models.IntegerField( default=0 )
     visit_count     = models.IntegerField( default=0 )
     average_rating  = models.DecimalField(max_digits=3, decimal_places=2)
+
 
 ##
 # Model: Cart
