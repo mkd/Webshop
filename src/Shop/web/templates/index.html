@@ -2,6 +2,23 @@
 
 {% block title %} Welcome to the shop {% endblock %}
 
+{% block side_bar %}
+	<ul>
+	{% for category in categories %}
+		<li><a href="/category/{{ category.id }}/">{{ category.name }}</a></li>
+	{% endfor %}
+	</ul>
+{% endblock %}
+
 {% block main_content %}
-	<p>This is the index page</p>
+	<div id='products'>
+		<p>The best products</p>
+		{% for product in products %}
+			<div id='product'>
+				<a href="/product/{{ product.id }}/">{{ product.name }}</a><br/>
+				{{ product.price }}<br/>
+				{{ product.average_rating }}<br/>
+			</div>
+		{% endfor %}
+	</div>
 {% endblock %}

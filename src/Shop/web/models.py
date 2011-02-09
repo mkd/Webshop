@@ -40,27 +40,6 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 
 ##
-# Model: Shop stats
-# 
-# Stores daily info of the webshop
-# In order to avoid several operation each time that statistical are render, at the end of the day 
-# the application saves all the information.
-#
-# date                 Day of the stats.
-# number_new_users     Number of new registered users this day.
-# number_sold_products Number of products sold this day.
-# number_new_comments  Number of comments wrote this day.
-# number_new_products  Number of new products added to the shop this day.
-class ShopStats():
-    date = models.DateTimeField( default=datetime.now(), unique=True )
-    number_visits        = models.IntegerField( default=0 )
-    number_new_users     = models.IntegerField( default=0 )
-    number_sold_products = models.IntegerField( default=0 )
-    number_new_comments  = models.IntegerField( default=0 )
-    number_new_products  = models.IntegerField( default=0 ) 
-
-
-##
 # Model: Category
 #
 # This model represents a category where products can be included. Typically,
@@ -77,10 +56,13 @@ class ShopStats():
 # parent_id   ID of the parent category, if any (i.e. subcategory)
 class Category(models.Model):
     name        = models.CharField( max_length=20, blank = False )
-    description = models.CharField( max_length=100, default = '' )
+    description = models.CharField( max_length=100, blank=True )
     icon        = models.CharField( max_length=100, default = 'images/categories/unknown.png' )
     #parent_id   = models.ForeignKey(Category, default = -1) 
 
+    def __unicode__(self):
+        return self.name
+    
     # accessors
     def getName(self):
         return self.name
@@ -122,6 +104,9 @@ class Category(models.Model):
 class Tag(models.Model):
     name        = models.CharField( max_length=20, blank=False )
 
+    def __unicode__(self):
+        return self.name
+    
     # accessors
     def getName(self):
         return self.name
@@ -150,16 +135,21 @@ class Tag(models.Model):
 # average rating  gets the average rating of all users for the product (a jt table is necessary to get user-table relation)
 
 class Product(models.Model):
-    tag_id          = models.ManyToManyField(Tag)
-    category_id     = models.ManyToManyField(Category)
+    tag             = models.ManyToManyField( Tag, blank=True)
+    category        = models.ManyToManyField(Category, blank=True)
     name            = models.CharField( max_length=20 )
-    description     = models.CharField( max_length=100, default = '' )
+    description     = models.CharField( max_length=100, default = '' )   
+    picture         = models.CharField( max_length=100, default = 'images/categories/unknown.png' )
     price           = models.FloatField( default=1 )
     stock_count     = models.IntegerField( default=0 )
     sold_count      = models.IntegerField( default=0 )
     comment_count   = models.IntegerField( default=0 )
     visit_count     = models.IntegerField( default=0 )
-    average_rating  = models.DecimalField(max_digits=3, decimal_places=2)
+    average_rating  = models.DecimalField( max_digits=3, decimal_places=2, default=0) 
+    votes           = models.IntegerField( default=0 )
+      
+    def __unicode__(self):
+        return self.name
 
 
 ##
@@ -193,26 +183,6 @@ class CartProduct(models.Model):
     cart_id     = models.ForeignKey(Cart)
     timestamp   = models.DateTimeField( default=datetime.now)
     quantity    = models.IntegerField( default=0 )
- 
- 
-##
-# Model: ItemStats
-#
-# This model represents the product statistic for a given time. For instance daily/hourly product statistics
-#
-# @see: Product
-#
-# product_id      id of the product
-# date            date of the statistics (should this be time period?)
-# visit_count     visit count for the product in the given time 
-# sold_count      number of sold products in the given time
-# comment_count   number of user comments for the product in the given time
-class ItemStats(models.Model):
-    product_id      = models.ForeignKey(Product)
-    date            = models.DateTimeField( default=datetime.now)
-    visit_count     = models.IntegerField( default=0 )
-    sold_count      = models.IntegerField( default=0 )
-    comment_count   = models.IntegerField( default=0 )
 
 
 ##
@@ -318,3 +288,45 @@ class Comment(models.Model):
 
     def decNeg(self):
         self.negatives -= 1
+        
+        
+##
+# Model: ItemStats
+#
+# This model represents the product statistic for a given time. For instance daily/hourly product statistics
+#
+# @see: Product
+#
+# product_id      id of the product
+# date            date of the statistics (should this be time period?)
+# visit_count     visit count for the product in the given time 
+# sold_count      number of sold products in the given time
+# comment_count   number of user comments for the product in the given time
+class ItemStats(models.Model):
+    product_id      = models.ForeignKey(Product)
+    date            = models.DateTimeField( default=datetime.now)
+    visit_count     = models.IntegerField( default=0 )
+    sold_count      = models.IntegerField( default=0 )
+    comment_count   = models.IntegerField( default=0 )
+
+
+##
+# Model: Shop stats
+# 
+# Stores daily info of the webshop
+# In order to avoid several operation each time that statistical are render, at the end of the day 
+# the application saves all the information.
+#
+# date                 Day of the stats.
+# number_new_users     Number of new registered users this day.
+# number_sold_products Number of products sold this day.
+# number_new_comments  Number of comments wrote this day.
+# number_new_products  Number of new products added to the shop this day.
+class ShopStats():
+    date = models.DateTimeField( default=datetime.now(), unique=True )
+    number_visits        = models.IntegerField( default=0 )
+    number_new_users     = models.IntegerField( default=0 )
+    number_sold_products = models.IntegerField( default=0 )
+    number_new_comments  = models.IntegerField( default=0 )
+    number_new_products  = models.IntegerField( default=0 ) 
+
