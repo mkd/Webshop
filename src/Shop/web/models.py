@@ -18,20 +18,18 @@ from django.db.models.signals import post_save
 # postal_city      The city.
 # postal_country   The country.
 class UserProfile( models.Model ):
-
-    def get_user(self):
-        return self.__user
-
-
-    def set_user(self, value):
-        self.__user = value
-
     user           = models.ForeignKey( User, unique=True )
     postal_address = models.CharField( max_length=160 )
     postal_code    = models.CharField( max_length=5 )
     postal_city    = models.CharField( max_length=20 )
     postal_country = models.CharField( max_length=20 )
     
+    def get_user(self):
+        return self.__user
+
+    def set_user(self, value):
+        self.__user = value
+   
     def __unicode__(self):
         return self.user.name
     user = property(get_user, set_user, None, None)
@@ -80,7 +78,7 @@ class ShopStats():
 class Category(models.Model):
     name        = models.CharField( max_length=20, blank = False )
     description = models.CharField( max_length=100, default = '' )
-    #icon        = models.CharField( deafult = 'images/categories/unknown.png' )
+    icon        = models.CharField( max_length=100, default = 'images/categories/unknown.png' )
     #parent_id   = models.ForeignKey(Category, default = -1) 
 
     # accessors
@@ -235,7 +233,7 @@ class Transaction( models.Model ):
     user           = models.ForeignKey(User)
     payment_date   = models.DateTimeField( default=datetime.now )
     quantity       = models.IntegerField( default=1 )
-#    unit_price     = models.FloatField( default=product_id.price) 
+    unit_price     = models.FloatField( default=0) 
     rate           = models.IntegerField()
     postal_address = models.CharField( max_length=160 )
     postal_code    = models.CharField( max_length=5 )
@@ -267,9 +265,10 @@ class Comment(models.Model):
     product_id = models.ForeignKey(Product)
     user_id    = models.ForeignKey(User)
     timestamp  = models.DateTimeField( default=datetime.now, blank=False )
+    comment    = models.CharField( max_length=300 )
     #parent_id  = models.ForeignKey(Comment, default = -1)
-    #positives  = models.PositiveIntegerField( default = 0 )
-    #negatives  = models.NegativeIntegerField( default = 0 )
+    positives  = models.PositiveIntegerField( default = 0 )
+    negatives  = models.PositiveIntegerField( default = 0 )
 
     # accessors
     def getProduct(self):
@@ -319,4 +318,3 @@ class Comment(models.Model):
 
     def decNeg(self):
         self.negatives -= 1
-
