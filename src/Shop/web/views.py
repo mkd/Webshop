@@ -27,3 +27,10 @@ def category(request):
         'latest_poll_list': 'jarr',
     })
     return HttpResponse(template.render(context))
+
+def signup(request):
+    template = loader.get_template('signup.html')
+    context = Context({
+        'latest_poll_list': 'jarr',
+    })
+    return HttpResponse(template.render(context))
