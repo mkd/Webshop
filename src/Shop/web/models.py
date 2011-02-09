@@ -18,6 +18,14 @@ from django.db.models.signals import post_save
 # postal_city      The city.
 # postal_country   The country.
 class UserProfile( models.Model ):
+
+    def get_user(self):
+        return self.__user
+
+
+    def set_user(self, value):
+        self.__user = value
+
     user           = models.ForeignKey( User, unique=True )
     postal_address = models.CharField( max_length=160 )
     postal_code    = models.CharField( max_length=5 )
@@ -26,6 +34,7 @@ class UserProfile( models.Model ):
     
     def __unicode__(self):
         return self.user.name
+    user = property(get_user, set_user, None, None)
 
 ##
 # Activates the create_user_profile handler when a new user is saved.
@@ -46,11 +55,11 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 # postal_city      The city.
 # postal_country   The country.
 class Transaction( models.Model ):
-    #product        = models.ForeignKey( Product )
+    product        = models.ForeignKey( Product )
     user           = models.ForeignKey( User )
     payment_date   = models.DateTimeField( default=datetime.now )
     quantity       = models.IntegerField( default=1 )
-    #unit_price     = models.FloatField( default=product_id.price) 
+    unit_price     = models.FloatField( default=product_id.price) 
     rate           = models.IntegerField()
     postal_address = models.CharField( max_length=160 )
     postal_code    = models.CharField( max_length=5 )
@@ -100,7 +109,7 @@ class ShopStats():
 # might be useless comments and useful comments, and hence users should be able
 # to also rate comments.
 class Comment(models.Model):
-    #product_id = models.ForeignKey(Product)
+    product_id = models.ForeignKey(Product)
     user_id    = models.ForeignKey(User)
     timestamp  = models.DateTimeField( default=datetime.now, blank=False )
     #parent_id  = models.ForeignKey(Comment, default = -1)
@@ -225,3 +234,88 @@ class Tag(models.Model):
 
     def setName(self, n):
         self.name = n
+        
+        
+##
+# Model: Product
+#
+# This model represents the main object which can be bought, commented, voted, and added by users
+#
+# @see: Category
+# @see: Tag
+#
+# tag_id          id of the tag which the product belongs to. A product can belong to multiple tags and a tag can be for many products
+# category_id     id of the category which the products belongs to. A product can only belong to one category.
+# name            the name of the product
+# description     additional description of the product
+# price           a decimal field containing the price of the product (e.g. 99.50)
+# stock_count     the number of products in stock. Descending field. (can also be a query. no need to keep in db)
+# sold_count      the number of sold products until now. Incremental field (can also be a query. no need to keep in db)
+# comment_count   the number of comments made for the product. Incremental field. (can also be a query. no need to keep in db)
+# visit_count     Incremental field. Incremented per user view of the product
+# average rating  gets the average rating of all users for the product (a jt table is necessary to get user-table relation)
+
+class Product(models.Model):
+    tag_id          = models.ManyToManyField(Tag, db_table='jt_product_tag')
+    category_id     = models.ForeignKey(Category)
+    name            = models.CharField( max_lenght=20 )
+    description     = models.CharField( max_length=100, default = '' )
+    price           = models.DecimalField(max_digits=10, decimal_places=2)
+    stock_count     = models.IntegerField( default=0 )
+    sold_count      = models.IntegerField( default=0 )
+    comment_count   = models.IntegerField( default=0 )
+    visit_count     = models.IntegerField( default=0 )
+    average_rating  = models.DecimalField(max_digits=3, decimal_places=2)
+
+##
+# Model: Cart
+#
+# This model represents the shoping cart of a user where the products and quantity information that user wants to buy is stored
+#
+# @see: CardProduct  
+# @see: User 
+#     
+# user_id     id of the user that the cart belongs to
+class Cart(models.Model):
+    user_id         = models.ForeignKey(User)
+
+
+##
+# Model: CartProduct
+#
+# This model represents one product information inside a shopping card. There could be multiple products inside a cart and there can be multiple counts of a certain product
+# 
+# @see: Cart
+# @see: Product
+# 
+# product_id      id of the product inside a cart
+# cart_id         id of the cart that the product belongs to
+# timestamp       date information of when the product was added to the cart
+# quantity        quantity of a the product inside the cart
+# 
+class CartProduct(models.Model):
+    product_id  = models.ForeignKey(Product)
+    cart_id     = models.ForeignKey(Cart)
+    timestamp   = models.DateTimeField( default=datetime.now)
+    quantity    = models.IntegerField( default=0 )
+ 
+ 
+##
+# Model: ItemStats
+#
+# This model represents the product statistic for a given time. For instance daily/hourly product statistics
+#
+# @see: Product
+#
+# product_id      id of the product
+# date            date of the statistics (should this be time period?)
+# visit_count     visit count for the product in the given time 
+# sold_count      number of sold products in the given time
+# comment_count   number of user comments for the product in the given time
+class ItemStats(models.Model):
+    product_id      = models.ForeignKe(Product)
+    date            = models.DateTimeField( default=datetime.now)
+    visit_count     = models.IntegerField( default=0 )
+    sold_count      = models.IntegerField( default=0 )
+    comment_count   = models.IntegerField( default=0 )
+
