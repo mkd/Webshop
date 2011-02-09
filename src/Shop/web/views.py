@@ -6,7 +6,7 @@ def index(request):
     template = loader.get_template('index.html')
     
     categories = Category.objects.all()
-    best_products = Product.objects.all().order_by('average_rating')[:5].reverse()
+    best_products = Product.objects.all().order_by('average_rating').reverse()[:10]
     
     context = Context({
         'categories'  : categories,
