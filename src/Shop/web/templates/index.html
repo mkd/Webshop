@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} Welcome to the shop {% endblock %}
+{% block title %} Welcome to Webshop {% endblock %}
 
 {% block side_bar %}
 	<ul>
@@ -11,6 +11,41 @@
 {% endblock %}
 
 {% block main_content %}
+	<p>
+        Welcome to <strong>Webshop</strong>, an open community where you can
+        purchase the latest products and share your experience with millions of
+        users around the world.
+    </p>
+
+    <p>
+        Be the first one to comment and rate on the
+        coolest products on our online store and become part of our social
+        network of online buyers.
+    </p>
+
+    <p><br /></p>
+
+    <div class="note">
+        <img src="/static/images/presentation.png" width="640" />
+        <br />
+        <strong>People + Shopping + Social =</strong>
+        <span style="font-size: large; font-weight: bolder;"> Webshop Retail
+        Experience</span>
+    </div>
+
+    <p><br /></p>
+
+    <h2>Start shopping right now</h2>
+    <p>
+        If you already have an account on Webshop, just <a href="/signin">Sign
+        in</a> and start shopping.
+    </p>
+    
+    <p>
+        If you don't have yet an account on Webshop, <a href="/signup">sign up
+        right now</a> and experience the joy of going social while shopping.
+    </p>
+
 	<div id='products'>
 		<p>The best products</p>
 		{% for product in products %}

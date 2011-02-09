@@ -1,8 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<!DOCTYPE html>
 <html> 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel=stylesheet href="/static/css/style.css" type="text/css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
     	<title>{% block title %}{% endblock %}</title>
     	{% block extra_head %}{% endblock %}
   	</head> 
@@ -54,9 +55,12 @@
 	  		{% block main_content %}{% endblock %}
 	  		</div>
   		</div>
-  		
+  	
   		<div id="footer">
-  		{% block footer %}{% endblock %}
+  		{% block footer %}
+            <hr />	
+            &copy;2011 The Webshop Team, Finland
+        {% endblock %}
   		</div
   	</body> 
 </html> 
