@@ -2,6 +2,14 @@
 
 {% block title %} Welcome to Webshop {% endblock %}
 
+{% block side_bar %}
+	<ul>
+	{% for category in categories %}
+		<li><a href="/category/{{ category.id }}/">{{ category.name }}</a></li>
+	{% endfor %}
+	</ul>
+{% endblock %}
+
 {% block main_content %}
 	<p>
         Welcome to <strong>Webshop</strong>, an open community where you can
@@ -37,4 +45,15 @@
         If you don't have yet an account on Webshop, <a href="/signup">sign up
         right now</a> and experience the joy of going social while shopping.
     </p>
+
+	<div id='products'>
+		<p>The best products</p>
+		{% for product in products %}
+			<div id='product'>
+				<a href="/product/{{ product.id }}/">{{ product.name }}</a><br/>
+				{{ product.price }}<br/>
+				{{ product.average_rating }}<br/>
+			</div>
+		{% endfor %}
+	</div>
 {% endblock %}
