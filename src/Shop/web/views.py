@@ -21,3 +21,4 @@ def category(request):
         'latest_poll_list': 'jarr',
     })
     return HttpResponse(template.render(context))
+
