@@ -2,6 +2,28 @@
 
 {% block title %} Product {% endblock %}
 
+{% block side_bar %}{% endblock %}
+
+    tag             = models.ManyToManyField( Tag, blank=True)
+    category        = models.ManyToManyField(Category, blank=True)
+    name            = models.CharField( max_length=20 )
+    description     = models.CharField( max_length=100, default = '' )   
+    picture         = models.CharField( max_length=100, default = '/static/images/categories/unknown.png' )
+    price           = models.FloatField( default=1 )
+    stock_count     = models.IntegerField( default=0 )
+    sold_count      = models.IntegerField( default=0 )
+    comment_count   = models.IntegerField( default=0 )
+    visit_count     = models.IntegerField( default=0 )
+    average_rating  = models.DecimalField( max_digits=3, decimal_places=2, default=0) 
+    votes           = models.IntegerField( default=0 )
+
 {% block main_content %}
-	<p>This is a Product page</p>
+	<p>{{ product.name }}</p>
+	<p>{{ product.picture }}</p>
+	<p>{{ product.description }}</p>
+	<p>{{ product.price }}</p>
+	<p>{{ product.stock_count }}</p>
+	<p>{{ product.sold_count }}</p>
+	<p>{{ product.visit_count }}</p>
+	<p>{{ product.average_rating }}</p>
 {% endblock %}

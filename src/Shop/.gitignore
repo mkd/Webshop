@@ -2,3 +2,4 @@
 /__init__.py
 /settings.py
 /urls.py
+/db.sql

@@ -1,102 +1,156 @@
 /**
  * CSS Stylesheet for Webshop
  *
- * Revised: 09.02.2011 (mkd)
  */
 
 
 /*** GENERAL ***/
-body
+body 
 {
-	background:             #ffe;
-	color:                  #555;
-	font:                   normal .8em/1.5em Arial, Helvetica, sans-serif;
-	margin:                 8px auto;
-    text-align:             center;
-	width:                  1024px;
+	font: normal .8em/1.5em Arial, Helvetica, sans-serif;
+	background: #ffe;
+	margin: 10px auto;
+	color: #666;
 }
 
-a
+a 
 {
-	color:                  #333;
+	color: #333;
 }
 
+#wraper
+{ 
+	text-align: left; 
+	width: 900px; 
+	margin: auto; 
+}
 
+#content
+{
+	float: left; 
+	margin: 10px;
+	width: 680px;
+	text-align: justify;
+}
+
+#side_bar
+{
+	float:left; 	
+	
+	background: #ddd; /* for non-css3 browsers */
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#cfcfcf)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #fff,  #cfcfcf); /* for firefox 3.6+ */
+
+	padding-left: 10px;
+	margin-top: 10px;
+	width: 185px;
+	
+	border: solid 1px #b4b4b4;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+}
+
+#footer
+{
+	margin-top: 10px;
+	padding:    10px;
+    color:      #888;
+    text-align: center;
+    clear: 	    both;
+    border-top: 1px dotted #888;
+}
 
 /*** NAVIGATOR ***/
-#nav
+#nav 
 {
-	background:             #8b8b8b;
-	border:                 solid 2px #6d6d6d;
-	margin:                 0 auto;
-	padding:                8px 0;
-	border-radius:          1em;
-
-    /* rounded borders  and shadows */ 
-	-webkit-border-radius:  1em;
-	-moz-border-radius:     1em;
-	-webkit-box-shadow:     0 1px 3px rgba(0, 0, 0, .4);
-	-moz-box-shadow:        0 1px 3px rgba(0, 0, 0, .4);
+	margin: 0;
+	padding: 7px 6px 0;
+	line-height: 100%;
+	border-radius: 1em;
+ 
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+	
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+ 
+	background: #8b8b8b; /* for non-css3 browsers */
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#a9a9a9', endColorstr='#7a7a7a'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#a9a9a9), to(#7a7a7a)); /* for webkit browsers */
 	background: -moz-linear-gradient(top,  #a9a9a9,  #7a7a7a); /* for firefox 3.6+ */
  
+	border: solid 1px #6d6d6d;
 }
 
-#nav li
+#nav li 
 {
-	float:                  right;
-	list-style:             none;
+	margin: 0 1px;
+	padding: 0 0 8px;
+	float: right;
+	position: relative;
+	list-style: none;
 }
 
-#nav a
+/* main level link */
+#nav a 
 {
-	color:                  #e7e5e5;
-	font-weight:            bold;
-	display:                block;
-	padding:                8px 24px;
-	-webkit-border-radius:  1.6em;
-	-moz-border-radius:     1.6em;
-	text-decoration:        none;
-	text-shadow:            0 1px 1px rgba(0, 0, 0, .3);
+	font-weight: bold;
+	color: #e7e5e5;
+	text-decoration: none;
+	display: block;
+	padding:  8px 20px;
+	margin: 0;
+	-webkit-border-radius: 1.6em;
+	-moz-border-radius: 1.6em;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
 }
 
-#nav .current a, #nav li:hover > a
+/* main level link hover */
+#nav .current a, #nav li:hover > a 
 {
-	background:             #d1d1d1;
-	border-top:             solid 1px #f8f8f8;
-	color:                  #444;
-
+	background: #d1d1d1; /* for non-css3 browsers */
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#a1a1a1)); /* for webkit browsers */
 	background: -moz-linear-gradient(top,  #ebebeb,  #a1a1a1); /* for firefox 3.6+ */
-	-webkit-box-shadow:     0 1px 1px rgba(0, 0, 0, .2);
-	-moz-box-shadow:        0 1px 1px rgba(0, 0, 0, .2);
-	box-shadow:             0 1px 1px rgba(0, 0, 0, .2);
-	text-shadow:            0 1px 0 rgba(255, 255, 255, .8);
+ 
+	color: #444;
+	border-top: solid 1px #f8f8f8;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
 }
 
-#nav ul li:hover a, #nav li:hover li a
+/* sub levels link hover */
+#nav ul li:hover a, #nav li:hover li a 
 {
-	color:                  #666;
-	-webkit-box-shadow:     none;
-	-moz-box-shadow:        none;
+	background: none;
+	border: none;
+	color: #666;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
 }
 
-#nav ul a:hover
+#nav ul a:hover 
 {
-	background:             #0399d4 !important; /* for non-css3 browsers */
-	color:                  #fff !important;
-
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#04acec', endColorstr='#0186ba'); /* for IE */
+	background: #0399d4 !important; /* for non-css3 browsers */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#04acec', endColorstr='#0186ba'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#04acec), to(#0186ba)) !important; /* for webkit browsers */
 	background: -moz-linear-gradient(top,  #04acec,  #0186ba) !important; /* for firefox 3.6+ */
+ 
+	color: #fff !important;
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
 }
 
-#nav ul
+/* level 2 list */
+#nav ul 
 {
 	background: #ddd; /* for non-css3 browsers */
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
@@ -119,25 +173,27 @@ a
 	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
 }
 
-#nav li:hover > ul
+/* dropdown */
+#nav li:hover > ul 
 {
 	display: block;
 }
 
-#nav ul li
+#nav ul li 
 {
 	float: none;
 	margin: 0;
 	padding: 0;
 }
 
-#nav ul a
+#nav ul a 
 {
 	font-weight: normal;
 	text-shadow: 0 1px 1px rgba(255, 255, 255, .9);
 }
 
-#nav ul li:first-child > a
+/* rounded corners for first and last child */
+#nav ul li:first-child > a 
 {
 	-webkit-border-top-left-radius: 9px;
 	-moz-border-radius-topleft: 9px;
@@ -145,7 +201,7 @@ a
 	-moz-border-radius-topright: 9px;
 }
 
-#nav ul li:last-child > a
+#nav ul li:last-child > a 
 {
 	-webkit-border-bottom-left-radius: 9px;
 	-moz-border-radius-bottomleft: 9px;
@@ -153,7 +209,8 @@ a
 	-moz-border-radius-bottomright: 9px;
 }
 
-#nav:after
+/* clearfix */
+#nav:after 
 {
 	content: ".";
 	display: block;
@@ -163,43 +220,49 @@ a
 	height: 0;
 }
 
-#nav
+#nav 
 {
 	display: inline-block;
-    margin-top: 1em;
 }
 
-#nav-separator {
+#nav-separator 
+{
 	border-left: 1px solid #ccc; 
 	width:1px;
 	height:25px;
 }
 
-html[xmlns] #nav {
+html[xmlns] #nav 
+{
 	display: block;
 }
 
-* html #nav {
+* html #nav 
+{
 	height: 1%;
 }
 
-#cart{
+#cart
+{
 	float:left;
 	padding-right:5px;
 	margin-top:-8px;
 }
 
-#nav li.logo
+#nav li.logo 
 {
-    margin-left:       -16px;
-	margin-top:        -38px;
+	margin: 0 15px;
+	margin-top: -15px;
+	padding: 0 0 8px;
 	float: left;
+	position: relative;
 	list-style: none;
 }
 
-#nav li.search {
+#nav li.search 
+{
 	margin: 0 1px;
-	margin-left: 100px;
+	margin-left: 107px;
 	padding: 0 0 8px;
 	float: left;
 	position: relative;
@@ -208,10 +271,19 @@ html[xmlns] #nav {
 
 #logo
 {
+	width: 400px;
 	height: 1px;
 }
 
-.searchform {
+#logo:hover
+{
+	margin-top: 1px;
+	cursor:     pointer;
+}
+
+/*** SEARCH BOX ***/
+.searchform 
+{
 	display: inline-block;
 	zoom: 1; /* ie7 hack for display:inline-block */
 	*display: inline;
@@ -231,11 +303,15 @@ html[xmlns] #nav {
 	background: -moz-linear-gradient(top,  #a9a9a9,  #7a7a7a); /* for firefox 3.6+ */
 	-ms-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed'); /* ie8 */
 }
-.searchform input {
+
+.searchform input 
+{
 	font: normal 12px/100% Arial, Helvetica, sans-serif;
 	color: #2F4F4F;
 }
-.searchform .searchfield {
+
+.searchform .searchfield 
+{
 	background: #fff;
 	padding: 3px 3px 3px 4px;
 	width: 202px;
@@ -250,7 +326,9 @@ html[xmlns] #nav {
 	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
 	box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
 }
-.searchform .searchbutton {
+
+.searchform .searchbutton 
+{
 	color: #fff;
 	border: solid 1px #494949;
 	font-size: 10px;
@@ -269,7 +347,8 @@ html[xmlns] #nav {
 	-ms-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#9e9e9e', endColorstr='#454545'); /* ie8 */
 }
 
-.searchbutton:hover {
+.searchbutton:hover 
+{
 	background: #d1d1d1; /* for non-css3 browsers */
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#a1a1a1)); /* for webkit browsers */
@@ -293,44 +372,8 @@ html[xmlns] #nav {
 }
 
 
-
-/*** SIDEBAR ***/
-#side_bar
-{
-	background:         #ddd;
-	border:             solid 1px #b4b4b4;
-    float:              left;
-    margin-left:        56px;
-	margin-top:         16px;
-	padding:             8px;
-	width:             185px;
-
-    /* eye-candy */
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
-	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#cfcfcf)); /* for webkit browsers */
-	background: -moz-linear-gradient(top,  #fff,  #cfcfcf); /* for firefox 3.6+ */
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
-	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
-	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
-}
-
-
-
-/*** PAGE CONTENT ***/
-#content
-{
-	float:              right; 
-    margin-right:       64px;
-	margin-top:         16px;
-    text-align:         justify;
-	width:              640px;
-}
-
-
 /*** EXTRA STUFF ***/
+
 .note
 {
     margin:             0 auto;
@@ -340,10 +383,58 @@ html[xmlns] #nav {
 	border-radius: 10px;
 }
 
-#footer
+#products
 {
-    color:              #888;
-    display:            block;
-    margin-top:         500px;
-    text-align:         center;
+	margin:0 auto 0 auto; 
+	width:580px;	
+}
+
+#product
+{
+	background: #fee;
+	border:  1px solid #fde;
+	width:   150px;
+	height:  200px;
+    margin:  10px;
+    padding: 10px;
+    float: left;
+    text-align: center;
+    display: inline;
+}
+
+#product:hover
+{
+	background: #ded;
+	cursor: pointer;
+}
+
+h1.product
+{
+	text-transform:capitalize;
+	margin-top: -22px;
+	font: normal Helvetica, sans-serif;
+	text-shadow: Silver 2px 2px 2px;
+	font-size: 20px;
+	color: #666;
+}
+
+h1.product  a
+{
+	text-decoration: none;
+	text-transform:capitalize;
+	color: #666;
+}
+
+.product-image {
+        position: relative;
+}
+.price {
+        position: absolute;
+        text-align: center;
+        text-shadow: Silver 2px 2px 2px;
+        font-size: 18px;
+        font-weight: 800;
+        top: -10px;
+        left: -8px;
+        padding: 3px 0;
 }

@@ -4,6 +4,7 @@ from django.utils.datetime_safe import datetime
 from django.template.defaultfilters import default
 from django.contrib.admin.models import User
 from django.db.models.signals import post_save
+import math
 
 
 ##
@@ -139,7 +140,7 @@ class Product(models.Model):
     category        = models.ManyToManyField(Category, blank=True)
     name            = models.CharField( max_length=20 )
     description     = models.CharField( max_length=100, default = '' )   
-    picture         = models.CharField( max_length=100, default = 'images/categories/unknown.png' )
+    picture         = models.CharField( max_length=100, default = '/static/images/categories/unknown.png' )
     price           = models.FloatField( default=1 )
     stock_count     = models.IntegerField( default=0 )
     sold_count      = models.IntegerField( default=0 )
@@ -150,6 +151,7 @@ class Product(models.Model):
       
     def __unicode__(self):
         return self.name
+        
 
 
 ##

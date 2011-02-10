@@ -8,59 +8,63 @@
     	{% block extra_head %}{% endblock %}
   	</head> 
   	
-  	<body> 
-  		{% block header %}
-  		<div id="nav-menu">
-	  		<ul id="nav"> 
-				<li class="logo"><div id="logo"><img src="/static/images/logo.png" /></div></li>
-				<li class="search">
-					<form class="searchform"> 
-						<input class="searchfield" type="text" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
-						<input class="searchbutton" type="submit" value="Go" /> 
-					</form>
-				</li>
+  	<body>
+  		<div id="wraper">
+	  		{% block header %}
+	  		<div id="nav-menu">
+		  		<ul id="nav"> 
+					<li class="logo"><div id="logo"><img src="/static/images/logo.png" width="63" height="59"  onclick="window.location.href='/';" /></div></li>
+					<li class="search">
+						<form class="searchform"> 
+							<input class="searchfield" type="text" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
+							<input class="searchbutton" type="submit" value="Go" /> 
+						</form>
+					</li>
+					
+					<!--Un logged user-->
+	                {% if signed_in %}
+					    <li><a href="#">Sign out</a></li>
+	                {% else %}
+					    <li><a href="#">Sign in</a></li> 
+	                {% endif %}
+	                    
+					<li id="nav-separator"></li>
+					<li><a href="/signup">Sign up</a></li>
+					<!--end-->
 				
-				<!--Un logged user-->
-                {% if signed_in %}
-				    <li><a href="#">Sign out</a></li>
-                {% else %}
-				    <li><a href="#">Sign in</a></li> 
-                {% endif %}
-                    
-				<li id="nav-separator"></li>
-				<li><a href="/signup">Sign up</a></li>
-				<!--end-->
-			
-				<!--Logged user-->
-				<li><a href="#">Javier</a> 
-					<ul> 
-						<li><a href="#">My cart</a></li> 
-						<li><a href="#">My account</a></li> 
-					</ul> 
-				</li> 
-				<li><a href="#"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
-				<!--end-->
-			</ul> 
-  		</div>
-  		{% endblock %}
-  		
-  		<div id="main-content">
-  		
-	  		<div id="side_bar">
-	  		{% block side_bar %}
+					<!--Logged user-->
+					<li><a href="#">Javier</a> 
+						<ul> 
+							<li><a href="#">My cart</a></li> 
+							<li><a href="#">My account</a></li> 
+						</ul> 
+					</li> 
+					<li><a href="#"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
+					<!--end-->
+				</ul> 
+	  		</div>
 	  		{% endblock %}
-	  		</div>
-	  		
-	  		<div id="content">
-	  		{% block main_content %}{% endblock %}
+	  			
+		  		{% block side_bar %}
+		  			<div id="side_bar">
+		  				<h3>Categories</h3>
+						<ul>
+						{% for category in categories %}
+							<li><a href="/category/{{ category.name }}/">{{ category.name }}</a></li>
+						{% endfor %}
+						</ul>	
+		  			</div>
+		  		{% endblock %}
+		  		
+		  		<div id="content">
+		  			{% block main_content %}{% endblock %}
+		  		</div>
+	  	
+	  		<div id="footer">
+		  		{% block footer %}
+		        	&copy;2011 The Webshop Team, Finland
+		        {% endblock %}
 	  		</div>
   		</div>
-  	
-  		<div id="footer">
-  		{% block footer %}
-            <hr />	
-            &copy;2011 The Webshop Team, Finland
-        {% endblock %}
-  		</div
   	</body> 
 </html> 
