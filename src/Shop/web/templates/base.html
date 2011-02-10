@@ -47,8 +47,7 @@
 	  			
 		  		{% block side_bar %}
 		  			<div id="side_bar">
-		  				<h3>Categories</h3>
-						<ul>
+						<ul id="side_bar">
 						{% for category in categories %}
 							<li><a href="/category/{{ category.name }}/">{{ category.name }}</a></li>
 						{% endfor %}
