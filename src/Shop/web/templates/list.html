@@ -1,35 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %} {{ this.name }} {% endblock %}
-
 {% block main_content %}
-	
-	<h1>{{ this.name }}</h1>
 	
 	<div id='products'>	
 		{% for product in products %}
 			<div id='product' onclick="window.location.href='/product/{{ product.id }}'; ">
 				<h1 class="product"><a href="/product/{{ product.id }}/">{{ product.name }}</a></h1>
 				<div class="product-image">
-					<img src="{{ product.picture }}" width="150" height="150" />
+					<div class="middle"><img src="{{ product.picture }}" width="130"  /></div>
 					<div class="price">{{ product.price }} &euro;</div>
 				</div>
 				<p>
 				<!-- This is awful, I know, but I can do in range(product.average_rating) -->		
 				{% if product.average_rating == 1 %}
-					<center><img src="/static/images/heart.png" /> </center>
+					<center><img src="/static/images/heart-pic.png" /> </center>
 				{% endif %}
 				{% if product.average_rating == 2%}
-					<center><img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> </center>
+					<center><img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> </center>
 				{% endif %}
 				{% if product.average_rating == 3%}
-					<center><img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> </center>
+					<center><img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> </center>
 				{% endif %}
 				{% if product.average_rating == 4%}
-					<center><img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> </center>
+					<center><img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> </center>
 				{% endif %}
 				{% if product.average_rating == 5%}
-					<center><img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> </center>
+					<center><img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> </center>
 				{% endif %}
 				</p>
 			</div>

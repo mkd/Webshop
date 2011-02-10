@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "list.html" %}
 
 {% block title %} Welcome to Webshop {% endblock %}
 
@@ -39,35 +39,6 @@
         right now</a> and experience the joy of going social while shopping.
     </p>
 
-	<div id='products'>
-		<p>The best products</p>
-		{% for product in products %}
-			<div id='product' onclick="window.location.href='/product/{{ product.id }}'; ">
-				<h1 class="product"><a href="/product/{{ product.id }}/">{{ product.name }}</a></h1>
-				<div class="product-image">
-					<img src="{{ product.picture }}" width="150" height="150" />
-					<div class="price">{{ product.price }} &euro;</div>
-				</div>
-				<p>
-				<!-- This is awful, I know, but I can do in range(product.average_rating) -->		
-				{% if product.average_rating == 1 %}
-					<center><img src="/static/images/heart.png" /> </center>
-				{% endif %}
-				{% if product.average_rating == 2%}
-					<center><img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> </center>
-				{% endif %}
-				{% if product.average_rating == 3%}
-					<center><img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> </center>
-				{% endif %}
-				{% if product.average_rating == 4%}
-					<center><img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> </center>
-				{% endif %}
-				{% if product.average_rating == 5%}
-					<center><img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> <img src="/static/images/heart.png" /> </center>
-				{% endif %}
-				</p>
-			</div>
-		{% endfor %}
-	</div>
+	{{ block.super }}
 	
 {% endblock %}
