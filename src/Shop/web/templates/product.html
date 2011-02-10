@@ -1,11 +1,82 @@
 {% extends "base.html" %}
 
-{% block title %} Product {% endblock %}
+{% block title %} Product | {{ product.name }} {% endblock %}
+{% block extra_head %}
+	<link rel=stylesheet href="/static/css/product.css" type="text/css" />
+{% endblock %}
 
 {% block side_bar %}{% endblock %}
 
 {% block main_content %}
 
-	
+	<div id="product-content">
+		<div id="left-side">
+			<img src="{{product.picture}}" />
+		</div>
+		
+		<div id="right-side">
+			<div id="p-name">
+				<h1>{{ product.name }}</h1>
+			</div>			
+			
+			<div id="p-price">
+				 {{ product.price }}&euro; | BUY 
+			</div>
+			
+			<div id="clear" style="margin-left: 5px;">
+				
+				<p>
+					<!-- This is awful, I know, but I can do in range(product.average_rating) -->		
+					{% if product.average_rating == 1 %}
+						<img src="/static/images/heart-pic.png" /> 
+					{% endif %}
+					{% if product.average_rating == 2%}
+						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> 
+					{% endif %}
+					{% if product.average_rating == 3%}
+						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> 
+					{% endif %}
+					{% if product.average_rating == 4%}
+						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> 
+					{% endif %}
+					{% if product.average_rating == 5%}
+						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> 
+					{% endif %}
+					&nbsp;({{ product.votes }} user reviews)
+				</p>
+				<p>
+					{{ product.stock_count }} products avaiable.
+				</p>
+				<p>
+					{{ product.description }}
+				</p>
+				
+				
+				<div id="comments">
+					{% for comment in comments %}
+						<div id="#comment">
+							<div id="com_author">{{ comment.user.username }} says:</div>
+							<div id="com_date">{{ comment.timestamp }}</div>
+							<div id="com_text">{{ comment.comment }}</div>
+							<div id="com_repy">reply</div>
+							<div id="com_rating">rate comment</div>
+						</div>
+					{% endfor %}
+				</div>
+				
+				<div id="write_comment">
+					<form action="/product/{{ product.id }}/comment/" method="post">
+						{% csrf_token %}
+						<input type="hidden" name="user" value="1"/>
+					    <input type="textarea" name="text" />
+					<input type="submit" value="Post" />
+				</div>
+				
+				
+			</div>
+		</div>
+		
+		
+	</div>
 
 {% endblock %}

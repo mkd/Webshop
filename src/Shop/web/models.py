@@ -139,7 +139,7 @@ class Product(models.Model):
     tag             = models.ManyToManyField( Tag, blank=True)
     category        = models.ManyToManyField(Category, blank=True)
     name            = models.CharField( max_length=20 )
-    description     = models.CharField( max_length=100, default = '' )   
+    description     = models.CharField( max_length=500, default = '' )   
     picture         = models.CharField( max_length=100, default = '/static/images/categories/unknown.png' )
     price           = models.FloatField( default=1 )
     stock_count     = models.IntegerField( default=0 )
@@ -234,14 +234,17 @@ class Transaction( models.Model ):
 # might be useless comments and useful comments, and hence users should be able
 # to also rate comments.
 class Comment(models.Model):
-    product_id = models.ForeignKey(Product)
-    user_id    = models.ForeignKey(User)
+    product = models.ForeignKey(Product)
+    user    = models.ForeignKey(User)
     timestamp  = models.DateTimeField( default=datetime.now, blank=False )
     comment    = models.CharField( max_length=300 )
     #parent_id  = models.ForeignKey(Comment, default = -1)
     positives  = models.PositiveIntegerField( default = 0 )
     negatives  = models.PositiveIntegerField( default = 0 )
 
+    def __unicode__(self):
+        return self.user.username + " en " + self.product.name
+    
     # accessors
     def getProduct(self):
         return self.product_id
