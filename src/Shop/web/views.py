@@ -46,8 +46,19 @@ def category(request, category_name):
     return HttpResponse(template.render(context))
 
 
+##
+# Render a simple registration form (sign up)
 def signup(request):
     template = loader.get_template('signup.html')
+    context = Context({
+        'latest_poll_list': 'jarr',
+    })
+    return HttpResponse(template.render(context))
+
+##
+# Render a simple login form (sign in)
+def signin(request):
+    template = loader.get_template('signin.html')
     context = Context({
         'latest_poll_list': 'jarr',
     })

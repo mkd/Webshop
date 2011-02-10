@@ -132,6 +132,7 @@ a
     border-top: 1px dotted #888;
 }
 
+
 /*** NAVIGATOR ***/
 #nav 
 {
@@ -522,4 +523,16 @@ h1.product  a
 	-webkit-border-radius: 1.6em;
 	-moz-border-radius: 1.6em;
 	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+}
+
+input
+{
+    border:                 1px solid #888;
+    padding:                2px;
+}
+
+textarea
+{
+    border:                 1px solid #888;
+    padding:                2px;
 }
