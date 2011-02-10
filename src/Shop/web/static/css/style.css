@@ -65,6 +65,7 @@ a
     border-top: 1px dotted #888;
 }
 
+
 /*** NAVIGATOR ***/
 #nav 
 {
@@ -425,16 +426,31 @@ h1.product  a
 	color: #666;
 }
 
-.product-image {
-        position: relative;
+.product-image
+{
+    position: relative;
 }
-.price {
-        position: absolute;
-        text-align: center;
-        text-shadow: Silver 2px 2px 2px;
-        font-size: 18px;
-        font-weight: 800;
-        top: -10px;
-        left: -8px;
-        padding: 3px 0;
+
+.price
+{
+    position: absolute;
+    text-align: center;
+    text-shadow: Silver 2px 2px 2px;
+    font-size: 18px;
+    font-weight: 800;
+    top: -10px;
+    left: -8px;
+    padding: 3px 0;
+}
+
+input
+{
+    border:                 1px solid #888;
+    padding:                2px;
+}
+
+textarea
+{
+    border:                 1px solid #888;
+    padding:                2px;
 }

@@ -8,5 +8,6 @@ urlpatterns = patterns('',
     (r'^index$', 'web.views.index'),
     (r'^$', 'web.views.index'),
     (r'^signup$', 'web.views.signup'),
+    (r'^signin$', 'web.views.signin'),
 )
     
