@@ -37,7 +37,7 @@ def product(request, product_id):
     return HttpResponse(template.render(context))
 
 ##
-# Render a specific product page.    
+# Publish a comment on a page 
 def comment(request, product_id):
     template = loader.get_template('product.html')
       
@@ -47,13 +47,12 @@ def comment(request, product_id):
     user_id = get_object_or_404(User, id=request.POST['user'])
     
     product.comment_count +=1;
-    product.save()
-    
     new_comment = Comment(product = product, 
                           user = user_id,
                           timestamp = datetime.datetime.now(),
                           comment = text)
     new_comment.save()
+    product.save()
     
     comments = Comment.objects.filter(product=product_id).order_by('timestamp')
     
