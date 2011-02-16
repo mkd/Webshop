@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %} Registration Form {% endblock %}
+
+{% block main_content %}
+    {% block registration_form %}
+        <h1>Register now</h1>
+        <form method="post" action="/signup">
+        <table>
+        <tr>
+            <td colspan="2">
+                <img src="/static/images/users/new_user.png" align="middle"
+                     height="64"
+                     style="cursor: pointer;" title="Add your own picture" />
+                <em>Click on the image to add your own picture</em>
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="user">Username:</label>
+            </td>
+            <td>
+            <input type="text" id="user" size="16" value="{{ username }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="pass">Password:</label>
+            </td>
+            <td>
+            <input type="password" id="pass" size="16" value="{{ pass }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="pass2">Repeat password:</label>
+            </td>
+            <td>
+            <input type="password" id="pass2" size="16" value="{{ pass2 }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="email">Email:</label>
+            </td>
+            <td>
+            <input type="text" id="email" size="32" value="{{ email }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="pass2">Repeat email:</label>
+            </td>
+            <td>
+            <input type="text" id="email2" size="32" value="{{ email2 }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="address">Address:</label>
+            </td>
+            <td>
+                <textarea id="address" rows="2" cols="32">{{ address }}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="postal_code">Postal code:</label>
+            </td>
+            <td>
+            <input type="text" id="postal_code" size="5" value="{{ postal_code }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="postal_city">City:</label>
+            </td>
+            <td>
+            <input type="text" id="postal_city" size="24" value="{{ postal_city }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="postal_country">Country:</label>
+            </td>
+            <td>
+            <input type="text" id="postal_country" size="24" value="{{ postal_country }}" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" value="Register" />
+                <input type="reset" value="Clear" />
+            </td>
+        </tr>
+        </table>
+        </form>
+    {% endblock %}
+{% endblock %}
