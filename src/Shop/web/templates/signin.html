@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %} Webshop -- Sign in {% endblock %}
+
+{% block main_content %}
+    {% block login_form %}
+        <h1>Sign in</h1>
+        <form method="post" action="/signin">
+        <table>
+        <tr>
+            <td>
+	        <label for="user">Username:</label>
+            </td>
+            <td>
+            <input type="text" id="user" size="16" value="{{ username }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="pass">Password:</label>
+            </td>
+            <td>
+            <input type="password" id="pass" size="16" value="{{ pass }}" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" value="Sign in" />
+            </td>
+        </tr>
+        </table>
+        </form>
+    {% endblock %}
+    <p>
+        <a href="/recover_pass">Forgot your password?</a>
+    </p>
+{% endblock %}
