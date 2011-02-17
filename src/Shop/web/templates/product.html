@@ -54,12 +54,13 @@
 				
 				<div id="comments">
 					{% for comment in comments %}
-						<div id="#comment">
-							<div id="com_author">{{ comment.user.username }} says:</div>
-							<div id="com_date">{{ comment.timestamp }}</div>
-							<div id="com_text">{{ comment.comment }}</div>
-							<div id="com_repy">reply</div>
-							<div id="com_rating">rate comment</div>
+						<div class="comment">
+							<blockquote>
+								{{ comment.comment }}
+							</blockquote>
+							<cite><strong>{{ comment.user.username }}</strong> on {{ comment.timestamp }}</cite>
+							<!--<div id="com_repy">reply</div>
+							<div id="com_rating">rate comment</div>-->
 						</div>
 					{% endfor %}
 				</div>
@@ -67,9 +68,10 @@
 				<div id="write_comment">
 					<form action="/product/{{ product.id }}/comment/" method="post">
 						{% csrf_token %}
+						{{ form.as_p }}
 						<input type="hidden" name="user" value="1"/>
-					    <input type="textarea" name="text" />
 					<input type="submit" value="Post" />
+					</form>
 				</div>
 				
 				

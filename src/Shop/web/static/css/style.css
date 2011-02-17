@@ -468,6 +468,8 @@ html[xmlns] #nav
     float: left;
     text-align: center;
     display: inline;
+    -webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
 }
 
 #product:hover

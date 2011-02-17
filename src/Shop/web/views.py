@@ -1,8 +1,9 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
 from models import Category, Product, Comment, User
+from forms import CommentForm
 import datetime
 
 ##
@@ -19,12 +20,14 @@ def index(request):
     })
     return HttpResponse(template.render(context))
     
+    
 ##
 # Render a specific product page.    
 def product(request, product_id):
     template = loader.get_template('product.html')   
     product = get_object_or_404(Product, id=product_id)
     comments = Comment.objects.filter(product=product_id).order_by('timestamp')
+    form = CommentForm()
     
     product.visit_count +=1;
     product.save()
@@ -32,36 +35,38 @@ def product(request, product_id):
     context = Context({
         'product':  product,
         'comments': comments,
+        'form': form,
     })
     context.update(csrf(request))
     return HttpResponse(template.render(context))
+
 
 ##
 # Publish a comment on a page 
 def comment(request, product_id):
     template = loader.get_template('product.html')
-      
-    product = get_object_or_404(Product, id=product_id)
-       
-    text = request.POST['text']
-    user_id = get_object_or_404(User, id=request.POST['user'])
     
-    product.comment_count +=1;
-    new_comment = Comment(product = product, 
-                          user = user_id,
-                          timestamp = datetime.datetime.now(),
-                          comment = text)
-    new_comment.save()
-    product.save()
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        
+        if form.is_valid():
+            product = get_object_or_404(Product, id=product_id)
+            user_id = get_object_or_404(User, id=request.POST['user'])
+            text = request.POST['comment']
     
-    comments = Comment.objects.filter(product=product_id).order_by('timestamp')
+            product.comment_count +=1;
+            new_comment = Comment(product = product, 
+                                  user = user_id,
+                                  timestamp = datetime.datetime.now(),
+                                  comment = text)
+            
+            new_comment.save()
+            product.save()
     
-    context = Context({
-        'product':  product,
-        'comments': comments,
-    })
-    context.update(csrf(request))
-    return HttpResponse(template.render(context))
+            comments = Comment.objects.filter(product=product_id).order_by('timestamp')
+    
+    return HttpResponseRedirect('/product/%s' % (product_id))        
+
 
 ##
 # Render a page with all the products of a specific category. 
@@ -87,6 +92,7 @@ def signup(request):
         'latest_poll_list': 'jarr',
     })
     return HttpResponse(template.render(context))
+
 
 ##
 # Render a simple login form (sign in)
