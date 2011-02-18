@@ -453,8 +453,13 @@ html[xmlns] #nav
 
 #products
 {
-	margin:0 auto 0 auto; 
-	width:690px;	
+	margin:                 0 auto; 
+	width:                  690px;	
+}
+
+#products h2
+{
+	margin-top:             2em;
 }
 
 #product
@@ -545,4 +550,12 @@ textarea
 {
     border:                 1px solid #888;
     padding:                2px;
+}
+
+.error
+{
+    color:                  red;
+    display:                block;
+    font-weight:            bold;
+    margin:                 1em 0;
 }

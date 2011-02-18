@@ -6,7 +6,8 @@
 {% block main_content %}
     {% block registration_form %}
         <h1>Register now</h1>
-        <form method="post" action="/signup">
+        <form method="post" action="/register">
+        {% csrf_token %}
         <table>
         <tr>
             <td colspan="2">
@@ -18,10 +19,26 @@
         </tr>
         <tr>
             <td>
+	        <label for="fname">First name:</label>
+            </td>
+            <td>
+            <input type="text" id="fname" name="fname" maxlength="16" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="sname">Surname:</label>
+            </td>
+            <td>
+            <input type="text" id="sname" name="sname" maxlength="16" />
+            </td>
+        </tr>
+        <tr>
+            <td>
 	        <label for="user">Username:</label>
             </td>
             <td>
-            <input type="text" id="user" size="16" value="{{ username }}" />
+            <input type="text" id="user" name="user" maxlength="16" />
             </td>
         </tr>
         <tr>
@@ -29,7 +46,7 @@
 	        <label for="pass">Password:</label>
             </td>
             <td>
-            <input type="password" id="pass" size="16" value="{{ pass }}" />
+            <input type="password" id="pass" name="pass" />
             </td>
         </tr>
         <tr>
@@ -37,7 +54,7 @@
 	        <label for="pass2">Repeat password:</label>
             </td>
             <td>
-            <input type="password" id="pass2" size="16" value="{{ pass2 }}" />
+            <input type="password" id="pass2" name="pass2" />
             </td>
         </tr>
         <tr>
@@ -45,7 +62,7 @@
 	        <label for="email">Email:</label>
             </td>
             <td>
-            <input type="text" id="email" size="32" value="{{ email }}" />
+            <input type="text" id="email" name="email" maxlength="32" />
             </td>
         </tr>
         <tr>
@@ -53,7 +70,7 @@
 	        <label for="pass2">Repeat email:</label>
             </td>
             <td>
-            <input type="text" id="email2" size="32" value="{{ email2 }}" />
+            <input type="text" id="email2" name="email2" maxlength="32" />
             </td>
         </tr>
         <tr>
@@ -61,7 +78,7 @@
 	        <label for="address">Address:</label>
             </td>
             <td>
-                <textarea id="address" rows="2" cols="32">{{ address }}</textarea>
+                <textarea id="address" name="address" rows="2" cols="32"></textarea>
             </td>
         </tr>
         <tr>
@@ -69,7 +86,7 @@
 	        <label for="postal_code">Postal code:</label>
             </td>
             <td>
-            <input type="text" id="postal_code" size="5" value="{{ postal_code }}" />
+            <input type="text" id="postal_code" name="postal_code" maxlength="5" />
             </td>
         </tr>
         <tr>
@@ -77,7 +94,7 @@
 	        <label for="postal_city">City:</label>
             </td>
             <td>
-            <input type="text" id="postal_city" size="24" value="{{ postal_city }}" />
+            <input type="text" id="postal_city" name="postal_city" maxlength="24" />
             </td>
         </tr>
         <tr>
@@ -85,12 +102,12 @@
 	        <label for="postal_country">Country:</label>
             </td>
             <td>
-            <input type="text" id="postal_country" size="24" value="{{ postal_country }}" />
+            <input type="text" id="postal_country" name="postal_country" maxlength="24" />
             </td>
         </tr>
         <tr>
             <td colspan="2" align="right">
-                <input type="submit" value="Register" />
+                <input type="submit" name="submit" value="Register" />
                 <input type="reset" value="Clear" />
             </td>
         </tr>

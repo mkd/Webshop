@@ -5,6 +5,9 @@
 {% block main_content %}
     {% block login_form %}
         <h1>Sign in</h1>
+        {% if login_failed %}
+            <div class="error">Username or password incorrect!</div>
+        {% endif %}
         <form method="post" action="/login">
         {% csrf_token %}
         <table>

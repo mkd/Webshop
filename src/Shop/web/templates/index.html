@@ -3,8 +3,8 @@
 {% block title %} Welcome to Webshop! {% endblock %}
 
 {% block main_content %}
-    {% if user_signed %}
-        <h2>Welcome {{ user }}!</h2>
+    {% if signed_in %}
+        <h2>Welcome {{ user }} </h2>
     {% else %}
         <h2>Welcome to Webshop</h2>
     {% endif %}

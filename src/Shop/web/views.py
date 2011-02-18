@@ -4,22 +4,35 @@ from django.contrib.auth import authenticate
 from django.template import Context, RequestContext, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
-from models import Category, Product, Comment, User
+from models import Category, Product, Comment, User, UserProfile
 from forms import CommentForm
-import datetime
+import datetime, hashlib
 
 ##
-# Render  the index page. 
+# Render the home page. 
 def index(request):
-    template = loader.get_template('index.html')
     
+    template = loader.get_template('index.html')
     categories = Category.objects.all()
     best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
-    
-    context = Context({
-        'categories'  : categories,
-        'products'    : best_products,
-    })
+    # check for an existing session
+    if request.session.get('id', False):
+        context = Context({
+            'signed_in'   : True,
+            'user'        : User.objects.get(id=request.session.get('id')).username,
+            'categories'  : categories,
+            'products'    : best_products,
+        })
+    # if no session, use a standard context
+    else:
+        context = Context({
+            'signed_in'   : False,
+            'user'        : None,
+            'categories'  : categories,
+            'products'    : best_products,
+        })
+
+    # render the home page
     return HttpResponse(template.render(context))
     
     
@@ -140,7 +153,7 @@ def search(request, term):
 # Render a simple registration form (sign up)
 def signup(request):
     template = loader.get_template('signup.html')
-    context = Context({ })
+    context = RequestContext(request, { })
     return HttpResponse(template.render(context))
 
 
@@ -159,20 +172,32 @@ def signin(request):
 # and tries to log in. If successful, the user is redirected to the home page,
 # otherwise an error is displayed.
 def login(request):
-    if request.method == 'POST':
-        user = authenticate(username=request.POST['user'], password=request.POST['pass'])
-        #if user is not None and user.is_active:
-        #    login(request, user)
-        #    return direct_to_template(request, 'index.html')
-        #else:
-        #    return direct_to_template(request, 'invalid_login.html')
-    t = loader.get_template('index.html')
-    context = Context({
-        'user': user,
-        'signed_in' : True,
-    })
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+    u = User.objects.get(username=request.POST['user'])
+    p = u.password
+    # user and password match
+    if u.password == hashlib.sha1(request.POST['pass']).hexdigest():
+        request.session['id'] = u.id
+        t = loader.get_template('index.html')
+        context = Context({
+            'user': request.POST['user'],
+            'pass': request.POST['pass'],
+            'stored_pass': u.password,
+            'signed_in' : True,
+            'login_failed' : False,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
+    # login failed
+    else:
+        t = loader.get_template('signin.html')
+        context = Context({
+            'user': None,
+            'signed_in' : False,
+            'login_failed': True,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
+
 
 ##
 # Close the session for an user.
@@ -182,4 +207,34 @@ def signout(request):
         'user': None,
         'signed_in': False,
     })
+    try:
+        del request.session['id']
+    except KeyError:
+        pass
     return HttpResponse(t.render(context))
+
+
+##
+# Add a new user.
+def register(request):
+    t = loader.get_template('index.html')
+    if request.method == 'POST':
+        context = Context({
+            'user': request.POST['user'],
+            'pass': request.POST['pass'],
+            'signed_in' : True,
+            'login_failed' : False,
+        })
+        
+        # save all the data from the POST into the database
+        u = User(
+            username       = request.POST['user'],
+            first_name     = request.POST['fname'],
+            last_name      = request.POST['sname'],
+            email          = request.POST['email'],
+            password       = hashlib.sha1(request.POST['pass']).hexdigest(),
+        )
+        u.save()
+
+        # redirect the user to the home page (already logged-in)
+        return HttpResponseRedirect(t.render(context))

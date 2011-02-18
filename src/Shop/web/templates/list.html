@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block main_content %}
-	
 	<div id='products'>	
+        <h2>Latest Products</h2>
 		{% for product in products %}
 			<div id='product' onclick="window.location.href='/product/{{ product.id }}'; ">
 				<h1 class="product"><a href="/product/{{ product.id }}/">{{ product.name }}</a></h1>
