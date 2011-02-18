@@ -68,14 +68,16 @@
 }
 
 /* Comments */
-div.comment {
-	width: auto;
+div.comment 
+{
+	width: 580px;
 	font-size: 0.75em;
 	padding: 10px;
 	margin-bottom: 0px;
 }
 
-div.comment blockquote {
+div.comment blockquote 
+{
 	margin: 0px;
 	padding: 5px;
 	font-size: 11px;
@@ -87,18 +89,42 @@ div.comment blockquote {
 	-moz-border-radius: 0.6em;
 }
 
-div.comment blockquote p {
+div.comment blockquote p 
+{
 	margin: 10px;
 	padding: 0px;
 }
 
-div.comment cite {
+div.comment cite 
+{
 	position: relative;
 	margin: 0px;
 	padding: 7px 0px 0px 15px;
 	top: 1px;
 	background: transparent url(/static/images/tip.gif) no-repeat 20px 0;
 	font-style: normal;
+}
+
+div.comment:hover > .rate
+{
+	display: block;
+}
+
+div.comment:hover > blockquote
+{
+
+	border: 1px solid #A0A0A0;
+}
+
+.rate 
+{
+	width: 60px;
+	margin-left: 525px;
+	margin-top: -19px;
+	position: relative;
+	top: 1px;
+	font-style: normal;
+	display: none;
 }
 
 #clear

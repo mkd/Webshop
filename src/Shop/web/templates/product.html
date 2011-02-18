@@ -9,6 +9,16 @@
 
 {% block main_content %}
 
+<script>
+
+function rate(comment, option){
+	$.get('/comment/'+comment+'/'+option, function(data) {
+		$('#comment-rate-'+comment).html(data);
+	});
+}
+
+</script>
+
 	<div id="product-content">
 		<div id="left-side">
 			<img src="{{product.picture}}" />
@@ -59,6 +69,11 @@
 								{{ comment.comment }}
 							</blockquote>
 							<cite><strong>{{ comment.user.username }}</strong> on {{ comment.timestamp }}</cite>
+							<div class="rate" id="comment-rate-{{ comment.id }}">
+								{{ comment.positives }} <img src="/static/images/up.png" onclick="rate({{ comment.id }},1);" />&nbsp;
+								<img src="/static/images/down.png" onclick="rate({{ comment.id }},0);" /> {{ comment.negatives }}
+							</div>
+							
 							<!--<div id="com_repy">reply</div>
 							<div id="com_rating">rate comment</div>-->
 						</div>

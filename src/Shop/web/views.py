@@ -68,6 +68,22 @@ def comment(request, product_id):
     return HttpResponseRedirect('/product/%s' % (product_id))        
 
 
+def rateComment(request, comment_id, option): 
+    print option
+    template = loader.get_template('product.html')
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    if (option == '1'):
+        comment.positives += 1
+    else:
+        comment.negatives += 1
+    
+    comment.save()
+    
+    #return HttpResponse("%s <img src=\"/static/images/up.png\" onclick=\"rate(%s,1);\" />&nbsp;<img src=\"/static/images/down.png\" onclick=\"rate(%s,0);\" /> %s" % (comment.positives, comment.id, comment.id, comment.negatives))
+    return HttpResponse("%s <img src=\"/static/images/up.png\" />&nbsp;<img src=\"/static/images/down.png\"  /> %s" % (comment.positives, comment.negatives))
+
+
 ##
 # Render a page with all the products of a specific category. 
 def category(request, category_name):
