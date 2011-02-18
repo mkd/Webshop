@@ -132,3 +132,8 @@ div.comment:hover > blockquote
 	clear: both;
 	text-align: left;
 }
+
+div.comment img:hover
+{
+	cursor: pointer;
+}

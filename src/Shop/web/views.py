@@ -76,10 +76,9 @@ def rateComment(request, comment_id, option):
     if (option == '1'):
         comment.positives += 1
     else:
-        comment.negatives += 1
+        comment.negatives -= 1
     
     comment.save()
-    
     #return HttpResponse("%s <img src=\"/static/images/up.png\" onclick=\"rate(%s,1);\" />&nbsp;<img src=\"/static/images/down.png\" onclick=\"rate(%s,0);\" /> %s" % (comment.positives, comment.id, comment.id, comment.negatives))
     return HttpResponse("%s <img src=\"/static/images/up.png\" />&nbsp;<img src=\"/static/images/down.png\"  /> %s" % (comment.positives, comment.negatives))
 
@@ -99,6 +98,41 @@ def category(request, category_name):
     })
     return HttpResponse(template.render(context))
 
+ 
+def search(request, term):
+    products = Product.objects.get(name__icontains = term)
+    categories = Category.objects.all()
+    
+    
+    if request.method == 'POST':
+        form = request.POST
+        print form
+    
+    
+    if hasattr(products,'__iter__'):
+        template = loader.get_template('list.html')
+        context = Context({
+            'categories'  : categories,
+            'products'    : products,
+        })
+        return HttpResponse(template.render(context))
+    
+    else:
+        template = loader.get_template('product.html')   
+        comments = Comment.objects.filter(product=products.id).order_by('timestamp')
+        form = CommentForm()
+        
+        products.visit_count +=1;
+        products.save()
+        
+        context = Context({
+            'product':  products,
+            'comments': comments,
+            'form': form,
+        })
+        context.update(csrf(request))
+        return HttpResponse(template.render(context))
+        
 
 ##
 # Render a simple registration form (sign up)
