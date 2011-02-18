@@ -1,9 +1,13 @@
 {% extends "list.html" %}
 
-{% block title %} Welcome to Webshop {% endblock %}
+{% block title %} Welcome to Webshop! {% endblock %}
 
 {% block main_content %}
-    <h2>Welcome to Webshop</h2>
+    {% if user_signed %}
+        <h2>Welcome {{ user }}!</h2>
+    {% else %}
+        <h2>Welcome to Webshop</h2>
+    {% endif %}
 	<p>
         <strong>Webshop</strong> is an open community where you can
         purchase the latest products and share your experience with millions of

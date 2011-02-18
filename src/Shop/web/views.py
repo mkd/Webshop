@@ -1,5 +1,7 @@
+from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import Context, loader
+from django.contrib.auth import authenticate
+from django.template import Context, RequestContext, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
 from models import Category, Product, Comment, User
@@ -138,17 +140,46 @@ def search(request, term):
 # Render a simple registration form (sign up)
 def signup(request):
     template = loader.get_template('signup.html')
-    context = Context({
-        'latest_poll_list': 'jarr',
-    })
+    context = Context({ })
     return HttpResponse(template.render(context))
 
 
 ##
 # Render a simple login form (sign in)
 def signin(request):
-    template = loader.get_template('signin.html')
+    t = loader.get_template('signin.html')
+    context = RequestContext(request, { })
+    return HttpResponse(t.render(context))
+
+
+##
+# Perform the actual login.
+#
+# This function checks the user and password against the users in the database
+# and tries to log in. If successful, the user is redirected to the home page,
+# otherwise an error is displayed.
+def login(request):
+    if request.method == 'POST':
+        user = authenticate(username=request.POST['user'], password=request.POST['pass'])
+        #if user is not None and user.is_active:
+        #    login(request, user)
+        #    return direct_to_template(request, 'index.html')
+        #else:
+        #    return direct_to_template(request, 'invalid_login.html')
+    t = loader.get_template('index.html')
     context = Context({
-        'latest_poll_list': 'jarr',
+        'user': user,
+        'signed_in' : True,
     })
-    return HttpResponse(template.render(context))
+    context.update(csrf(request))
+    return HttpResponse(t.render(context))
+
+##
+# Close the session for an user.
+def signout(request):
+    t = loader.get_template('index.html')
+    context = RequestContext(request, { 
+        'user': None,
+        'signed_in': False,
+    })
+    return HttpResponse(t.render(context))

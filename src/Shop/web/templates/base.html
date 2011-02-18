@@ -23,7 +23,7 @@
 					
 					<!--Un logged user-->
 	                {% if signed_in %}
-					    <li><a href="#">Sign out</a></li>
+					    <li><a href="/signout">Sign out</a></li>
 	                {% else %}
 					    <li><a href="/signin">Sign in</a></li> 
 	                {% endif %}
@@ -33,7 +33,7 @@
 				
 					<!--Logged user-->
                     {% if signed_in %}
-					<li><a href="#">Javier</a> 
+					<li><a href="#">{{ user }}</a> 
 						<ul> 
 							<li><a href="#">My cart</a></li> 
 							<li><a href="#">My account</a></li> 

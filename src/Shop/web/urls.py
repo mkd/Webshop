@@ -12,5 +12,7 @@ urlpatterns = patterns('',
     (r'^$', 'web.views.index'),
     (r'^signup$', 'web.views.signup'),
     (r'^signin$', 'web.views.signin'),
+    (r'^signout$', 'web.views.signout'),
+    (r'^login$', 'web.views.login'),
 )
     
