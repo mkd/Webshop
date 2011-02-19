@@ -17,6 +17,11 @@ function rate(comment, option){
 	});
 }
 
+function showReplyBox(comment){
+	$('.write_reply').css("display","none");
+	$('#comment_reply_box_'+comment).css("display","block");
+}
+
 </script>
 
 	<div id="product-content">
@@ -55,7 +60,7 @@ function rate(comment, option){
 					&nbsp;({{ product.votes }} user reviews)
 				</p>
 				<p>
-					{{ product.stock_count }} products avaiable.
+					{{ product.stock_count }} products avaiable | {{ product.visit_count }} visits
 				</p>
 				<p>
 					{{ product.description }}
@@ -64,23 +69,44 @@ function rate(comment, option){
 				
 				<div id="comments">
 					{% for comment in comments %}
+						<a name="{{ comment.id }}"></a>
 						{% if comment.hasProduct %}
-							<div class="comment buyer">
+							<div class="comment buyer" >
 						{% else %}
 							<div class="comment">
 						{% endif %}
-							<blockquote>
-								{{ comment.comment }}
-							</blockquote>
+						
+							{% if comment.parent_id %}
+								<blockquote>
+									<i>In reply to <a href="#{{ comment.parent_id.id }}">@{{ comment.parent_id.user }}</a></i><br/> 
+									{{ comment.comment }}
+								</blockquote>
+							{% else %}
+								<blockquote>
+									{{ comment.comment }}
+								</blockquote>					
+							{% endif %}
+							
 							<cite><strong>{{ comment.user.username }}</strong> on {{ comment.timestamp }}</cite>
 							<div class="rate" id="comment-rate-{{ comment.id }}">
-								{{ comment.positives }} <img src="/static/images/up.png" onclick="rate({{ comment.id }},1);" />&nbsp;
+								<a onclick="showReplyBox('{{ comment.id }}');">Reply</a> | {{ comment.positives }} <img src="/static/images/up.png" onclick="rate({{ comment.id }},1);" />&nbsp;
 								<img src="/static/images/down.png" onclick="rate({{ comment.id }},0);" /> {{ comment.negatives }}
 							</div>
 							
 							<!--<div id="com_repy">reply</div>
 							<div id="com_rating">rate comment</div>-->
 						</div>
+						
+						<div class="write_reply" id="comment_reply_box_{{ comment.id }}">
+							<form action="/product/{{ product.id }}/comment/" method="post">
+								{% csrf_token %}
+								{{ form.as_p }}
+								<input type="hidden" name="user" value="1"/>
+								<input type="hidden" name="in_reply" value="{{ comment.id }}"/>
+							<input type="submit" value="Post" />
+							</form>
+						</div>
+						
 					{% endfor %}
 				</div>
 				

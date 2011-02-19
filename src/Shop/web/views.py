@@ -6,7 +6,7 @@ from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
-from models import Category, Product, Comment, User, UserProfile
+from models import Category, Product, Comment, User, UserProfile, CartProduct
 from forms import CommentForm, SearchForm, RegisterForm, ProfileForm
 import datetime, hashlib, os
 
@@ -54,13 +54,31 @@ def product(request, product_id):
     product.save()
     
     context = Context({
-        'product':  product,
-        'comments': comments,
-        'form': form,
+        'product'  : product,
+        'comments' : comments,
+        'form'     : form,
     })
     context.update(csrf(request))
     return HttpResponse(template.render(context))
 
+
+##
+# Render the user cart page.    
+def cart(request, user_id):
+    print user_id
+    template = loader.get_template('cart.html')
+    user = get_object_or_404(User, id=user_id)
+    userProducts = CartProduct.objects.filter(user=user)
+        
+    context = Context({
+        'cart'  : userProducts,
+    })
+    context.update(csrf(request))
+    return HttpResponse(template.render(context))
+
+def deleteFromCart(request):
+    if request.method == 'POST':
+        element = request.POST['product']
 
 ##
 # Publish a comment on a page 
@@ -73,13 +91,22 @@ def comment(request, product_id):
         if form.is_valid():
             product = get_object_or_404(Product, id=product_id)
             user_id = get_object_or_404(User, id=request.POST['user'])
-            text = request.POST['comment']
+            text = form.cleaned_data['comment']
+            reply = Comment.objects.get(id=request.POST['in_reply'])
     
             product.comment_count +=1;
-            new_comment = Comment(product = product, 
-                                  user = user_id,
-                                  timestamp = datetime.datetime.now(),
-                                  comment = text)
+            
+            if reply:
+                new_comment = Comment(product = product, 
+                                      user = user_id,
+                                      timestamp = datetime.datetime.now(),
+                                      comment = text,
+                                      parent_id = reply)
+            else:
+                new_comment = Comment(product = product, 
+                                      user = user_id,
+                                      timestamp = datetime.datetime.now(),
+                                      comment = text)
             
             new_comment.save()
             product.save()
@@ -100,7 +127,7 @@ def rateComment(request, comment_id, option):
     
     comment.save()
     #return HttpResponse("%s <img src=\"/static/images/up.png\" onclick=\"rate(%s,1);\" />&nbsp;<img src=\"/static/images/down.png\" onclick=\"rate(%s,0);\" /> %s" % (comment.positives, comment.id, comment.id, comment.negatives))
-    return HttpResponse("%s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\"  /> %s" % (comment.positives, comment.negatives))
+    return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\"  /> %s" % (comment.id, comment.positives, comment.negatives))
 
 
 ##

@@ -102,6 +102,17 @@ div.comment blockquote p
 	padding: 0px;
 }
 
+div.comment a
+{
+	text-decoration: none;
+}
+
+div.comment a:hover
+{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 div.comment cite 
 {
 	position: relative;
@@ -125,8 +136,8 @@ div.comment:hover > blockquote
 
 .rate 
 {
-	width: 60px;
-	margin-left: 525px;
+	width: 120px;
+	margin-left: 500px;
 	margin-top: -19px;
 	position: relative;
 	top: 1px;
@@ -143,4 +154,10 @@ div.comment:hover > blockquote
 div.comment img:hover
 {
 	cursor: pointer;
+}
+
+div.write_reply
+{
+	margin-left: 20px;
+	display: none;
 }

@@ -1,0 +1,22 @@
+
+img.product-pic
+{
+	width: 50px;
+	height: 50px;
+	padding:2px;
+	border: solid #888 1px;
+    -webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
+
+tr:hover
+{
+	background: #ded;
+}
+
+td.name a
+{
+	text-decoration: none;
+	font-size: 16px;
+	color: #666;
+}
