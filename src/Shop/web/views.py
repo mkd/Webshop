@@ -1,3 +1,4 @@
+### necessary Django modules ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate
@@ -6,10 +7,16 @@ from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
+
+
+### necessary models (other than Django's) ###
 from models import Category, Product, Comment, User, UserProfile, CartProduct
 from forms import CommentForm, SearchForm, RegisterForm, ProfileForm
 import datetime, hashlib, os
+ 
 
+
+### plain web pages ###
 ##
 # Render the home page. 
 def index(request):
@@ -38,7 +45,7 @@ def index(request):
     # render the home page
     context.update(csrf(request))
     return HttpResponse(template.render(context))
-    
+   
     
 ##
 # Render a specific product page.    
@@ -78,6 +85,9 @@ def deleteFromCart(request):
     if request.method == 'POST':
         element = request.POST['product']
 
+
+
+### comments functionality ###
 ##
 # Publish a comment on a page 
 def comment(request, product_id):
@@ -114,6 +124,8 @@ def comment(request, product_id):
     return HttpResponseRedirect('/product/%s' % (product_id))        
 
 
+##
+# Rate a comment for a product.
 def rateComment(request, comment_id, option): 
     template = loader.get_template('product.html')
     comment = get_object_or_404(Comment, id=comment_id)
@@ -124,10 +136,11 @@ def rateComment(request, comment_id, option):
         comment.negatives -= 1
     
     comment.save()
-    #return HttpResponse("%s <img src=\"/static/images/up.png\" onclick=\"rate(%s,1);\" />&nbsp;<img src=\"/static/images/down.png\" onclick=\"rate(%s,0);\" /> %s" % (comment.positives, comment.id, comment.id, comment.negatives))
-    return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\"  /> %s" % (comment.id, comment.positives, comment.negatives))
+    return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\" /> %s" % (comment.id, comment.positives, comment.negatives))
 
 
+
+### products pages ###
 ##
 # Render a page with all the products of a specific category. 
 def category(request, category_name):
@@ -145,6 +158,8 @@ def category(request, category_name):
     return HttpResponse(template.render(context))
 
  
+##
+# Search for a product.
 def search(request):
     if request.method == 'POST': # If the form has been submitted...
         form = SearchForm(request.POST) # A form bound to the POST data
@@ -173,6 +188,8 @@ def search(request):
         return HttpResponseRedirect('/')
 
 
+
+### user registration and session signing ###
 ##
 # Render a simple registration form (sign up)
 def signup(request):
@@ -376,12 +393,14 @@ def save_profile(request):
 
 ##
 # Show a 'foo' page telling that your password has been sent to your email.
-def forgot_password(request):
+#def forgot_password(request):
         t = loader.get_template('forgot_password.html')
         context = Context({ })
         return HttpResponse(t.render(context))
 
 
+
+### extra functionality ###
 ##
 # Handle an uploaded file.
 #
