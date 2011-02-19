@@ -73,13 +73,22 @@ def comment(request, product_id):
         if form.is_valid():
             product = get_object_or_404(Product, id=product_id)
             user_id = get_object_or_404(User, id=request.POST['user'])
-            text = request.POST['comment']
+            text = form.cleaned_data['comment']
+            reply = Comment.objects.get(id=request.POST['in_reply'])
     
             product.comment_count +=1;
-            new_comment = Comment(product = product, 
-                                  user = user_id,
-                                  timestamp = datetime.datetime.now(),
-                                  comment = text)
+            
+            if reply:
+                new_comment = Comment(product = product, 
+                                      user = user_id,
+                                      timestamp = datetime.datetime.now(),
+                                      comment = text,
+                                      parent_id = reply)
+            else:
+                new_comment = Comment(product = product, 
+                                      user = user_id,
+                                      timestamp = datetime.datetime.now(),
+                                      comment = text)
             
             new_comment.save()
             product.save()

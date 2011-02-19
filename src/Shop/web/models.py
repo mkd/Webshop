@@ -235,12 +235,13 @@ class Transaction( models.Model ):
 # can give reliability to certain users, depending on their comments. There
 # might be useless comments and useful comments, and hence users should be able
 # to also rate comments.
+
 class Comment(models.Model):
     product = models.ForeignKey(Product)
     user    = models.ForeignKey(User)
     timestamp  = models.DateTimeField( default=datetime.now, blank=False )
     comment    = models.CharField( max_length=300 )
-    #parent_id  = models.ForeignKey(Comment, default = -1)
+    parent_id  = models.ForeignKey('self', related_name='parent', null=True, blank=True)
     positives  = models.PositiveIntegerField( default = 0 )
     negatives  = models.PositiveIntegerField( default = 0 )
     hasProduct = models.BooleanField( default = False)
@@ -256,8 +257,6 @@ class Comment(models.Model):
             
         except Transaction.DoesNotExist: 
             self.hasProduct = False
-            
-        print "aaa"
             
         super(Comment, self).save()
         return self
@@ -309,8 +308,7 @@ class Comment(models.Model):
         self.negatives += 1
 
     def decNeg(self):
-        self.negatives -= 1
-        
+        self.negatives -= 1      
         
 ##
 # Model: ItemStats
