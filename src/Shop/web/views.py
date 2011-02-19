@@ -21,7 +21,6 @@ def index(request):
     # check for an existing session
     if request.session.get('id', False):
         context = Context({
-            'signed_in'   : True,
             'user'        : User.objects.get(id=request.session.get('id')).username,
             'categories'  : categories,
             'products'    : best_products,
@@ -30,7 +29,6 @@ def index(request):
     # if no session, use a standard context
     else:
         context = Context({
-            'signed_in'   : False,
             'user'        : None,
             'categories'  : categories,
             'products'    : best_products,
@@ -220,7 +218,6 @@ def login(request):
             'user': request.POST['user'],
             'pass': request.POST['pass'],
             'stored_pass': u.password,
-            'signed_in' : True,
             'login_failed' : False,
         })
         context.update(csrf(request))
@@ -230,7 +227,6 @@ def login(request):
         t = loader.get_template('signin.html')
         context = Context({
             'user': None,
-            'signed_in' : False,
             'login_failed': True,
         })
         context.update(csrf(request))
@@ -243,7 +239,6 @@ def signout(request):
     t = loader.get_template('index.html')
     context = RequestContext(request, { 
         'user': None,
-        'signed_in': False,
     })
     try:
         del request.session['id']
@@ -289,7 +284,6 @@ def register(request):
         
         # save all the data from the POST into the database
         context = Context({
-            'signed_in' : True,
             'user'      : request.POST['user'],
         })
         u = User(
@@ -326,7 +320,6 @@ def profile(request):
             #'postal_code'    : u.get_profile().postal_code,
             #'postal_city'    : u.get_profile().postal_city,
             #'postal_country' : u.get_profile().postal_country,
-            'signed_in'      : True,
             'form'           : form,
         })
         context.update(csrf(request))
@@ -365,7 +358,6 @@ def save_profile(request):
         
         # save all the data from the POST into the database
         context = Context({
-            'signed_in' : True,
             'user'      : request.POST['user'],
         })
         u = User(

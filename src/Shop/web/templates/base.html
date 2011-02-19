@@ -25,18 +25,15 @@
 						</form>
 					</li>
 					
-					<!--Un logged user-->
-	                {% if signed_in %}
+	                {% if request.session.id %}
 					    <li><a href="/signout">Sign out</a></li>
 	                {% else %}
 					    <li><a href="/signin">Sign in</a></li> 
 	                {% endif %}
 	                    
 					<li id="nav-separator"></li>
-					<!--end-->
 				
-					<!--Logged user-->
-                    {% if signed_in %}
+                    {% if request.session.id %}
                         <li><a href="#">{{ user }}</a> 
                             <ul> 
                                 <li><a href="#">My cart</a></li> 
@@ -47,7 +44,6 @@
                     {% else %}
 					    <li><a href="/signup">Sign up</a></li>
                     {% endif %}
-					<!--end-->
 				</ul> 
 	  		</div>
 	  		{% endblock %}
@@ -68,7 +64,8 @@
 	  	
 	  		<div id="footer">
 		  		{% block footer %}
-		        	&copy;2011 The Webshop Team, Finland
+		        	&copy;2011 The Webshop Team, Finland | <a
+                    href="/myadmin">Administrative page</a>
 		        {% endblock %}
 	  		</div>
   		</div>
