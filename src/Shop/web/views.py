@@ -4,8 +4,9 @@ from django.contrib.auth import authenticate
 from django.template import Context, RequestContext, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
+
 from models import Category, Product, Comment, User, UserProfile
-from forms import CommentForm
+from forms import CommentForm, SearchForm
 import datetime, hashlib
 
 ##
@@ -15,6 +16,8 @@ def index(request):
     template = loader.get_template('index.html')
     categories = Category.objects.all()
     best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
+    searchForm = SearchForm()
+    
     # check for an existing session
     if request.session.get('id', False):
         context = Context({
@@ -22,6 +25,7 @@ def index(request):
             'user'        : User.objects.get(id=request.session.get('id')).username,
             'categories'  : categories,
             'products'    : best_products,
+            'form'        : searchForm,
         })
     # if no session, use a standard context
     else:
@@ -30,9 +34,11 @@ def index(request):
             'user'        : None,
             'categories'  : categories,
             'products'    : best_products,
+            'form'        : searchForm,
         })
 
     # render the home page
+    context.update(csrf(request))
     return HttpResponse(template.render(context))
     
     
@@ -84,7 +90,6 @@ def comment(request, product_id):
 
 
 def rateComment(request, comment_id, option): 
-    print option
     template = loader.get_template('product.html')
     comment = get_object_or_404(Comment, id=comment_id)
     
@@ -95,7 +100,7 @@ def rateComment(request, comment_id, option):
     
     comment.save()
     #return HttpResponse("%s <img src=\"/static/images/up.png\" onclick=\"rate(%s,1);\" />&nbsp;<img src=\"/static/images/down.png\" onclick=\"rate(%s,0);\" /> %s" % (comment.positives, comment.id, comment.id, comment.negatives))
-    return HttpResponse("%s <img src=\"/static/images/up.png\" />&nbsp;<img src=\"/static/images/down.png\"  /> %s" % (comment.positives, comment.negatives))
+    return HttpResponse("%s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\"  /> %s" % (comment.positives, comment.negatives))
 
 
 ##
@@ -111,43 +116,36 @@ def category(request, category_name):
         'categories'  : categories,
         'products'    : best_products,
     })
+    context.update(csrf(request))
     return HttpResponse(template.render(context))
 
  
-def search(request, term):
-    products = Product.objects.get(name__icontains = term)
-    categories = Category.objects.all()
-    
-    
-    if request.method == 'POST':
-        form = request.POST
-        print form
-    
-    
-    if hasattr(products,'__iter__'):
-        template = loader.get_template('list.html')
-        context = Context({
-            'categories'  : categories,
-            'products'    : products,
-        })
-        return HttpResponse(template.render(context))
-    
+def search(request):
+      
+    if request.method == 'POST': # If the form has been submitted...
+        form = SearchForm(request.POST) # A form bound to the POST data
+        
+        if form.is_valid(): # All validation rules pass
+            query = form.cleaned_data['query']
+            
+            try: 
+                products = Product.objects.filter(name__icontains = query)
+            except Product.DoesNotExist: 
+                return HttpResponse("Sorry, we can't find your product.")
+           
+            categories = Category.objects.all()            
+            template = loader.get_template('list.html')
+            message = "Search results for %s." % query
+            context = Context({
+                'message'     : message,
+                'categories'  : categories,
+                'products'    : products,
+            })
+            return HttpResponse(template.render(context))
+           
     else:
-        template = loader.get_template('product.html')   
-        comments = Comment.objects.filter(product=products.id).order_by('timestamp')
-        form = CommentForm()
-        
-        products.visit_count +=1;
-        products.save()
-        
-        context = Context({
-            'product':  products,
-            'comments': comments,
-            'form': form,
-        })
-        context.update(csrf(request))
-        return HttpResponse(template.render(context))
-        
+        return HttpResponseRedirect('/')
+
 
 ##
 # Render a simple registration form (sign up)
