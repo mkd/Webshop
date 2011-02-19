@@ -1,12 +1,18 @@
+<!--
+  - signup.html
+  -
+  - This form is used to register a new user into the system.
+-->
 {% extends "base.html" %}
 
 {% block title %} Registration Form {% endblock %}
 
 
+
 {% block main_content %}
     {% block registration_form %}
         <h1>Register now</h1>
-        <form method="post" action="/register">
+        <form id="register_form" method="post" action="/register">
         {% csrf_token %}
         <table>
         <tr>
@@ -22,7 +28,7 @@
 	        <label for="fname">First name:</label>
             </td>
             <td>
-            <input type="text" id="fname" name="fname" maxlength="16" />
+            <input type="text" id="fname" name="fname" maxlength="16" class="required" />
             </td>
         </tr>
         <tr>
@@ -67,7 +73,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="pass2">Repeat email:</label>
+	        <label for="email2">Repeat email:</label>
             </td>
             <td>
             <input type="text" id="email2" name="email2" maxlength="32" />
@@ -82,7 +88,7 @@
         </tr>
         <tr>
             <td colspan="2" align="right">
-                <input type="submit" name="submit" value="Register" />
+                <input type="submit" id="submit" value="Register" />
                 <input type="reset" value="Clear" />
             </td>
         </tr>
