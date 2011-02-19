@@ -172,7 +172,15 @@ def signin(request):
 # and tries to log in. If successful, the user is redirected to the home page,
 # otherwise an error is displayed.
 def login(request):
-    u = User.objects.get(username=request.POST['user'])
+    try:
+        u = User.objects.get(username=request.POST['user'])
+    except User.DoesNotExist:
+        t = loader.get_template('signin.html')
+        context = Context({
+            'login_failed' : True,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
     p = u.password
     # user and password match
     if u.password == hashlib.sha1(request.POST['pass']).hexdigest():
@@ -225,6 +233,16 @@ def register(request):
             'signed_in' : True,
             'login_failed' : False,
         })
+
+        # check if the user already exists in the database
+        check_username = User.objects.get(username=request.POST['user'])
+        check_email    = User.objects.get(email=request.POST['email'])
+        if check_username is not None or check_email is not None:
+            t = loader.get_template('signup.html')
+            context = Context({
+                'user_exists' : True,
+            })
+            return HttpResponse(t.render(context))
         
         # save all the data from the POST into the database
         u = User(
@@ -237,7 +255,7 @@ def register(request):
         u.save()
 
         # redirect the user to the home page (already logged-in)
-        return HttpResponseRedirect(t.render(context))
+        return HttpResponse(t.render(context))
 
 
 ##
