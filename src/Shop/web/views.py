@@ -225,24 +225,35 @@ def signout(request):
 def register(request):
     t = loader.get_template('index.html')
     if request.method == 'POST':
-        context = Context({
-            'user': request.POST['user'],
-            'pass': request.POST['pass'],
-            'signed_in' : True,
-            'login_failed' : False,
-        })
-
         # check if the user already exists in the database
-        check_username = User.objects.get(username=request.POST['user'])
-        check_email    = User.objects.get(email=request.POST['email'])
+        try:
+            check_username = User.objects.get(username=request.POST['user'])
+        except:
+            check_username = None
+        try:
+            check_email = User.objects.get(email=request.POST['email'])
+        except:
+            check_email = None
         if check_username is not None or check_email is not None:
             t = loader.get_template('signup.html')
             context = Context({
-                'user_exists' : True,
+                'username'       : request.POST['user'],
+                'fname'          : request.POST['fname'],
+                'sname'          : request.POST['sname'],
+                'email'          : request.POST['email'],
+                'email2'         : request.POST['email2'],
+                'passwd'         : request.POST['pass'],
+                'pass2'          : request.POST['pass2'],
+                'user_exists'    : True,
             })
+            context.update(csrf(request))
             return HttpResponse(t.render(context))
         
         # save all the data from the POST into the database
+        context = Context({
+            'signed_in' : True,
+            'user'      : request.POST['user'],
+        })
         u = User(
             username       = request.POST['user'],
             first_name     = request.POST['fname'],
@@ -253,6 +264,7 @@ def register(request):
         u.save()
 
         # redirect the user to the home page (already logged-in)
+        context.update(csrf(request))
         return HttpResponse(t.render(context))
 
 
@@ -275,7 +287,16 @@ def profile(request):
             'postal_city'    : u.postal_city,
             'postal_country' : u.postal_country,
         })
-        return HttpResponseRedirect(t.render(context))
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
     # if no session, use a standard context
     else:
-        render_for_response('index.html', locals())
+        render_to_response('index.html', locals())
+
+
+##
+# Show a 'foo' page telling that your password has been sent to your email.
+def forgot_password(request):
+        t = loader.get_template('forgot_password.html')
+        context = Context({ })
+        return HttpResponse(t.render(context))
