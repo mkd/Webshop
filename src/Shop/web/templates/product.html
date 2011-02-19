@@ -60,7 +60,7 @@ function showReplyBox(comment){
 					&nbsp;({{ product.votes }} user reviews)
 				</p>
 				<p>
-					{{ product.stock_count }} products avaiable.
+					{{ product.stock_count }} products avaiable | {{ product.visit_count }} visits
 				</p>
 				<p>
 					{{ product.description }}
@@ -89,7 +89,7 @@ function showReplyBox(comment){
 							
 							<cite><strong>{{ comment.user.username }}</strong> on {{ comment.timestamp }}</cite>
 							<div class="rate" id="comment-rate-{{ comment.id }}">
-								<a onclick="showReplyBox('{{ comment.id }}');">Reply</a> {{ comment.positives }} <img src="/static/images/up.png" onclick="rate({{ comment.id }},1);" />&nbsp;
+								<a onclick="showReplyBox('{{ comment.id }}');">Reply</a> | {{ comment.positives }} <img src="/static/images/up.png" onclick="rate({{ comment.id }},1);" />&nbsp;
 								<img src="/static/images/down.png" onclick="rate({{ comment.id }},0);" /> {{ comment.negatives }}
 							</div>
 							

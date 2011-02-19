@@ -5,7 +5,7 @@ from django.template import Context, RequestContext, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
 
-from models import Category, Product, Comment, User, UserProfile
+from models import Category, Product, Comment, User, UserProfile, CartProduct
 from forms import CommentForm, SearchForm
 import datetime, hashlib
 
@@ -54,13 +54,31 @@ def product(request, product_id):
     product.save()
     
     context = Context({
-        'product':  product,
-        'comments': comments,
-        'form': form,
+        'product'  : product,
+        'comments' : comments,
+        'form'     : form,
     })
     context.update(csrf(request))
     return HttpResponse(template.render(context))
 
+
+##
+# Render the user cart page.    
+def cart(request, user_id):
+    print user_id
+    template = loader.get_template('cart.html')
+    user = get_object_or_404(User, id=user_id)
+    userProducts = CartProduct.objects.filter(user=user)
+        
+    context = Context({
+        'cart'  : userProducts,
+    })
+    context.update(csrf(request))
+    return HttpResponse(template.render(context))
+
+def deleteFromCart(request):
+    if request.method == 'POST':
+        element = request.POST['product']
 
 ##
 # Publish a comment on a page 
@@ -109,7 +127,7 @@ def rateComment(request, comment_id, option):
     
     comment.save()
     #return HttpResponse("%s <img src=\"/static/images/up.png\" onclick=\"rate(%s,1);\" />&nbsp;<img src=\"/static/images/down.png\" onclick=\"rate(%s,0);\" /> %s" % (comment.positives, comment.id, comment.id, comment.negatives))
-    return HttpResponse("%s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\"  /> %s" % (comment.positives, comment.negatives))
+    return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\"  /> %s" % (comment.id, comment.positives, comment.negatives))
 
 
 ##

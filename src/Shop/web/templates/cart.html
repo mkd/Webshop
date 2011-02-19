@@ -1,7 +1,37 @@
 {% extends "base.html" %}
 
 {% block title %} My cart {% endblock %}
+{% block extra_head %}
+	<link rel=stylesheet href="/static/css/cart.css" type="text/css" />
+{% endblock %}
+
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/category/{{ category.name }}/">Your profile</a></li>
+			<li><a href="/category/{{ category.name }}/">Your cart</a></li>
+			<li><a href="/category/{{ category.name }}/">Your buy products</a></li>
+		</ul>	
+	</div>
+{% endblock %}
 
 {% block main_content %}
-	<p>This is a Test</p>
+	<table cellspacing="0" callpadding="50" border="0" width="660">
+		<tr>
+			<td>pic</td>
+			<td>name</td>
+			<td>cuantity</td>
+			<td>price</td>
+			<td>delete</td>
+		</tr>
+		{% for product in cart %}
+		<tr>
+			<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
+			<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
+			<td class="quantity" width="100">{{ product.quantity }}</td>
+			<td class="value" width="75">{{ product.product.price }}</td>
+			<td class="delete" width="40"><img src="/static/images/delete-icon.png" /></td>
+		</tr>
+		{% endfor %}
+	</table>
 {% endblock %}

@@ -153,20 +153,6 @@ class Product(models.Model):
       
     def __unicode__(self):
         return self.name
-        
-
-
-##
-# Model: Cart
-#
-# This model represents the shoping cart of a user where the products and quantity information that user wants to buy is stored
-#
-# @see: CardProduct  
-# @see: User 
-#     
-# user_id     id of the user that the cart belongs to
-class Cart(models.Model):
-    user_id         = models.ForeignKey(User)
 
 
 ##
@@ -183,8 +169,8 @@ class Cart(models.Model):
 # quantity        quantity of a the product inside the cart
 # 
 class CartProduct(models.Model):
-    product_id  = models.ForeignKey(Product)
-    cart_id     = models.ForeignKey(Cart)
+    product     = models.ForeignKey(Product)
+    user        = models.ForeignKey(User)
     timestamp   = models.DateTimeField( default=datetime.now)
     quantity    = models.IntegerField( default=0 )
 
