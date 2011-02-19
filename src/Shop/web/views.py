@@ -141,6 +141,8 @@ def search(request):
                 'categories'  : categories,
                 'products'    : products,
             })
+            
+            context.update(csrf(request))
             return HttpResponse(template.render(context))
            
     else:
