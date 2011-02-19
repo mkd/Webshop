@@ -6,7 +6,7 @@ from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
 
 from models import Category, Product, Comment, User, UserProfile
-from forms import CommentForm
+from forms import CommentForm, SearchForm
 import datetime, hashlib
 
 ##
