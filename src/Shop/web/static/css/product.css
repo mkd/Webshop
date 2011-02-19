@@ -89,6 +89,13 @@ div.comment blockquote
 	-moz-border-radius: 0.6em;
 }
 
+div.buyer blockquote 
+{
+	color: white;
+	border: 1px solid #404040;
+	background-color: #808080;
+}
+
 div.comment blockquote p 
 {
 	margin: 10px;

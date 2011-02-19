@@ -215,7 +215,7 @@ class Transaction( models.Model ):
     postal_country = models.CharField( max_length=20 )
     
     def __unicode__(self):
-        return self.user.name + ": " + self.product.name + "(" + self.quantity + ")"
+        return "%s: %s (%d)" % (self.user.username, self.product.name, self.quantity)
 
 
 ##
@@ -243,9 +243,24 @@ class Comment(models.Model):
     #parent_id  = models.ForeignKey(Comment, default = -1)
     positives  = models.PositiveIntegerField( default = 0 )
     negatives  = models.PositiveIntegerField( default = 0 )
+    hasProduct = models.BooleanField( default = False)
 
     def __unicode__(self):
         return self.user.username + " en " + self.product.name
+    
+    def save(self, force_insert=False, force_update=False):
+        # do custom stuff
+        try:
+            transaction = Transaction.objects.get(user=self.user, product=self.product)
+            self.hasProduct = True
+            
+        except Transaction.DoesNotExist: 
+            self.hasProduct = False
+            
+        print "aaa"
+            
+        super(Comment, self).save()
+        return self
     
     # accessors
     def getProduct(self):

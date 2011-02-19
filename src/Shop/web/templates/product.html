@@ -64,7 +64,11 @@ function rate(comment, option){
 				
 				<div id="comments">
 					{% for comment in comments %}
-						<div class="comment">
+						{% if comment.hasProduct %}
+							<div class="comment buyer">
+						{% else %}
+							<div class="comment">
+						{% endif %}
 							<blockquote>
 								{{ comment.comment }}
 							</blockquote>
