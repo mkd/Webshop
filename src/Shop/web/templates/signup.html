@@ -11,12 +11,12 @@
     {% block registration_form %}
         <h1>Register now</h1>
         <form id="register_form" method="post" action="/register">
+        {% csrf_token %}
         {% if user_exists %}
             <div class="error">Username or email already exist in the
             system! Please pick a different username and make sure your email
             address is correct.</div>
         {% endif %}
-        {% csrf_token %}
         <table>
         <tr>
             <td colspan="2">
@@ -31,7 +31,7 @@
 	        <label for="fname">First name:</label>
             </td>
             <td>
-            <input type="text" id="fname" name="fname" maxlength="16" />
+            <input type="text" id="fname" name="fname" maxlength="16" value="{{ fname }}" />
             </td>
         </tr>
         <tr>
@@ -39,7 +39,7 @@
 	        <label for="sname">Surname:</label>
             </td>
             <td>
-            <input type="text" id="sname" name="sname" maxlength="16" />
+            <input type="text" id="sname" name="sname" maxlength="16" value="{{ sname }}" />
             </td>
         </tr>
         <tr>
@@ -47,7 +47,7 @@
 	        <label for="user">Username:</label>
             </td>
             <td>
-            <input type="text" id="user" name="user" maxlength="16" />
+            <input type="text" id="user" name="user" maxlength="16" value="{{ username }}" />
             </td>
         </tr>
         <tr>
@@ -55,7 +55,7 @@
 	        <label for="pass">Password:</label>
             </td>
             <td>
-            <input type="password" id="pass" name="pass" />
+            <input type="password" id="pass" name="pass" value="{{ passwd }}" />
             </td>
         </tr>
         <tr>
@@ -63,7 +63,7 @@
 	        <label for="pass2">Repeat password:</label>
             </td>
             <td>
-            <input type="password" id="pass2" name="pass2" />
+            <input type="password" id="pass2" name="pass2" value="{{ pass2 }}" />
             </td>
         </tr>
         <tr>
@@ -71,7 +71,8 @@
 	        <label for="email">Email:</label>
             </td>
             <td>
-            <input type="text" id="email" name="email" maxlength="32" class="email" />
+            <input type="text" id="email" name="email" maxlength="32"
+            class="email" value="{{ email }}" />
             </td>
         </tr>
         <tr>
@@ -79,7 +80,8 @@
 	        <label for="email2">Repeat email:</label>
             </td>
             <td>
-            <input type="text" id="email2" name="email2" maxlength="32" class="email" />
+            <input type="text" id="email2" name="email2" maxlength="32"
+            class="email" value="{{ email2 }}" />
             </td>
         </tr>
         <tr>
