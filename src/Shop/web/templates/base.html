@@ -37,13 +37,13 @@
 				
 					<!--Logged user-->
                     {% if signed_in %}
-					<li><a href="#">{{ user }}</a> 
-						<ul> 
-							<li><a href="#">My cart</a></li> 
-							<li><a href="/profile">My profile</a></li> 
-						</ul> 
-					</li> 
-					<li><a href="#"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
+                        <li><a href="#">{{ user }}</a> 
+                            <ul> 
+                                <li><a href="#">My cart</a></li> 
+                                <li><a href="/profile">My profile</a></li> 
+                            </ul> 
+                        </li> 
+                        <li><a href="#"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
                     {% else %}
 					    <li><a href="/signup">Sign up</a></li>
                     {% endif %}

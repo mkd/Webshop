@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %} My Profile {% endblock %}
+{% block title %} Webshop -- My Profile {% endblock %}
 
 
 {% block main_content %}
     {% block profile_form %}
-        <h1>Register now</h1>
-        <form method="post" action="/save_profile">
+        <h1>My Profile</h1>
+        <form id="profile_form" method="post" action="/save_profile">
         {% csrf_token %}
         <table>
         <tr>
             <td colspan="2">
-                <img src="/static/images/users/new_user.png" align="middle"
-                     height="64"
+                <img src="{{ picture }}" align="middle"
+                     height="64" id="picture_enabler"
                      style="cursor: pointer;" title="Add your own picture" />
-                <em>Click on the image to add your own picture</em>
+                <em>Click on the image to change your own picture</em>
+                <br />
+                {{ form.picture }}
             </td>
         </tr>
         <tr>
@@ -22,7 +24,7 @@
 	        <label for="fname">First name:</label>
             </td>
             <td>
-            <input type="text" id="fname" name="fname" maxlength="16" value="{{ first_name }}" />
+            {{ form.fname }}
             </td>
         </tr>
         <tr>
@@ -30,7 +32,7 @@
 	        <label for="sname">Surname:</label>
             </td>
             <td>
-            <input type="text" id="sname" name="sname" maxlength="16" value="{{ last_name }}" />
+            {{ form.sname }}
             </td>
         </tr>
         <tr>
@@ -46,7 +48,7 @@
 	        <label for="pass">Password:</label>
             </td>
             <td>
-            <input type="password" id="pass" name="pass" />
+            {{ form.passwd }}
             </td>
         </tr>
         <tr>
@@ -54,7 +56,7 @@
 	        <label for="pass2">Repeat password:</label>
             </td>
             <td>
-            <input type="password" id="pass2" name="pass2" />
+            {{ form.pass2 }}
             </td>
         </tr>
         <tr>
@@ -62,7 +64,7 @@
 	        <label for="email">Email:</label>
             </td>
             <td>
-            <input type="text" id="email" name="email" maxlength="32" value="{{ email }}" />
+            {{ form.email }}
             </td>
         </tr>
         <tr>
@@ -70,7 +72,7 @@
 	        <label for="address">Address:</label>
             </td>
             <td>
-                <textarea id="address" name="address" rows="2" cols="32">{{ postal_address }}</textarea>
+            {{ form.postal_address }}
             </td>
         </tr>
         <tr>
@@ -78,7 +80,7 @@
 	        <label for="postal_code">Postal code:</label>
             </td>
             <td>
-            <input type="text" id="postal_code" name="postal_code" maxlength="5" value="{{ postal_code }}" />
+            {{ form.postal_code }}
             </td>
         </tr>
         <tr>
@@ -86,7 +88,7 @@
 	        <label for="postal_city">City:</label>
             </td>
             <td>
-            <input type="text" id="postal_city" name="postal_city" maxlength="24" value="{{ postal_city }}" />
+            {{ form.postal_city }}
             </td>
         </tr>
         <tr>
@@ -94,7 +96,7 @@
 	        <label for="postal_country">Country:</label>
             </td>
             <td>
-            <input type="text" id="postal_country" name="postal_country" maxlength="24" value="{{ postal_country }}" />
+            {{ form.postal_country }}
             </td>
         </tr>
         <tr>

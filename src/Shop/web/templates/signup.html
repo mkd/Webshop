@@ -10,7 +10,7 @@
 {% block main_content %}
     {% block registration_form %}
         <h1>Register now</h1>
-        <form id="register_form" method="post" action="/register">
+        <form enctype="multipart/form-data" id="register_form" method="post" action="/register">
         {% csrf_token %}
         {% if user_exists %}
             <div class="error">Username or email already exist in the
@@ -21,9 +21,11 @@
         <tr>
             <td colspan="2">
                 <img src="/static/images/users/new_user.png" align="middle"
-                     height="64"
+                     height="64" id="picture_enabler"
                      style="cursor: pointer;" title="Add your own picture" />
                 <em>Click on the image to add your own picture</em>
+                <br />
+                {{ form.picture }}
             </td>
         </tr>
         <tr>
@@ -31,7 +33,7 @@
 	        <label for="fname">First name:</label>
             </td>
             <td>
-            <input type="text" id="fname" name="fname" maxlength="16" value="{{ fname }}" />
+            {{ form.fname }}
             </td>
         </tr>
         <tr>
@@ -39,7 +41,7 @@
 	        <label for="sname">Surname:</label>
             </td>
             <td>
-            <input type="text" id="sname" name="sname" maxlength="16" value="{{ sname }}" />
+            {{ form.sname }}
             </td>
         </tr>
         <tr>
@@ -47,7 +49,7 @@
 	        <label for="user">Username:</label>
             </td>
             <td>
-            <input type="text" id="user" name="user" maxlength="16" value="{{ username }}" />
+            {{ form.user }}
             </td>
         </tr>
         <tr>
@@ -55,7 +57,7 @@
 	        <label for="pass">Password:</label>
             </td>
             <td>
-            <input type="password" id="pass" name="pass" value="{{ passwd }}" />
+            {{ form.passwd }}
             </td>
         </tr>
         <tr>
@@ -63,7 +65,7 @@
 	        <label for="pass2">Repeat password:</label>
             </td>
             <td>
-            <input type="password" id="pass2" name="pass2" value="{{ pass2 }}" />
+            {{ form.pass2 }}
             </td>
         </tr>
         <tr>
@@ -71,8 +73,7 @@
 	        <label for="email">Email:</label>
             </td>
             <td>
-            <input type="text" id="email" name="email" maxlength="32"
-            class="email" value="{{ email }}" />
+            {{ form.email }}
             </td>
         </tr>
         <tr>
@@ -80,8 +81,7 @@
 	        <label for="email2">Repeat email:</label>
             </td>
             <td>
-            <input type="text" id="email2" name="email2" maxlength="32"
-            class="email" value="{{ email2 }}" />
+            {{ form.email2 }}
             </td>
         </tr>
         <tr>

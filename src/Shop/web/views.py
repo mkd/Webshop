@@ -4,15 +4,15 @@ from django.contrib.auth import authenticate
 from django.template import Context, RequestContext, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 from models import Category, Product, Comment, User, UserProfile
-from forms import CommentForm, SearchForm
-import datetime, hashlib
+from forms import CommentForm, SearchForm, RegisterForm, ProfileForm
+import datetime, hashlib, os
 
 ##
 # Render the home page. 
 def index(request):
-    
     template = loader.get_template('index.html')
     categories = Category.objects.all()
     best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
@@ -121,7 +121,6 @@ def category(request, category_name):
 
  
 def search(request):
-      
     if request.method == 'POST': # If the form has been submitted...
         form = SearchForm(request.POST) # A form bound to the POST data
         
@@ -131,7 +130,7 @@ def search(request):
             try: 
                 products = Product.objects.filter(name__icontains = query)
             except Product.DoesNotExist: 
-                return HttpResponse("Sorry, we can't find your product.")
+                return HttpResponse("Sorry, we couldn't find your product.")
            
             categories = Category.objects.all()            
             template = loader.get_template('list.html')
@@ -153,7 +152,11 @@ def search(request):
 # Render a simple registration form (sign up)
 def signup(request):
     template = loader.get_template('signup.html')
-    context = RequestContext(request, { })
+    form = RegisterForm()
+    context = RequestContext(request,
+    {
+        'form': form,
+    })
     return HttpResponse(template.render(context))
 
 
@@ -227,6 +230,7 @@ def signout(request):
 def register(request):
     t = loader.get_template('index.html')
     if request.method == 'POST':
+        form = RegisterForm(request.POST, request.FILES)
         # check if the user already exists in the database
         try:
             check_username = User.objects.get(username=request.POST['user'])
@@ -244,12 +248,17 @@ def register(request):
                 'sname'          : request.POST['sname'],
                 'email'          : request.POST['email'],
                 'email2'         : request.POST['email2'],
-                'passwd'         : request.POST['pass'],
+                'passwd'         : request.POST['passwd'],
                 'pass2'          : request.POST['pass2'],
                 'user_exists'    : True,
+                'form'           : form
             })
             context.update(csrf(request))
             return HttpResponse(t.render(context))
+
+        # save also avatar picture, if available
+        if form.is_valid():
+            handle_uploaded_profile_pic(request.FILES['picture'], request.POST['user'] + '.jpg')
         
         # save all the data from the POST into the database
         context = Context({
@@ -261,7 +270,7 @@ def register(request):
             first_name     = request.POST['fname'],
             last_name      = request.POST['sname'],
             email          = request.POST['email'],
-            password       = hashlib.sha1(request.POST['pass']).hexdigest(),
+            password       = hashlib.sha1(request.POST['passwd']).hexdigest(),
         )
         u.save()
 
@@ -276,25 +285,75 @@ def profile(request):
     # check for an existing session
     if request.session.get('id', False):
         t = loader.get_template('profile.html')
+        form = ProfileForm(request.POST, request.FILES)
 
         # obtain the data from the user and display his/her profile
-        u = UserProfile.objects.get(id=request.session.get('id'))
+        u = User.objects.get(id=request.session.get('id'))
         context = Context({
-            'picture'        : u.picture,
-            'first_name'     : u.first_name,
-            'last_name'      : u.last_name,
+            'picture'        : '/static/images/users/' + u.username + '.jpg',
+            'user'           : u.username,
+            'fname'          : u.first_name,
+            'sname'          : u.last_name,
             'email'          : u.email,
-            'postal_address' : u.postal_address,
-            'postal_code'    : u.postal_code,
-            'postal_city'    : u.postal_city,
-            'postal_country' : u.postal_country,
+            #'postal_address' : u.get_profile().postal_address,
+            #'postal_code'    : u.get_profile().postal_code,
+            #'postal_city'    : u.get_profile().postal_city,
+            #'postal_country' : u.get_profile().postal_country,
+            'signed_in'      : True,
+            'form'           : form,
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
     # if no session, use a standard context
     else:
-        render_to_response('index.html', locals())
+        t = loader.get_template('index.html')
+        context = Context({ })
+        return HttpResponse(t.render(context))
 
+
+##
+# Save the user's profile.
+def save_profile(request):
+    t = loader.get_template('index.html')
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES)
+        t = loader.get_template('profile.html')
+        context = Context({
+            'username'       : request.POST['user'],
+            'fname'          : request.POST['fname'],
+            'sname'          : request.POST['sname'],
+            'email'          : request.POST['email'],
+            'email2'         : request.POST['email2'],
+            'passwd'         : request.POST['passwd'],
+            'pass2'          : request.POST['pass2'],
+            'user_exists'    : True,
+            'form'           : form
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
+
+        # save also avatar picture, if available
+        if form.is_valid():
+            handle_uploaded_profile_pic(request.FILES['picture'], request.POST['user'] + '.jpg')
+        
+        # save all the data from the POST into the database
+        context = Context({
+            'signed_in' : True,
+            'user'      : request.POST['user'],
+        })
+        u = User(
+            username       = request.POST['user'],
+            first_name     = request.POST['fname'],
+            last_name      = request.POST['sname'],
+            email          = request.POST['email'],
+            password       = hashlib.sha1(request.POST['passwd']).hexdigest(),
+        )
+        u.save()
+
+        # redirect the user to the home page (already logged-in)
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
+  
 
 ##
 # Show a 'foo' page telling that your password has been sent to your email.
@@ -302,3 +361,18 @@ def forgot_password(request):
         t = loader.get_template('forgot_password.html')
         context = Context({ })
         return HttpResponse(t.render(context))
+
+
+##
+# Handle an uploaded file.
+#
+# This function does not only save a file but also do other checks (e.g. picture
+# size and resolution). TODO: this is not yet implemented!
+#
+# @param f File to be handled.
+# @param n Name of the file.
+def handle_uploaded_profile_pic(f, n):
+    fo = open('web/static/images/users/' + n, 'wb+')
+    for chunk in f.chunks():
+        fo.write(chunk)
+    fo.close()

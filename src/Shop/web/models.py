@@ -20,12 +20,13 @@ import math
 # postal_city      The city.
 # postal_country   The country.
 class UserProfile( models.Model ):
-    user           = models.ForeignKey( User, unique=True )
-    picture        = models.CharField( max_length=256 )
-    postal_address = models.CharField( max_length=160 )
-    postal_code    = models.CharField( max_length=5 )
-    postal_city    = models.CharField( max_length=20 )
-    postal_country = models.CharField( max_length=20 )
+    #user           = models.ForeignKey( User, unique=True )
+    user           = models.OneToOneField( User )
+    picture        = models.CharField(  max_length=256 )
+    postal_address = models.CharField(  max_length=160 )
+    postal_code    = models.CharField(  max_length=5 )
+    postal_city    = models.CharField(  max_length=20 )
+    postal_country = models.CharField(  max_length=20 )
     
     def get_user(self):
         return self.__user
