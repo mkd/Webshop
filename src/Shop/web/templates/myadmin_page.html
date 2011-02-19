@@ -7,6 +7,8 @@
 
 {% block main_content %}
     <h1>Administrative Functions</h1>
+    session id = {{ request.session.id }}
+    session user = {{ request.session.user }}
     <ul id="admin">
         <li onclick="window.location='/myadmin_products'"><a href="/myadmin_products">Administrate products</a></li>
         <li onclick="window.location='/myadmin_categories'"><a href="/myadmin_categories">Administrate categories</a></li>

@@ -139,7 +139,7 @@ class Tag(models.Model):
 # average rating  gets the average rating of all users for the product (a jt table is necessary to get user-table relation)
 
 class Product(models.Model):
-    tag             = models.ManyToManyField( Tag, blank=True)
+    tags            = models.ManyToManyField( Tag, blank=True)
     category        = models.ManyToManyField(Category, blank=True)
     name            = models.CharField( max_length=20 )
     description     = models.CharField( max_length=500, default = '' )   

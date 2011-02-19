@@ -50,3 +50,14 @@ class ProfileForm(forms.Form):
     postal_code     = forms.CharField( max_length=5 )
     postal_city     = forms.CharField( )
     postal_country  = forms.CharField( )
+
+
+##
+# Form to add a new product.
+class AddProductForm(forms.Form):
+    picture         = forms.FileField()
+    name            = forms.CharField( max_length=20 )
+    desc            = forms.CharField( max_length=500, widget=forms.Textarea )
+    price           = forms.IntegerField( min_value=1 )
+    units           = forms.IntegerField( min_value=0 )
+    tags            = forms.CharField( max_length=64 )

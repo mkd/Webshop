@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %} Administrative Pages -- Products {% endblock %}
+{% block extra_head %}
+	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
+{% endblock %}
+
+{% block main_content %}
+    <h1>Administrate Products</h1>
+    <div class="functions">
+        <a href="/myadmin_add_product">Add product</a>
+        {% ifnotequal products_no 0 %}
+            |
+            <a href="/myadmin_delete_products">Delete selected products</a>
+        {% endifnotequal %}
+    </div>
+    {% ifequal products_no 0 %}
+        <div class="error">There are no products in the system!</div>
+    {% else %}
+        {% for p in products %}
+        <a href="/edit_product/{{ p.id }}">product id={{ p.id }}</a>
+        <br />
+        {% endfor %}
+    {% endifequal %}
+{% endblock %}

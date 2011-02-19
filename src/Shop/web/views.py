@@ -58,6 +58,9 @@ def myadmin_page(request):
         f.close()
         # if passwords match, enter the administrative page
         if hashlib.sha1(request.POST['pass']).hexdigest() == masterpass:
+            # FIXME: these session variables are not stored!
+            request.session['id'] = -1
+            request.session['user'] = 'superuser'
             t = loader.get_template('myadmin_page.html')
             context = Context({
                 'login_failed' : False,
@@ -70,6 +73,29 @@ def myadmin_page(request):
             })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
+
+
+##
+# Render the products administration page.
+def myadmin_products(request):
+    products = Product.objects.all()
+    t = loader.get_template('myadmin_products.html')
+    context = Context({
+        'products'    : products,
+        'products_no' : len(products),
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to add a new product.
+def myadmin_add_product(request):
+    form = AddProductForm(request.POST)
+    t = loader.get_template('myadmin_add_product.html')
+    context = Context({
+        'form': form,
+    })
+    return HttpResponse(t.render(context))
    
     
 ##
