@@ -17,5 +17,6 @@ urlpatterns = patterns('',
     (r'^profile$', 'web.views.profile'),
     (r'^forgot_password$', 'web.views.forgot_password'),
     (r'^save_profile$', 'web.views.save_profile'),
-    (r'^myadmin$', 'web.views.myadmin')
+    (r'^myadmin$', 'web.views.myadmin'),
+    (r'^myadmin_page$', 'web.views.myadmin_page')
 )

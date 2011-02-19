@@ -1,0 +1,53 @@
+/**
+ * CSS Stylesheet for administrative pages.
+ * 
+ * Updated on 20.02.2011.
+ *
+ */
+ul#admin
+{
+    margin:     0 auto;
+}
+
+ul#admin li
+{
+    /* background */
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#feffef', endColorstr='#cfcfcf'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#fef), to(#cfcfcf)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #fef,  #cfcfcf); /* for firefox 3.6+ */
+
+    /* border */
+	border:                 solid 1px #b4b4b4;
+	-webkit-border-radius:  10px;
+	-moz-border-radius:     10px;
+	border-radius:          10px;
+
+    list-style:             none;
+    margin:                 1em auto;
+    padding:                2em;
+}
+
+ul#admin li:hover
+{
+    cursor:                 pointer;
+
+    /* background */
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#fbffbf', endColorstr='#cfcfcf'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#fbf), to(#cfcfcf)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #fbf,  #cfcfcf); /* for firefox 3.6+ */
+
+    /* border */
+	border:                 solid 1px #b4b4b4;
+	-webkit-border-radius:  10px;
+	-moz-border-radius:     10px;
+	border-radius:          10px;
+
+    list-style:             none;
+    margin:                 1em auto;
+    padding:                2em;
+}
+
+ul#admin li a
+{
+    text-decoration:        none;
+}

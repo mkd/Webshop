@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 
 ### necessary models (other than Django's) ###
 from models import Category, Product, Comment, User, UserProfile, CartProduct
-from forms import CommentForm, SearchForm, RegisterForm, ProfileForm
+from forms import *
 import datetime, hashlib, os
  
 
@@ -20,31 +20,56 @@ import datetime, hashlib, os
 ##
 # Render the home page. 
 def index(request):
-    template = loader.get_template('index.html')
+    t = loader.get_template('index.html')
     categories = Category.objects.all()
     best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
     searchForm = SearchForm()
     
-    # check for an existing session
-    if request.session.get('id', False):
-        context = Context({
-            'user'        : User.objects.get(id=request.session.get('id')).username,
-            'categories'  : categories,
-            'products'    : best_products,
-            'form'        : searchForm,
-        })
-    # if no session, use a standard context
-    else:
-        context = Context({
-            'user'        : None,
-            'categories'  : categories,
-            'products'    : best_products,
-            'form'        : searchForm,
-        })
+    context = Context({
+        'categories'  : categories,
+        'products'    : best_products,
+        'form'        : searchForm,
+    })
 
     # render the home page
     context.update(csrf(request))
-    return HttpResponse(template.render(context))
+    return HttpResponse(t.render(context))
+
+
+##
+# Ask the user for the master password, in order to enter the administrative
+# pages.
+def myadmin(request):
+    t = loader.get_template('myadmin.html')
+    form = AdminForm(request.POST)
+    context = RequestContext(request, {
+        'form' : form
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render the administrative page, after the master password has been entered
+# correctly.
+def myadmin_page(request):
+    if request.method == 'POST':
+        f = open('web/master.passwd', 'r')
+        masterpass = f.readline().rstrip()
+        f.close()
+        # if passwords match, enter the administrative page
+        if hashlib.sha1(request.POST['pass']).hexdigest() == masterpass:
+            t = loader.get_template('myadmin_page.html')
+            context = Context({
+                'login_failed' : False,
+            })
+        # if passwords do not match, go back and place an error
+        else:
+            t = loader.get_template('myadmin.html')
+            context = Context({
+                'login_failed' : True,
+            })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
    
     
 ##
@@ -54,10 +79,12 @@ def product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     comments = Comment.objects.filter(product=product_id).order_by('timestamp')
     form = CommentForm()
-    
+   
+    # increment the number of visits to the product 
     product.visit_count +=1;
     product.save()
-    
+   
+    # show the product view 
     context = Context({
         'product'  : product,
         'comments' : comments,
@@ -229,7 +256,8 @@ def login(request):
     p = u.password
     # user and password match
     if u.password == hashlib.sha1(request.POST['pass']).hexdigest():
-        request.session['id'] = u.id
+        request.session['id']   = u.id
+        request.session['user'] = u.username
         t = loader.get_template('index.html')
         context = Context({
             'user': request.POST['user'],

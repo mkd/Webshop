@@ -4,7 +4,7 @@
 
 {% block main_content %}
     {% if signed_in %}
-        <h2>Welcome {{ user }} </h2>
+        <h2>Welcome {{ request.session.user }} </h2>
     {% else %}
         <h2>Welcome to Webshop</h2>
     {% endif %}

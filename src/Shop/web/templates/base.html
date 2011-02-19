@@ -34,7 +34,7 @@
 					<li id="nav-separator"></li>
 				
                     {% if request.session.id %}
-                        <li><a href="#">{{ user }}</a> 
+                        <li><a href="#">{{ request.session.user }}</a> 
                             <ul> 
                                 <li><a href="#">My cart</a></li> 
                                 <li><a href="/profile">My profile</a></li> 

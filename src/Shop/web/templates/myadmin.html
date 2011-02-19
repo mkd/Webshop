@@ -14,7 +14,7 @@
         {% if login_failed %}
             <div class="error">Master password incorrect!</div>
         {% endif %}
-        <form method="post" action="/login">
+        <form method="post" action="/myadmin_page">
         {% csrf_token %}
         <tr>
             <td>
