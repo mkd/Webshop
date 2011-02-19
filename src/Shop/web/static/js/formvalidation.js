@@ -27,6 +27,11 @@ $(document).ready(function()
                 required:  true
             },
 
+            pass:
+            {
+                required:  true
+            },
+
             pass2:
             {
                 required:  true
