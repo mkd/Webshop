@@ -14,12 +14,14 @@ import math
 # Adds fields to manage the postal information of the user.
 #
 # user             references the built in user class of django.
+# picture          path to the static file containing the user profile's picture
 # postal_address   The street, number and flat to deliver the product.
 # postal_code      The zip or postal code.
 # postal_city      The city.
 # postal_country   The country.
 class UserProfile( models.Model ):
     user           = models.ForeignKey( User, unique=True )
+    picture        = models.CharField( max_length=256 )
     postal_address = models.CharField( max_length=160 )
     postal_code    = models.CharField( max_length=5 )
     postal_city    = models.CharField( max_length=20 )

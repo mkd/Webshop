@@ -238,3 +238,28 @@ def register(request):
 
         # redirect the user to the home page (already logged-in)
         return HttpResponseRedirect(t.render(context))
+
+
+##
+# Render the user profile page.
+def profile(request):
+    # check for an existing session
+    if request.session.get('id', False):
+        t = loader.get_template('profile.html')
+
+        # obtain the data from the user and display his/her profile
+        u = UserProfile.objects.get(id=request.session.get('id'))
+        context = Context({
+            'picture'        : u.picture,
+            'first_name'     : u.first_name,
+            'last_name'      : u.last_name,
+            'email'          : u.email,
+            'postal_address' : u.postal_address,
+            'postal_code'    : u.postal_code,
+            'postal_city'    : u.postal_city,
+            'postal_country' : u.postal_country,
+        })
+        return HttpResponseRedirect(t.render(context))
+    # if no session, use a standard context
+    else:
+        render_for_response('index.html', locals())

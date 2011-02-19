@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %} Registration Form {% endblock %}
+{% block title %} My Profile {% endblock %}
 
 
 {% block main_content %}
-    {% block registration_form %}
+    {% block profile_form %}
         <h1>Register now</h1>
-        <form method="post" action="/register">
+        <form method="post" action="/save_profile">
         {% csrf_token %}
         <table>
         <tr>
@@ -22,7 +22,7 @@
 	        <label for="fname">First name:</label>
             </td>
             <td>
-            <input type="text" id="fname" name="fname" maxlength="16" />
+            <input type="text" id="fname" name="fname" maxlength="16" value="{{ first_name }}" />
             </td>
         </tr>
         <tr>
@@ -30,7 +30,7 @@
 	        <label for="sname">Surname:</label>
             </td>
             <td>
-            <input type="text" id="sname" name="sname" maxlength="16" />
+            <input type="text" id="sname" name="sname" maxlength="16" value="{{ last_name }}" />
             </td>
         </tr>
         <tr>
@@ -38,7 +38,7 @@
 	        <label for="user">Username:</label>
             </td>
             <td>
-            <input type="text" id="user" name="user" maxlength="16" />
+            {{ user }}
             </td>
         </tr>
         <tr>
@@ -62,28 +62,44 @@
 	        <label for="email">Email:</label>
             </td>
             <td>
-            <input type="text" id="email" name="email" maxlength="32" />
+            <input type="text" id="email" name="email" maxlength="32" value="{{ email }}" />
             </td>
         </tr>
         <tr>
             <td>
-	        <label for="pass2">Repeat email:</label>
+	        <label for="address">Address:</label>
             </td>
             <td>
-            <input type="text" id="email2" name="email2" maxlength="32" />
+                <textarea id="address" name="address" rows="2" cols="32">{{ postal_address }}</textarea>
             </td>
         </tr>
         <tr>
-            <td colspan="2">
-                You will be able to set more detailed information (e.g. delivery
-                address) in your user profile, once you are registered and
-                logged in.
+            <td>
+	        <label for="postal_code">Postal code:</label>
+            </td>
+            <td>
+            <input type="text" id="postal_code" name="postal_code" maxlength="5" value="{{ postal_code }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="postal_city">City:</label>
+            </td>
+            <td>
+            <input type="text" id="postal_city" name="postal_city" maxlength="24" value="{{ postal_city }}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="postal_country">Country:</label>
+            </td>
+            <td>
+            <input type="text" id="postal_country" name="postal_country" maxlength="24" value="{{ postal_country }}" />
             </td>
         </tr>
         <tr>
             <td colspan="2" align="right">
-                <input type="submit" name="submit" value="Register" />
-                <input type="reset" value="Clear" />
+                <input type="submit" name="submit" value="Save" />
             </td>
         </tr>
         </table>
