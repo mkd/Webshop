@@ -1,25 +1,43 @@
+from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import Context, loader
+from django.contrib.auth import authenticate
+from django.template import Context, RequestContext, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
-from models import Category, Product, Comment, User
-from forms import CommentForm, SearchForm
-import datetime
+
+from models import Category, Product, Comment, User, UserProfile
+from forms import CommentForm
+import datetime, hashlib
 
 ##
-# Render  the index page. 
+# Render the home page. 
 def index(request):
-    template = loader.get_template('index.html')
     
+    template = loader.get_template('index.html')
     categories = Category.objects.all()
     best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
     searchForm = SearchForm()
     
-    context = Context({
-        'categories'  : categories,
-        'products'    : best_products,
-        'form'        : searchForm,
-    })
+    # check for an existing session
+    if request.session.get('id', False):
+        context = Context({
+            'signed_in'   : True,
+            'user'        : User.objects.get(id=request.session.get('id')).username,
+            'categories'  : categories,
+            'products'    : best_products,
+            'form'        : searchForm,
+        })
+    # if no session, use a standard context
+    else:
+        context = Context({
+            'signed_in'   : False,
+            'user'        : None,
+            'categories'  : categories,
+            'products'    : best_products,
+            'form'        : searchForm,
+        })
+
+    # render the home page
     context.update(csrf(request))
     return HttpResponse(template.render(context))
     
@@ -133,17 +151,113 @@ def search(request):
 # Render a simple registration form (sign up)
 def signup(request):
     template = loader.get_template('signup.html')
-    context = Context({
-        'latest_poll_list': 'jarr',
-    })
+    context = RequestContext(request, { })
     return HttpResponse(template.render(context))
 
 
 ##
 # Render a simple login form (sign in)
 def signin(request):
-    template = loader.get_template('signin.html')
-    context = Context({
-        'latest_poll_list': 'jarr',
+    t = loader.get_template('signin.html')
+    context = RequestContext(request, { })
+    return HttpResponse(t.render(context))
+
+
+##
+# Perform the actual login.
+#
+# This function checks the user and password against the users in the database
+# and tries to log in. If successful, the user is redirected to the home page,
+# otherwise an error is displayed.
+def login(request):
+    u = User.objects.get(username=request.POST['user'])
+    p = u.password
+    # user and password match
+    if u.password == hashlib.sha1(request.POST['pass']).hexdigest():
+        request.session['id'] = u.id
+        t = loader.get_template('index.html')
+        context = Context({
+            'user': request.POST['user'],
+            'pass': request.POST['pass'],
+            'stored_pass': u.password,
+            'signed_in' : True,
+            'login_failed' : False,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
+    # login failed
+    else:
+        t = loader.get_template('signin.html')
+        context = Context({
+            'user': None,
+            'signed_in' : False,
+            'login_failed': True,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
+
+
+##
+# Close the session for an user.
+def signout(request):
+    t = loader.get_template('index.html')
+    context = RequestContext(request, { 
+        'user': None,
+        'signed_in': False,
     })
-    return HttpResponse(template.render(context))
+    try:
+        del request.session['id']
+    except KeyError:
+        pass
+    return HttpResponse(t.render(context))
+
+
+##
+# Add a new user.
+def register(request):
+    t = loader.get_template('index.html')
+    if request.method == 'POST':
+        context = Context({
+            'user': request.POST['user'],
+            'pass': request.POST['pass'],
+            'signed_in' : True,
+            'login_failed' : False,
+        })
+        
+        # save all the data from the POST into the database
+        u = User(
+            username       = request.POST['user'],
+            first_name     = request.POST['fname'],
+            last_name      = request.POST['sname'],
+            email          = request.POST['email'],
+            password       = hashlib.sha1(request.POST['pass']).hexdigest(),
+        )
+        u.save()
+
+        # redirect the user to the home page (already logged-in)
+        return HttpResponseRedirect(t.render(context))
+
+
+##
+# Render the user profile page.
+def profile(request):
+    # check for an existing session
+    if request.session.get('id', False):
+        t = loader.get_template('profile.html')
+
+        # obtain the data from the user and display his/her profile
+        u = UserProfile.objects.get(id=request.session.get('id'))
+        context = Context({
+            'picture'        : u.picture,
+            'first_name'     : u.first_name,
+            'last_name'      : u.last_name,
+            'email'          : u.email,
+            'postal_address' : u.postal_address,
+            'postal_code'    : u.postal_code,
+            'postal_city'    : u.postal_city,
+            'postal_country' : u.postal_country,
+        })
+        return HttpResponseRedirect(t.render(context))
+    # if no session, use a standard context
+    else:
+        render_for_response('index.html', locals())
