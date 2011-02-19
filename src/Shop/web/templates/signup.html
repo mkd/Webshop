@@ -7,12 +7,15 @@
 
 {% block title %} Registration Form {% endblock %}
 
-
-
 {% block main_content %}
     {% block registration_form %}
         <h1>Register now</h1>
         <form id="register_form" method="post" action="/register">
+        {% if user_exists %}
+            <div class="error">Username or email already exist in the
+            system! Please pick a different username and make sure your email
+            address is correct.</div>
+        {% endif %}
         {% csrf_token %}
         <table>
         <tr>
