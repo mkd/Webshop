@@ -59,9 +59,9 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 # icon        string with the path to the icon associated to the category
 # parent_id   ID of the parent category, if any (i.e. subcategory)
 class Category(models.Model):
-    name        = models.CharField( max_length=20, blank = False )
-    description = models.CharField( max_length=100, blank=True )
-    icon        = models.CharField( max_length=100, default = 'images/categories/unknown.png' )
+    name        = models.CharField( max_length=32, blank = False )
+    description = models.CharField( max_length=256, blank=True )
+    icon        = models.CharField( max_length=256, default = 'images/products/unknown.png' )
     #parent_id   = models.ForeignKey(Category, default = -1) 
 
     def __unicode__(self):
