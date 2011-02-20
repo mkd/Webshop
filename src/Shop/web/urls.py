@@ -28,4 +28,8 @@ urlpatterns = patterns('',
     (r'^myadmin_users$', 'web.views.myadmin_users'),
     (r'^myadmin_orders$', 'web.views.myadmin_orders'),
     (r'^myadmin_add_product', 'web.views.myadmin_add_product'),
+    (r'^categoryNew$', 'web.views.render_new_category'),
+    (r'^categoryList$', 'web.views.render_list_category'),
+    (r'^categoryInsert$', 'web.views.insert_category'),
+    (r'^categoryDelete', 'web.views.delete_selected_categories'),  
 )

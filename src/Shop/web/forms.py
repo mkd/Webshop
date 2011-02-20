@@ -61,3 +61,11 @@ class AddProductForm(forms.Form):
     price           = forms.IntegerField( min_value=1 )
     units           = forms.IntegerField( min_value=0 )
     tags            = forms.CharField( max_length=64 )
+ 
+ 
+##
+# Form to add a new category.  
+class NewCategoryForm(forms.Form):
+    name = forms.CharField(label=u'Category Name', max_length=20, widget=forms.TextInput) 
+    description = forms.CharField(label=u'Category Description', max_length=100, widget=forms.Textarea)
+    icon = forms.CharField(label=u'Directory', widget=forms.TextInput)
