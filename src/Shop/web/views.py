@@ -154,7 +154,7 @@ def add_product(request):
         p.save()
 
         # save icon
-        handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id))
+        handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id) + 'jpg')
 
         # redirect the products management page
         t = loader.get_template('myadmin_products.html')
@@ -682,9 +682,34 @@ def insert_category(request):
     context.update(csrf(request))
     return HttpResponse(template.render(context))
 
+
 ##
-# Delete selected categories.
-def delete_selected_categories(request):
+# Delete a set of products.
+def deleteProducts(request):
+    t = loader.get_template('myadmin_products.html')
+
+    # delete products
+    # note: comments are not necessarily deleted, because the user miht want to
+    # check a comment he or she wrote in the past (even if the product does not
+    # exist anymore)
+    if request.method == 'POST':
+        products = request.POST.getlist('product_list')
+        for p in products:
+            product = Product.objects.get(pk=p)
+            product.delete()
+            # also delete the picture of the product
+            os.remove('static/images/products/' + p + '.jpg')
+
+    # return to the products page
+    products = Category.objects.all()
+    context = RequestContext(request, {
+        'categories':  products,
+    })
+    return HttpResponse(t.render(context))
+
+##
+# Delete a set of categories.
+def deleteCategories(request):
     t = loader.get_template('myadmin_categories.html')
 
     # delete categories and set their products orphaned 
@@ -701,6 +726,8 @@ def delete_selected_categories(request):
                 p.category = -1
                 p.save()
             category.delete()
+            # also delete the picture of the category
+            os.remove('static/images/categories/' + p.id + '.jpg')
 
     categories = Category.objects.all()
     context = RequestContext(request, {
