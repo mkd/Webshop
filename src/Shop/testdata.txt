@@ -19,3 +19,6 @@ INSERT INTO "web_product" VALUES(2,'Manolos Sommer','Hand-made manolos semi-sand
 INSERT INTO "web_product" VALUES(3,'Nexus S','Google''s Android flaghsip phone, the Nexus S','/static/images/products/nexusS.png',499.0,25,0,0,0,0,0);
 INSERT INTO "web_product" VALUES(4,'Samsung Galaxy S','Most sold Samsung Galaxy S, with Android Froyo 2.2.1','/static/images/products/galaxyS.png',399.0,50,0,0,0,0,0);
 INSERT INTO "web_product" VALUES(5,'Samsung Galaxy S II','Second version of the most sold Samsung Galaxy S, with Android Gingerbread 2.3.3','/static/images/products/galaxyS2.jpg',599.0,5,0,0,0,0,0);
+
+INSERT INTO "web_product" VALUES(6,'Fender Telecaster Classic','Classic Telecaster from Fender (MEX)','/static/images/products/telecaster.gif',1340.0,16,0,0,0,0,0);
+INSERT INTO "web_product" VALUES(7,'Gibson SG','Gibson SG, plain model with 6 strings','/static/images/products/gibson_sg.jpg',899.0,4,0,0,0,0,0);
