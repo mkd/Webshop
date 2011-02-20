@@ -34,7 +34,10 @@
 					<li id="nav-separator"></li>
 				
                     {% if request.user.is_authenticated %}
-                        <li><a href="#">{{ request.user.username }}</a> 
+                        {% if request.user.is_staff %}
+                            <li><a href="/myadmin">Administration</a></li>
+                        {% endif %}
+                        <li><a href="/profile">{{ request.user.username }}</a> 
                             <ul> 
                                 <li><a href="/cart">My cart</a></li> 
                                 <li><a href="/profile">My profile</a></li> 
