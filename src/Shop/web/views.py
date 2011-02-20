@@ -336,15 +336,15 @@ def comment(request, product_id):
     if request.method == 'POST':
         form = CommentForm(request.POST)
         
-        if form.is_valid():
+        if form.is_valid() and request.user.is_authenticated():
             product = get_object_or_404(Product, id=product_id)
             user_id = get_object_or_404(User, id=request.POST['user'])
-            text = form.cleaned_data['comment']
-            reply = Comment.objects.get(id=request.POST['in_reply'])
-    
+            text = form.cleaned_data['comment']         
+            reply = request.POST['in_reply']
             product.comment_count +=1;
             
-            if reply:
+            if reply != '0':
+                reply = Comment.objects.get(id=reply)
                 new_comment = Comment(product = product, 
                                       user = user_id,
                                       timestamp = datetime.datetime.now(),

@@ -89,7 +89,8 @@ function showReplyBox(comment){
 							
 							<cite><strong>{{ comment.user.username }}</strong> on {{ comment.timestamp }}</cite>
 							<div class="rate" id="comment-rate-{{ comment.id }}">
-								<a onclick="showReplyBox('{{ comment.id }}');">Reply</a> | {{ comment.positives }} <img src="/static/images/up.png" onclick="rate({{ comment.id }},1);" />&nbsp;
+								{% if user %}<a onclick="showReplyBox('{{ comment.id }}');">Reply</a> | {% endif %} {{ comment.positives }} 
+								<img src="/static/images/up.png" onclick="rate({{ comment.id }},1);" />&nbsp;
 								<img src="/static/images/down.png" onclick="rate({{ comment.id }},0);" /> {{ comment.negatives }}
 							</div>
 							
@@ -97,6 +98,7 @@ function showReplyBox(comment){
 							<div id="com_rating">rate comment</div>-->
 						</div>
 						
+						{% if user %}
 						<div class="write_reply" id="comment_reply_box_{{ comment.id }}">
 							<form action="/product/{{ product.id }}/comment/" method="post">
 								{% csrf_token %}
@@ -106,6 +108,7 @@ function showReplyBox(comment){
 							<input type="submit" value="Post" />
 							</form>
 						</div>
+						{% endif %}
 						
 					{% endfor %}
 				</div>
@@ -116,7 +119,7 @@ function showReplyBox(comment){
 						{% csrf_token %}
 						{{ form.as_p }}
 						<input type="hidden" name="user" value="1"/>
-						<input type="hidden" name="in_reply" value=""/>
+						<input type="hidden" name="in_reply" value="0"/>
 					<input type="submit" value="Post" />
 					</form>
 				</div>
