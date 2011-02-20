@@ -334,14 +334,15 @@ def rateComment(request, comment_id, option):
 ### products pages ###
 ##
 # Render a page with all the products of a specific category. 
-def category(request, category_name):
+def category(request, category_id):
     template = loader.get_template('list.html')
-    thisCategorie = get_object_or_404(Category, name=category_name)
+    thisCategory = get_object_or_404(Category, id=category_id)  
     categories = Category.objects.all()
-    best_products = Product.objects.filter(category=thisCategorie.id).filter(stock_count__gt=0).order_by('-average_rating')[:10]
-    
+    best_products = Product.objects.filter(category=thisCategory.id).filter(stock_count__gt=0).order_by('-average_rating')[:10]
+    message = "Products on " + thisCategory.name
     context = RequestContext(request, {
-        'this' : thisCategorie,
+        'message' : message,
+        'this' : thisCategory,
         'categories'  : categories,
         'products'    : best_products,
     })

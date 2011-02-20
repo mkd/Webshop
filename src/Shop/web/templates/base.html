@@ -36,11 +36,11 @@
                     {% if request.user.is_authenticated %}
                         <li><a href="#">{{ request.user.username }}</a> 
                             <ul> 
-                                <li><a href="#">My cart</a></li> 
+                                <li><a href="/cart">My cart</a></li> 
                                 <li><a href="/profile">My profile</a></li> 
                             </ul> 
                         </li> 
-                        <li><a href="#"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
+                        <li><a href="/cart"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
                     {% else %}
 					    <li><a href="/signup">Sign up</a></li>
                     {% endif %}
@@ -52,7 +52,7 @@
 		  			<div id="side_bar">
 						<ul id="side_bar">
 						{% for category in categories %}
-							<li><a href="/category/{{ category.name }}/">{{ category.name }}</a></li>
+							<li><a href="/category/{{ category.id }}/">{{ category.name }}</a></li>
 						{% endfor %}
 						</ul>	
 		  			</div>
