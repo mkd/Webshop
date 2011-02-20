@@ -3,7 +3,7 @@
 {% block title %} Welcome to Webshop! {% endblock %}
 
 {% block main_content %}
-    {% if signed_in %}
+    {% if request.session.id %}
         <h2>Welcome {{ request.session.user }} </h2>
     {% else %}
         <h2>Welcome to Webshop</h2>
