@@ -32,4 +32,5 @@ urlpatterns = patterns('',
     (r'^categoryList$', 'web.views.render_list_category'),
     (r'^categoryInsert$', 'web.views.insert_category'),
     (r'^categoryDelete', 'web.views.delete_selected_categories'),  
+    (r'^add_product', 'web.views.add_product'),
 )

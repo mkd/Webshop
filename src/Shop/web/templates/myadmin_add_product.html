@@ -10,12 +10,12 @@
 {% block main_content %}
     {% block new_product_form %}
         <h1>New Product</h1>
-        <form enctype="multipart/form-data" id="register_form" method="post" action="/register">
+        <form enctype="multipart/form-data" id="register_form" method="post" action="/add_product">
         {% csrf_token %}
         <table>
         <tr>
             <td colspan="2">
-                <img src="/static/images/categories/products/unknown.png" align="middle"
+                <img src="/static/images/products/unknown.png" align="middle"
                      height="64" id="picture_enabler"
                      style="cursor: pointer;" title="Add your own picture" />
                 <em>Click on the image to add a product picture</em>
