@@ -50,7 +50,7 @@ def cart(request):
         for product in userProducts:
             total += product.quantity * product.product.price
             
-        context = Context({
+        context = RequestContext(request, {
             'cart'  : userProducts,
             'total' : total,
         })
