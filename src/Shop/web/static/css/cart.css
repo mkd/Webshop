@@ -29,3 +29,28 @@ td.total
 	padding: 12px;
 	border-top: 1px solid #999;  
 }
+
+#checkout
+{
+	float: right;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 800;
+        
+	background: #d1d1d1; /* for non-css3 browsers */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#a1a1a1)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #ebebeb,  #a1a1a1); /* for firefox 3.6+ */
+ 
+	color: #444;
+	border-top: solid 1px #f8f8f8;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
+	
+	margin-top: -4px;
+	padding:  3px 10px;
+	-webkit-border-radius: 1.6em;
+	-moz-border-radius: 1.6em;
+}
