@@ -1,7 +1,7 @@
 ### necessary Django modules ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate
+from django.contrib.auth import *
 from django.template import Context, RequestContext, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
@@ -393,36 +393,19 @@ def signin(request):
 # This function checks the user and password against the users in the database
 # and tries to log in. If successful, the user is redirected to the home page,
 # otherwise an error is displayed.
-def login(request):
-    try:
-        u = User.objects.get(username=request.POST['user'])
-    except User.DoesNotExist:
-        t = loader.get_template('signin.html')
-        context = Context({
-            'login_failed' : True,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
-    p = u.password
-    # user and password match
-    if u.password == hashlib.sha1(request.POST['pass']).hexdigest():
-        request.session['id']   = u.id
-        request.session['user'] = u.username
+def try_login(request):
+    username = request.POST['user']
+    password = request.POST['pass']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request, user)
         t = loader.get_template('index.html')
-        context = Context({
-            'user': request.POST['user'],
-            'pass': request.POST['pass'],
-            'stored_pass': u.password,
-            'login_failed' : False,
-        })
-        context.update(csrf(request))
+        context = Context({ })
         return HttpResponse(t.render(context))
-    # login failed
     else:
         t = loader.get_template('signin.html')
-        context = Context({
-            'user': None,
-            'login_failed': True,
+        context = RequestContext(request, {
+            'login_failed' : True,
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
@@ -431,14 +414,9 @@ def login(request):
 ##
 # Close the session for an user.
 def signout(request):
+    logout(request)
     t = loader.get_template('index.html')
-    context = RequestContext(request, { 
-        'user': None,
-    })
-    try:
-        del request.session['id']
-    except KeyError:
-        pass
+    context = RequestContext(request, { })
     return HttpResponse(t.render(context))
 
 

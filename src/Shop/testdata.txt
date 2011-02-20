@@ -2,11 +2,11 @@ PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 
 INSERT INTO "auth_user" VALUES(1,'root','','','root@root.com','sha1$d670b$fe8b4129bc543c6c574f412343dd3c109a55ad99',1,1,1,'2011-02-19 16:04:34.605257','2011-02-19 11:05:18.395730');
-INSERT INTO "auth_user" VALUES(2,'claudio','Claudio','Camacho','claudiomkd@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:06:06.133204','2011-02-19 11:06:06.133218');
-INSERT INTO "auth_user" VALUES(3,'javi','Javier','Berlana','jberlana@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:07:06.133204','2011-02-19 11:06:06.133218');
-INSERT INTO "auth_user" VALUES(4,'furkan','Tercan','Furkan','furkan.tercan@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:08:06.133204','2011-02-19 11:06:06.133218');
-INSERT INTO "auth_user" VALUES(5,'pepe','José','Marchal','pepe@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:08:06.133204','2011-02-19 11:06:06.133218');
-COMMIT;
+INSERT INTO "auth_user" VALUES(2,'claudio','Claudio','Camacho','claudiomkd@gmail.com','sha1$f0eff$11e47da9f6da5613036289565491cd38122acac5',1,1,0,'2011-02-20 04:28:34','2011-02-20 04:28:34');
+INSERT INTO "auth_user" VALUES(3,'javi','Javier','Berlana','jberlana@gmail.com','sha1$12ba9$4b735be8601e783bbd859b4d21c1905a29e87375',1,1,0,'2011-02-20 04:29:19','2011-02-20 04:29:19');
+INSERT INTO "auth_user" VALUES(4,'furkan','Tercan','Furkan','furkan.tercan@gmail.com','sha1$86596$ab2a69399bab3626edff20ff06638daa7279f648',1,1,0,'2011-02-20 04:29:44','2011-02-20 04:29:44');
+INSERT INTO "auth_user" VALUES(5,'test1','Test User 1','','test@mail.fi','sha1$c792e$3b3d97b8087965751a78885fa8b18ce41921cb2f',0,1,0,'2011-02-20 04:30:06','2011-02-20 04:30:06');
+INSERT INTO "auth_user" VALUES(6,'test2','Test User 2','','test2@mail.ru','sha1$0f138$4190dde6ca78694fe2c58e16beeeb22f4c7ff5b6',0,1,0,'2011-02-20 04:30:38','2011-02-20 04:30:38');
 
 INSERT INTO "web_category" VALUES(1,'Shoes','','images/categories/shoes.png');
 INSERT INTO "web_category" VALUES(2,'Guitars','','images/categories/guitars.png');
@@ -22,3 +22,5 @@ INSERT INTO "web_product" VALUES(5,'Samsung Galaxy S II','Second version of the 
 
 INSERT INTO "web_product" VALUES(6,'Fender Telecaster Classic','Classic Telecaster from Fender (MEX)','/static/images/products/telecaster.gif',1340.0,16,0,0,0,0,0);
 INSERT INTO "web_product" VALUES(7,'Gibson SG','Gibson SG, plain model with 6 strings','/static/images/products/gibson_sg.jpg',899.0,4,0,0,0,0,0);
+
+COMMIT;
