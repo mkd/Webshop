@@ -31,5 +31,9 @@ urlpatterns = patterns('',
     (r'^categoryNew$', 'web.views.render_new_category'),
     (r'^categoryList$', 'web.views.render_list_category'),
     (r'^categoryInsert$', 'web.views.insert_category'),
-    (r'^categoryDelete', 'web.views.delete_selected_categories'),  
+    (r'^categoryDelete', 'web.views.delete_selected_categories'),
+    (r'^payment/success$', 'web.views.payment_success'), 
+    (r'^payment/success$', 'web.views.payment_error'),
+    (r'^payment/success$', 'web.views.payment_cancel'),
+    
 )
