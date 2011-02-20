@@ -63,8 +63,7 @@ class Category(models.Model):
     description = models.CharField( max_length=256, blank=True )
     icon        = models.CharField( max_length=256, default = 'images/categories/unknown.png' )
     #parent_id   = models.ForeignKey(Category, default = -1) 
-    selected    = False
-
+    
     def __unicode__(self):
         return self.name
     
