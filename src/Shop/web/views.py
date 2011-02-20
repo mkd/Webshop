@@ -192,11 +192,10 @@ def add_category(request):
 
 ##
 # Render a page to edit a product.
-# TODO: this is juast a copy paste from add product.
 def edit_product(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
-    context = Context({
+    form = EditProductForm(request.POST)
+    t = loader.get_template('myadmin_edit_product.html')
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -212,7 +211,7 @@ def product(request, product_id):
     
     if request.user.is_authenticated():
         user = request.user
-        context = Context({
+        context = RequestContext(request, {
             'user'     : user,
             'product'  : product,
             'comments' : comments,
@@ -220,7 +219,7 @@ def product(request, product_id):
         })
         
     else:
-        context = Context({
+        context = RequestContext(request, {
             'product'  : product,
             'comments' : comments,
             'form'     : form,
@@ -240,7 +239,7 @@ def product(request, product_id):
 def myadmin_categories(request):
     categories = Category.objects.all()
     t = loader.get_template('myadmin_categories.html')
-    context = Context({
+    context = RequestContext(request, {
         'categories'    : categories,
         'categories_no' : len(categories),
     })
@@ -265,7 +264,7 @@ def myadmin_add_category(request):
 def edit_category(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_edit_category.html')
-    context = Context({
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -277,33 +276,9 @@ def edit_category(request):
 def myadmin_orders(request):
     orders = Transaction.objects.all()
     t = loader.get_template('myadmin_orders.html')
-    context = Context({
+    context = RequestContext(request, {
         'orders'    : orders,
         'orders_no' : len(orders),
-    })
-    return HttpResponse(t.render(context))
-
-
-##
-# Render a page to add a new order.
-# TODO: this is juast a copy paste from add product.
-def myadmin_add_order(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_order.html')
-    context = Context({
-        'form': form,
-    })
-    return HttpResponse(t.render(context))
-
-
-##
-# Render a page to edit an order.
-# TODO: this is juast a copy paste from add product.
-def edit_order(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
-    context = Context({
-        'form': form,
     })
     return HttpResponse(t.render(context))
 
@@ -313,7 +288,7 @@ def edit_order(request):
 def myadmin_users(request):
     users = User.objects.all()
     t = loader.get_template('myadmin_users.html')
-    context = Context({
+    context = RequestContext(request, {
         'users'    : users,
         'users_no' : len(users),
     })
@@ -322,11 +297,10 @@ def myadmin_users(request):
 
 ##
 # Render a page to add a new user.
-# TODO: this is juast a copy paste from add product.
 def myadmin_add_user(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
-    context = Context({
+    form = AddUserForm(request.POST)
+    t = loader.get_template('myadmin_add_user.html')
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -334,11 +308,10 @@ def myadmin_add_user(request):
 
 ##
 # Render a page to edit a user.
-# TODO: this is juast a copy paste from add product.
 def edit_user(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
-    context = Context({
+    form = EditUserForm(request.POST)
+    t = loader.get_template('myadmin_edit_user.html')
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -433,7 +406,7 @@ def search(request):
             categories = Category.objects.all()            
             template = loader.get_template('list.html')
             message = "Search results for %s." % query
-            context = Context({
+            context = RequestContext(request, {
                 'message'     : message,
                 'categories'  : categories,
                 'products'    : products,
@@ -522,7 +495,7 @@ def register(request):
             check_email = None
         if check_username is not None or check_email is not None:
             t = loader.get_template('signup.html')
-            context = Context({
+            context = RequestContext(request, {
                 'username'       : request.POST['user'],
                 'fname'          : request.POST['fname'],
                 'sname'          : request.POST['sname'],
@@ -593,7 +566,7 @@ def save_profile(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES)
         t = loader.get_template('profile.html')
-        context = Context({
+        context = RequestContext(request, {
             'username'       : request.POST['user'],
             'fname'          : request.POST['fname'],
             'sname'          : request.POST['sname'],
@@ -612,7 +585,7 @@ def save_profile(request):
             handle_uploaded_profile_pic(request.FILES['picture'], request.POST['user'] + '.jpg')
         
         # save all the data from the POST into the database
-        context = Context({
+        context = RequestContext(request, {
             'user'      : request.POST['user'],
         })
         u = User(
@@ -662,7 +635,7 @@ def render_new_category(request):
     category = Category()
     form = NewCategoryForm()
 
-    context = Context({
+    context = RequestContext(request, {
         'category':  category,
         'categoryForm': form,
     })
@@ -702,7 +675,7 @@ def insert_category(request):
     category = Category()
     form = NewCategoryForm()
 
-    context = Context({
+    context = RequestContext(request, {
         'category':  category,
         'categoryForm': form,
     })
