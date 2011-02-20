@@ -96,6 +96,18 @@ def myadmin_add_product(request):
         'form': form,
     })
     return HttpResponse(t.render(context))
+
+
+##
+# Render a page to edit a product.
+# TODO: this is juast a copy paste from add product.
+def edit_product(request):
+    form = AddProductForm(request.POST)
+    t = loader.get_template('myadmin_add_product.html')
+    context = Context({
+        'form': form,
+    })
+    return HttpResponse(t.render(context))
    
     
 ##
@@ -118,6 +130,118 @@ def product(request, product_id):
     })
     context.update(csrf(request))
     return HttpResponse(template.render(context))
+
+
+##
+# Render the categories administration page.
+# TODO: this is just a copy paste from products
+def myadmin_categories(request):
+    products = Product.objects.all()
+    t = loader.get_template('myadmin_products.html')
+    context = Context({
+        'products'    : products,
+        'products_no' : len(products),
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to add a new category.
+# TODO: this is juast a copy paste from add product.
+def myadmin_add_category(request):
+    form = AddProductForm(request.POST)
+    t = loader.get_template('myadmin_add_product.html')
+    context = Context({
+        'form': form,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to edit a category.
+# TODO: this is juast a copy paste from add product.
+def edit_category(request):
+    form = AddProductForm(request.POST)
+    t = loader.get_template('myadmin_add_product.html')
+    context = Context({
+        'form': form,
+    })
+    return HttpResponse(t.render(context))
+
+
+
+##
+# Render the orders administration page.
+# TODO: this is just a copy paste from products
+def myadmin_orders(request):
+    products = Product.objects.all()
+    t = loader.get_template('myadmin_products.html')
+    context = Context({
+        'products'    : products,
+        'products_no' : len(products),
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to add a new order.
+# TODO: this is juast a copy paste from add product.
+def myadmin_add_order(request):
+    form = AddProductForm(request.POST)
+    t = loader.get_template('myadmin_add_product.html')
+    context = Context({
+        'form': form,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to edit an order.
+# TODO: this is juast a copy paste from add product.
+def edit_order(request):
+    form = AddProductForm(request.POST)
+    t = loader.get_template('myadmin_add_product.html')
+    context = Context({
+        'form': form,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render the users administration page.
+# TODO: this is just a copy paste from products
+def myadmin_users(request):
+    products = Product.objects.all()
+    t = loader.get_template('myadmin_products.html')
+    context = Context({
+        'products'    : products,
+        'products_no' : len(products),
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to add a new user.
+# TODO: this is juast a copy paste from add product.
+def myadmin_add_user(request):
+    form = AddProductForm(request.POST)
+    t = loader.get_template('myadmin_add_product.html')
+    context = Context({
+        'form': form,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to edit a user.
+# TODO: this is juast a copy paste from add product.
+def edit_user(request):
+    form = AddProductForm(request.POST)
+    t = loader.get_template('myadmin_add_product.html')
+    context = Context({
+        'form': form,
+    })
+    return HttpResponse(t.render(context))
 
 
 ##
@@ -447,7 +571,7 @@ def save_profile(request):
 
 ##
 # Show a 'foo' page telling that your password has been sent to your email.
-#def forgot_password(request):
+def forgot_password(request):
         t = loader.get_template('forgot_password.html')
         context = Context({ })
         return HttpResponse(t.render(context))

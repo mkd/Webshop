@@ -1,0 +1,9 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+
+INSERT INTO "auth_user" VALUES(1,'root','','','root@root.com','sha1$d670b$fe8b4129bc543c6c574f412343dd3c109a55ad99',1,1,1,'2011-02-19 16:04:34.605257','2011-02-19 11:05:18.395730');
+INSERT INTO "auth_user" VALUES(2,'claudio','Claudio','Camacho','claudiomkd@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:06:06.133204','2011-02-19 11:06:06.133218');
+INSERT INTO "auth_user" VALUES(3,'javi','Javier','Berlana','jberlana@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:07:06.133204','2011-02-19 11:06:06.133218');
+INSERT INTO "auth_user" VALUES(4,'furkan','Tercan','Furkan','furkan.tercan@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:08:06.133204','2011-02-19 11:06:06.133218');
+INSERT INTO "auth_user" VALUES(5,'pepe','José','Marchal','pepe@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:08:06.133204','2011-02-19 11:06:06.133218');
+COMMIT;
