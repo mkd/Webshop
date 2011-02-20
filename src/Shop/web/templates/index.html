@@ -3,8 +3,8 @@
 {% block title %} Welcome to Webshop! {% endblock %}
 
 {% block main_content %}
-    {% if request.session.id %}
-        <h2>Welcome {{ request.user.username }} !</h2>
+    {% if request.user.is_authenticated %}
+        <h2>Welcome {{ request.user.username }}!</h2>
     {% else %}
         <h2>Welcome to Webshop</h2>
     {% endif %}
@@ -32,6 +32,7 @@
 
     <p><br /></p>
 
+    {% if not request.user.is_authenticated %}
     <h2>Start shopping right now</h2>
     <p>
         If you already have an account on Webshop, just <a href="/signin">sign
@@ -42,6 +43,7 @@
         If you don't have yet an account on Webshop, <a href="/signup">sign up
         right now</a> and experience the joy of going social while shopping.
     </p>
+    {% endif %}
 
 	{{ block.super }}
 	

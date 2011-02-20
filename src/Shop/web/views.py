@@ -21,20 +21,29 @@ import datetime, hashlib, os
 ##
 # Render the home page. 
 def index(request):
-    t = loader.get_template('index.html')
-    categories = Category.objects.all()
-    best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
-    searchForm = SearchForm()
-    
-    context = Context({
-        'categories'  : categories,
-        'products'    : best_products,
-        'form'        : searchForm,
-    })
+    # build the page for the staff
+    if request.user.is_authenticated() and request.user.is_staff:
+        t = loader.get_template('myadmin_page.html')
+        context = Context({ })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
 
-    # render the home page
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+    # build the page for normal users
+    else:
+        t = loader.get_template('index.html')
+        categories = Category.objects.all()
+        best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
+        searchForm = SearchForm()
+        
+        context = Context({
+            'categories'  : categories,
+            'products'    : best_products,
+            'form'        : searchForm,
+        })
+
+        # render the home page
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
 
 
 ##

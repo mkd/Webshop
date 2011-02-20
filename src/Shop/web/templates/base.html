@@ -35,7 +35,7 @@
 					<li id="nav-separator"></li>
 				
                     {% if request.user.is_authenticated %}
-                        <li><a href="#">{{ request.session.user.username }}</a> 
+                        <li><a href="#">{{ request.user.username }}</a> 
                             <ul> 
                                 <li><a href="#">My cart</a></li> 
                                 <li><a href="/profile">My profile</a></li> 
