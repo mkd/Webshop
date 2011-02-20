@@ -11,7 +11,7 @@
   	</head> 
   	
   	<body>
-        <p>Session ID: '{{ request.user }}'</p>
+        <p>Session ID: '{{ request.session.session_key }}'</p>
   		<div id="wraper">
 	  		{% block header %}
 	  		<div id="nav-menu">
