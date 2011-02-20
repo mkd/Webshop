@@ -101,6 +101,7 @@ def myadmin_page(request):
             context = RequestContext(request, {
                 'login_failed' : False,
             })
+            
         # if passwords do not match, go back and place an error
         else:
             t = loader.get_template('myadmin.html')
@@ -161,6 +162,7 @@ def add_product(request):
             })
             context.update(csrf(request))
             return HttpResponse(t.render(context))
+            
         # if the form is not valid, return with an error
         else:
             t = loader.get_template('myadmin_add_product.html')
@@ -190,17 +192,27 @@ def product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     comments = Comment.objects.filter(product=product_id).order_by('timestamp')
     form = CommentForm()
+    
+    if request.user.is_authenticated():
+        user = request.user
+        context = Context({
+            'user'     : user,
+            'product'  : product,
+            'comments' : comments,
+            'form'     : form,
+        })
+        
+    else:
+        context = Context({
+            'product'  : product,
+            'comments' : comments,
+            'form'     : form,
+        })
    
     # increment the number of visits to the product 
     product.visit_count +=1;
     product.save()
-   
-    # show the product view 
-    context = Context({
-        'product'  : product,
-        'comments' : comments,
-        'form'     : form,
-    })
+
     context.update(csrf(request))
     return HttpResponse(template.render(context))
 
@@ -424,9 +436,11 @@ def search(request):
 def signup(request):
     template = loader.get_template('signup.html')
     form = RegisterForm()
+    categories = Category.objects.all()
     context = RequestContext(request,
     {
         'form': form,
+        'categories' : categories,
     })
     return HttpResponse(template.render(context))
 
@@ -435,7 +449,10 @@ def signup(request):
 # Render a simple login form (sign in)
 def signin(request):
     t = loader.get_template('signin.html')
-    context = RequestContext(request, { })
+    categories = Category.objects.all()
+    context = RequestContext(request, { 
+        'categories' : categories,
+    })
     return HttpResponse(t.render(context))
 
 
@@ -451,9 +468,8 @@ def try_login(request):
     user = authenticate(username=username, password=password)
     if user is not None:
         login(request, user)
-        t = loader.get_template('index.html')
-        context = RequestContext(request, { })
-        return HttpResponse(t.render(context))
+        return HttpResponseRedirect('/')      
+        
     else:
         t = loader.get_template('signin.html')
         context = RequestContext(request, {

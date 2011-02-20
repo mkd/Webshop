@@ -110,14 +110,17 @@ function showReplyBox(comment){
 					{% endfor %}
 				</div>
 				
+				{% if user %}
 				<div id="write_comment">
 					<form action="/product/{{ product.id }}/comment/" method="post">
 						{% csrf_token %}
 						{{ form.as_p }}
 						<input type="hidden" name="user" value="1"/>
+						<input type="hidden" name="in_reply" value=""/>
 					<input type="submit" value="Post" />
 					</form>
 				</div>
+				{% endif %}
 				
 				
 			</div>
