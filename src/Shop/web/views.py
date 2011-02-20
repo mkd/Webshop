@@ -98,13 +98,13 @@ def myadmin_page(request):
         # if passwords match, enter the administrative page
         if hashlib.sha1(request.POST['pass']).hexdigest() == masterpass:
             t = loader.get_template('myadmin_page.html')
-            context = Context({
+            context = RequestContext(request, {
                 'login_failed' : False,
             })
         # if passwords do not match, go back and place an error
         else:
             t = loader.get_template('myadmin.html')
-            context = Context({
+            context = RequestContext(request, {
                 'login_failed' : True,
             })
         context.update(csrf(request))
@@ -116,7 +116,7 @@ def myadmin_page(request):
 def myadmin_products(request):
     products = Product.objects.all()
     t = loader.get_template('myadmin_products.html')
-    context = Context({
+    context = RequestContext(request, {
         'products'    : products,
         'products_no' : len(products),
     })
@@ -128,10 +128,46 @@ def myadmin_products(request):
 def myadmin_add_product(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_add_product.html')
-    context = Context({
+    context = RequestContext(request, {
         'form': form,
     })
+    context.update(csrf(request))
     return HttpResponse(t.render(context))
+
+##
+# Add a product to the database.
+#
+# TODO: implement tags selection (drop-down list)
+def add_product(request):
+    t = loader.get_template('myadmin_add_product.html')
+    if request.method == 'POST':
+        form = AddProductForm(request.POST, request.FILES)
+        # if the form is valid, add the product
+        if form.is_valid():
+            # save all the data from the POST into the database
+            p = Product.objects.create(
+                name    = request.POST['name'],
+                description = request.POST['desc'],
+                price   = request.POST['price'],
+                stock_count = request.POST['units'],
+                #tags    = request.POST['tags'],
+            )
+            handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id))
+            p.save()
+
+            # redirect the user to the login page with a welcome
+            context = RequestContext(request, {
+                'product_added' : True,
+            })
+            context.update(csrf(request))
+            return HttpResponse(t.render(context))
+        # if the form is not valid, return with an error
+        else:
+            context = RequestContext(request, {
+                'product_added' : False,
+            })
+            context.update(csrf(request))
+            return HttpResponse(t.render(context))
 
 
 ##
@@ -186,7 +222,7 @@ def myadmin_categories(request):
 # TODO: this is juast a copy paste from add product.
 def myadmin_add_category(request):
     form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
+    t = loader.get_template('myadmin_add_category.html')
     context = Context({
         'form': form,
     })
@@ -198,7 +234,7 @@ def myadmin_add_category(request):
 # TODO: this is juast a copy paste from add product.
 def edit_category(request):
     form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
+    t = loader.get_template('myadmin_edit_category.html')
     context = Context({
         'form': form,
     })
@@ -223,7 +259,7 @@ def myadmin_orders(request):
 # TODO: this is juast a copy paste from add product.
 def myadmin_add_order(request):
     form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
+    t = loader.get_template('myadmin_add_order.html')
     context = Context({
         'form': form,
     })
@@ -468,7 +504,7 @@ def register(request):
 
         # save also avatar picture, if available
         if form.is_valid():
-            handle_uploaded_profile_pic(request.FILES['picture'], request.POST['user'] + '.jpg')
+            handle_uploaded_profile_pic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
         
         # save all the data from the POST into the database
         u = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
@@ -576,10 +612,11 @@ def forgot_password(request):
 # This function does not only save a file but also do other checks (e.g. picture
 # size and resolution). TODO: this is not yet implemented!
 #
+# @param d Directory where to store the picture.
 # @param f File to be handled.
 # @param n Name of the file.
-def handle_uploaded_profile_pic(f, n):
-    fo = open('web/static/images/users/' + n, 'wb+')
+def handle_uploaded_profile_pic(d, f, n):
+    fo = open('web/static/images/' + d + '/' + n, 'wb+')
     for chunk in f.chunks():
         fo.write(chunk)
     fo.close()
