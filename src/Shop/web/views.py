@@ -53,7 +53,7 @@ def myadmin(request):
 # correctly.
 def myadmin_page(request):
     if request.method == 'POST':
-        f = open('web/master.passwd', 'r')
+        f = open('static/master.passwd', 'r')
         masterpass = f.readline().rstrip()
         f.close()
         # if passwords match, enter the administrative page
