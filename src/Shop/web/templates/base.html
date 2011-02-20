@@ -11,7 +11,7 @@
   	</head> 
   	
   	<body>
-        <p>Session ID: '{{ request.session.session_key }}'</p>
+        <p>Session ID: '{{ request.user.is_authenticated }}'</p>
   		<div id="wraper">
 	  		{% block header %}
 	  		<div id="nav-menu">
@@ -26,7 +26,7 @@
 						</form>
 					</li>
 					
-	                {% if request.session.id %}
+	                {% if request.user.is_authenticated %}
 					    <li><a href="/signout">Sign out</a></li>
 	                {% else %}
 					    <li><a href="/signin">Sign in</a></li> 
@@ -34,8 +34,8 @@
 	                    
 					<li id="nav-separator"></li>
 				
-                    {% if request.session.id %}
-                        <li><a href="#">{{ request.session.user }}</a> 
+                    {% if request.user.is_authenticated %}
+                        <li><a href="#">{{ request.session.user.username }}</a> 
                             <ul> 
                                 <li><a href="#">My cart</a></li> 
                                 <li><a href="/profile">My profile</a></li> 

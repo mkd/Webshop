@@ -399,7 +399,7 @@ def try_login(request):
     if user is not None:
         login(request, user)
         t = loader.get_template('index.html')
-        context = Context({ })
+        context = RequestContext(request, { })
         return HttpResponse(t.render(context))
     else:
         t = loader.get_template('signin.html')
@@ -422,7 +422,7 @@ def signout(request):
 ##
 # Add a new user.
 def register(request):
-    t = loader.get_template('index.html')
+    t = loader.get_template('signin.html')
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         # check if the user already exists in the database
@@ -455,17 +455,17 @@ def register(request):
             handle_uploaded_profile_pic(request.FILES['picture'], request.POST['user'] + '.jpg')
         
         # save all the data from the POST into the database
-        context = Context({
-            'user'      : request.POST['user'],
-        })
         u = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
-        u = User(
-            first_name     = request.POST['fname'],
-            last_name      = request.POST['sname'],
-        )
+        u.is_staff   = False
+        u.first_name = request.POST['fname']
+        u.last_name  = request.POST['sname'],
         u.save()
 
-        # redirect the user to the home page (already logged-in)
+        # redirect the user to the login page with a welcome
+        context = RequestContext(request, {
+            'user'       : request.POST['user'],
+            'registered' : True,
+        })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
 
@@ -474,12 +474,12 @@ def register(request):
 # Render the user profile page.
 def profile(request):
     # check for an existing session
-    if request.session.get('id', False):
+    if request.user.is_authenticated():
         t = loader.get_template('profile.html')
         form = ProfileForm(request.POST, request.FILES)
 
         # obtain the data from the user and display his/her profile
-        u = User.objects.get(id=request.session.get('id'))
+        u = User.objects.get(id=request.user.id)
         context = Context({
             'picture'        : '/static/images/users/' + u.username + '.jpg',
             'user'           : u.username,
