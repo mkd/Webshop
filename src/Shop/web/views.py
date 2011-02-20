@@ -28,6 +28,7 @@ def index(request):
         context.update(csrf(request))
         return HttpResponse(t.render(context))
 
+
     # build the page for normal users
     else:
         t = loader.get_template('index.html')
