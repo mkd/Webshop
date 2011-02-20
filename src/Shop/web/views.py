@@ -48,6 +48,29 @@ def index(request):
 
 
 ##
+# Render the user cart page.    
+def cart(request, user_id):
+    print user_id
+    template = loader.get_template('cart.html')
+    user = get_object_or_404(User, id=user_id)
+    userProducts = CartProduct.objects.filter(user=user)
+    
+    total = 0
+    for product in userProducts:
+        total += product.quantity * product.product.price
+        
+    context = Context({
+        'cart'  : userProducts,
+        'total' : total,
+    })
+    context.update(csrf(request))
+    return HttpResponse(template.render(context))
+
+def deleteFromCart(request):
+    if request.method == 'POST':
+        element = request.POST['product']
+
+##
 # Ask the user for the master password, in order to enter the administrative
 # pages.
 def myadmin(request):
