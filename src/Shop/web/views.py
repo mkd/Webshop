@@ -654,16 +654,13 @@ def delete_selected_categories(request):
     template = loader.get_template('categoryList.html')
     
     if request.method == 'POST':
-        todeleteArray   = request.POST['categories']
-#        for todeleteCat in todeleteArray:
-#            if todeleteCat.
-#            todeleteCategory = Category.objects.get(pk=todeleteId)
-#            todeleteCategory.delete()
-    
+        category_list   = request.POST['categoryList']
+        for category_id in category_list:
+            category = Category.objects.get(pk=category_id)
+            category.delete()
+
     categories = Category.objects.all()
-    
     context = RequestContext(request, {
         'categories':  categories,
     })
-    context.update(csrf(request))
     return HttpResponse(template.render(context))

@@ -10,14 +10,13 @@
 {% block main_content %}
 <form action="categoryDelete" method="post">
 	{% csrf_token %}
-	<div id='products'>	
+	<div id='categories'>	
         <h2>Category List</h2>
 		{% for category in categories %}
 			<table>
 				<tr id='category'>
 					<td>
-<!--						<input type="checkbox" id='checkbox' name="categories[]" value="{{ category.id }}" />-->
-						<input type="checkbox" value="{{ category.to_delete }}" />
+						<input type="checkbox" value="{{ category.id }}" name="categories"/>
 					</td>
 					<td class="category" onclick="window.location.href='/category/{{ category.name }}'; ">
 						<a href="/category/{{ category.name }}/">{{ category.name }}</a>
