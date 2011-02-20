@@ -37,28 +37,35 @@ def index(request):
     return HttpResponse(t.render(context))
 
 
+
 ##
 # Render the user cart page.    
-def cart(request, user_id):
-    print user_id
-    template = loader.get_template('cart.html')
-    user = get_object_or_404(User, id=user_id)
-    userProducts = CartProduct.objects.filter(user=user)
-    
-    total = 0
-    for product in userProducts:
-        total += product.quantity * product.product.price
+def cart(request):
+    if request.user.is_authenticated():
+        template = loader.get_template('cart.html')
+        user = request.user
+        userProducts = CartProduct.objects.filter(user=user)
         
-    context = Context({
-        'cart'  : userProducts,
-        'total' : total,
-    })
-    context.update(csrf(request))
-    return HttpResponse(template.render(context))
+        total = 0
+        for product in userProducts:
+            total += product.quantity * product.product.price
+            
+        context = Context({
+            'cart'  : userProducts,
+            'total' : total,
+        })
+        context.update(csrf(request))
+        return HttpResponse(template.render(context))
+    
+    else:
+        return HttpResponse("You have to be logged")
+
+
 
 def deleteFromCart(request):
     if request.method == 'POST':
         element = request.POST['product']
+
 
 ##
 # Ask the user for the master password, in order to enter the administrative
