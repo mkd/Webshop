@@ -21,30 +21,20 @@ import datetime, hashlib, os
 ##
 # Render the home page. 
 def index(request):
-    # build the page for the staff
-    if request.user.is_authenticated() and request.user.is_staff:
-        t = loader.get_template('myadmin_page.html')
-        context = RequestContext(request, { })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
+    t = loader.get_template('index.html')
+    categories = Category.objects.all()
+    best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
+    searchForm = SearchForm()
+    
+    context = RequestContext(request, {
+        'categories'  : categories,
+        'products'    : best_products,
+        'form'        : searchForm,
+    })
 
-
-    # build the page for normal users
-    else:
-        t = loader.get_template('index.html')
-        categories = Category.objects.all()
-        best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
-        searchForm = SearchForm()
-        
-        context = Context({
-            'categories'  : categories,
-            'products'    : best_products,
-            'form'        : searchForm,
-        })
-
-        # render the home page
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
+    # render the home page
+    context.update(csrf(request))
+    return HttpResponse(t.render(context))
 
 
 
@@ -81,12 +71,19 @@ def deleteFromCart(request):
 # Ask the user for the master password, in order to enter the administrative
 # pages.
 def myadmin(request):
-    t = loader.get_template('myadmin.html')
-    form = AdminForm(request.POST)
-    context = RequestContext(request, {
-        'form' : form
-    })
-    return HttpResponse(t.render(context))
+    # if the user is authenticated and is staff, go straight to the admin page
+    if request.user.is_authenticated() and request.user.is_staff:
+        t = loader.get_template('myadmin_page.html')
+        context = RequestContext(request, { })
+        return HttpResponse(t.render(context))
+    # if the user is not logged in, ask for master password
+    else:
+        t = loader.get_template('myadmin.html')
+        form = AdminForm(request.POST)
+        context = RequestContext(request, {
+            'form' : form
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
