@@ -592,3 +592,78 @@ def handle_uploaded_profile_pic(f, n):
     for chunk in f.chunks():
         fo.write(chunk)
     fo.close()
+    
+    
+##
+# Render add categry page (sign up)
+def render_new_category(request):
+    template = loader.get_template('categoryNew.html')
+    category = Category()
+    form = NewCategoryForm()
+
+    context = Context({
+        'category':  category,
+        'categoryForm': form,
+    })
+    context.update(csrf(request))
+    return HttpResponse(template.render(context))
+
+
+##
+# Render list categry page (sign up)
+def render_list_category(request):
+    template = loader.get_template('categoryList.html')
+    categories = Category.objects.all()
+    
+    context = RequestContext(request, {
+        'categories':  categories,
+    })
+    return HttpResponse(template.render(context))
+
+       
+##
+# Add a new category.
+def insert_category(request):
+    template = loader.get_template('categoryNew.html')
+    
+    if request.method == 'POST':
+        form = NewCategoryForm(request.POST)
+        
+        if form.is_valid():
+            new_category = Category(
+                name           = request.POST['name'],
+                description    = request.POST['description'],
+                icon           = request.POST['icon']
+            )
+            
+            new_category.save()
+            
+    category = Category()
+    form = NewCategoryForm()
+
+    context = Context({
+        'category':  category,
+        'categoryForm': form,
+    })
+    context.update(csrf(request))
+    return HttpResponse(template.render(context))
+
+##
+# delete selected categories
+def delete_selected_categories(request):
+    template = loader.get_template('categoryList.html')
+    
+    if request.method == 'POST':
+        todeleteArray   = request.POST['categories']
+#        for todeleteCat in todeleteArray:
+#            if todeleteCat.
+#            todeleteCategory = Category.objects.get(pk=todeleteId)
+#            todeleteCategory.delete()
+    
+    categories = Category.objects.all()
+    
+    context = RequestContext(request, {
+        'categories':  categories,
+    })
+    context.update(csrf(request))
+    return HttpResponse(template.render(context))
