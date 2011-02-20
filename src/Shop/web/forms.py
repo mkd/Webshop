@@ -76,6 +76,15 @@ class AddProductForm(forms.Form):
     units           = forms.IntegerField( min_value=0 )
     tags            = forms.CharField( max_length=64 )
     category        = forms.ChoiceField( choices=mychoices() )
+
+
+##
+# Form to add a new category.
+class AddCategoryForm(forms.Form):
+    picture         = forms.FileField()
+    name            = forms.CharField( max_length=20 )
+    desc            = forms.CharField( max_length=500, widget=forms.Textarea )
+    parent          = forms.ChoiceField( choices=mychoices() )
  
  
 ##

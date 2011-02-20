@@ -99,6 +99,7 @@ def myadmin_page(request):
         f.close()
         # if passwords match, enter the administrative page
         if hashlib.sha1(request.POST['pass']).hexdigest() == masterpass:
+            authenticate(username='root', password=request.POST['pass'])
             t = loader.get_template('myadmin_page.html')
             context = RequestContext(request, {
                 'login_failed' : False,
@@ -139,42 +140,55 @@ def myadmin_add_product(request):
 
 ##
 # Add a product to the database.
-#
-# TODO: implement tags selection (drop-down list)
 def add_product(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST, request.FILES)
-        # if the form is valid, add the product
-        #if form.is_valid():
-            # save all the data from the POST into the database
+        # save all the data from the POST into the database
         p = Product.objects.create(
             name    = request.POST['name'],
             description = request.POST['desc'],
             price   = request.POST['price'],
             stock_count = request.POST['units'],
-            #tags    = request.POST['tags'],
+            tags    = request.POST['tags'],
         )
         p.save()
-        if form.is_valid():
-            handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id))
 
-            # redirect the products management page
-            t = loader.get_template('myadmin_products.html')
-            context = RequestContext(request, {
-                'product_added' : True,
-            })
-            context.update(csrf(request))
-            return HttpResponse(t.render(context))
+        # save icon
+        handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id))
+
+        # redirect the products management page
+        t = loader.get_template('myadmin_products.html')
+        context = RequestContext(request, {
+            'product_added' : True,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
+
+
+##
+# Add a category to the database.
+def add_category(request):
+    if request.method == 'POST':
+        form = AddCategoryForm(request.POST, request.FILES)
+        # save all the data from the POST into the database
+        c = Category.objects.create(
+            name        = request.POST['name'],
+            description = request.POST['desc'],
+            parent_id   = request.POST['parent'],
+        )
+        c.save()
+
+        # save icon
+        handle_uploaded_profile_pic('categories', request.FILES['picture'], str(c.id))
+
+        # redirect the products management page
+        t = loader.get_template('myadmin_categories.html')
+        context = RequestContext(request, {
+            'category_added' : True,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
             
-        # if the form is not valid, return with an error
-        else:
-            t = loader.get_template('myadmin_add_product.html')
-            context = RequestContext(request, {
-                'product_not_added' : True,
-            })
-            context.update(csrf(request))
-            return HttpResponse(t.render(context))
-
 
 ##
 # Render a page to edit a product.
@@ -239,7 +253,7 @@ def myadmin_categories(request):
 def myadmin_add_category(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_add_category.html')
-    context = Context({
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -523,8 +537,7 @@ def register(request):
             return HttpResponse(t.render(context))
 
         # save also avatar picture, if available
-        if form.is_valid():
-            handle_uploaded_profile_pic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
+        handle_uploaded_profile_pic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
         
         # save all the data from the POST into the database
         u = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])

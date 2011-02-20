@@ -38,6 +38,48 @@ $(document).ready(function()
         }
     });
 
+    $("#add_product_form").validate({
+        rules:
+        {
+            name:
+            {
+                maxlength: 32,
+                required:  true
+            },
+            
+            desc:
+            {
+                maxlength: 512,
+            },
+
+            price:
+            {
+                required:  true
+            },
+
+            units:
+            {
+                required:  true
+            },
+        }
+    });
+
+    $("#add_category_form").validate({
+        rules:
+        {
+            name:
+            {
+                maxlength: 32,
+                required:  true
+            },
+            
+            desc:
+            {
+                maxlength: 512,
+            },
+        }
+    });
+
     $("#register_form").validate({
         rules:
         {
