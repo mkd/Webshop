@@ -9,7 +9,7 @@ img.product-pic
 	-moz-border-radius: 1em;
 }
 
-tr:hover
+tr.item:hover
 {
 	background: #ded;
 }
@@ -19,4 +19,13 @@ td.name a
 	text-decoration: none;
 	font-size: 16px;
 	color: #666;
+}
+
+td.total
+{
+	text-align: right;
+	font-size: 18px;
+	font-weight: bold;
+	padding: 12px;
+	border-top: 1px solid #999;  
 }

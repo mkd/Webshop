@@ -16,6 +16,31 @@
 {% endblock %}
 
 {% block main_content %}
+
+	<script>
+	function deleteProduct(product, thisPrice){
+		var answer = confirm("Are you sure?")
+		if (answer){
+			$('#item-'+product).css("display","none");
+			total = $('#total').html();
+			thisPrice = $('#quantity-'+product).val() * thisPrice;
+			$('#total').html(total-thisPrice);
+			$('#quantity-'+product).val("0");
+		}	
+	}
+	
+	function editQuantity(product, thisPrice, beforeQuantity){
+		total = $('#total').html();
+		actualCost = thisPrice * beforeQuantity;
+		newQuantity = $('#quantity-'+product).val();
+		newCost = newQuantity * thisPrice;
+		total -= actualCost;
+		total += newCost;
+		$('#total').html(total);
+	}
+	
+	</script>
+
 	<table cellspacing="0" callpadding="50" border="0" width="660">
 		<tr>
 			<td>pic</td>
@@ -24,14 +49,20 @@
 			<td>price</td>
 			<td>delete</td>
 		</tr>
-		{% for product in cart %}
+		<form action="/product/{{ product.id }}/comment/" method="post">
+			{% for product in cart %}
+			<tr class="item" id="item-{{ product.id }}">
+				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
+				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
+				<td class="quantity" width="100"><input type="text" name="quantity" id="quantity-{{ product.id }}" value="{{ product.quantity }}" size="8" onChange="editQuantity({{ product.id }}, {{ product.product.price }}, {{ product.quantity }} )"/></td>
+				<td class="value" width="75">{{ product.product.price }} &euro;</td>
+				<td class="delete" width="40"><img src="/static/images/delete-icon.png" onclick="deleteProduct({{ product.id }}, {{ product.product.price }})" /></td>
+			</tr>
+			{% endfor %}
+		</form>
 		<tr>
-			<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
-			<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
-			<td class="quantity" width="100">{{ product.quantity }}</td>
-			<td class="value" width="75">{{ product.product.price }}</td>
-			<td class="delete" width="40"><img src="/static/images/delete-icon.png" /></td>
+			<td colspan="5" class="total">Total: <span id="total">{{ total }}</span> &euro;</td>
 		</tr>
-		{% endfor %}
 	</table>
+	
 {% endblock %}
