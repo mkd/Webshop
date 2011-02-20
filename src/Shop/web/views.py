@@ -58,7 +58,9 @@ def cart(request):
         return HttpResponse(template.render(context))
     
     else:
-        return HttpResponse("You have to be logged")
+        t = loader.get_template('index.html')
+        context = Context({ })
+        return HttpResponse(t.render(context))
 
 
 
@@ -97,6 +99,7 @@ def myadmin_page(request):
         f.close()
         # if passwords match, enter the administrative page
         if hashlib.sha1(request.POST['pass']).hexdigest() == masterpass:
+            authenticate(username='root', password=request.POST['pass'])
             t = loader.get_template('myadmin_page.html')
             context = RequestContext(request, {
                 'login_failed' : False,
@@ -137,49 +140,62 @@ def myadmin_add_product(request):
 
 ##
 # Add a product to the database.
-#
-# TODO: implement tags selection (drop-down list)
 def add_product(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST, request.FILES)
-        # if the form is valid, add the product
-        if form.is_valid():
-            # save all the data from the POST into the database
-            p = Product.objects.create(
-                name    = request.POST['name'],
-                description = request.POST['desc'],
-                price   = request.POST['price'],
-                stock_count = request.POST['units'],
-                #tags    = request.POST['tags'],
-            )
-            handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id))
-            p.save()
+        # save all the data from the POST into the database
+        p = Product.objects.create(
+            name    = request.POST['name'],
+            description = request.POST['desc'],
+            price   = request.POST['price'],
+            stock_count = request.POST['units'],
+            tags    = request.POST['tags'],
+        )
+        p.save()
 
-            # redirect the products management page
-            t = loader.get_template('myadmin_products.html')
-            context = RequestContext(request, {
-                'product_added' : True,
-            })
-            context.update(csrf(request))
-            return HttpResponse(t.render(context))
-            
-        # if the form is not valid, return with an error
-        else:
-            t = loader.get_template('myadmin_add_product.html')
-            context = RequestContext(request, {
-                'product_not_added' : True,
-            })
-            context.update(csrf(request))
-            return HttpResponse(t.render(context))
+        # save icon
+        handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id) + 'jpg')
+
+        # redirect the products management page
+        t = loader.get_template('myadmin_products.html')
+        context = RequestContext(request, {
+            'product_added' : True,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
 
 
 ##
+# Add a category to the database.
+def add_category(request):
+    if request.method == 'POST':
+        form = AddCategoryForm(request.POST, request.FILES)
+        # save all the data from the POST into the database
+        c = Category.objects.create(
+            name        = request.POST['name'],
+            description = request.POST['desc'],
+            parent_id   = request.POST['parent'],
+        )
+        c.save()
+
+        # save icon
+        handle_uploaded_profile_pic('categories', request.FILES['picture'], str(c.id))
+
+        # redirect the products management page
+        t = loader.get_template('myadmin_categories.html')
+        context = RequestContext(request, {
+            'category_added' : True,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
+            
+
+##
 # Render a page to edit a product.
-# TODO: this is juast a copy paste from add product.
 def edit_product(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
-    context = Context({
+    form = EditProductForm(request.POST)
+    t = loader.get_template('myadmin_edit_product.html')
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -195,7 +211,7 @@ def product(request, product_id):
     
     if request.user.is_authenticated():
         user = request.user
-        context = Context({
+        context = RequestContext(request, {
             'user'     : user,
             'product'  : product,
             'comments' : comments,
@@ -203,7 +219,7 @@ def product(request, product_id):
         })
         
     else:
-        context = Context({
+        context = RequestContext(request, {
             'product'  : product,
             'comments' : comments,
             'form'     : form,
@@ -223,7 +239,7 @@ def product(request, product_id):
 def myadmin_categories(request):
     categories = Category.objects.all()
     t = loader.get_template('myadmin_categories.html')
-    context = Context({
+    context = RequestContext(request, {
         'categories'    : categories,
         'categories_no' : len(categories),
     })
@@ -236,7 +252,7 @@ def myadmin_categories(request):
 def myadmin_add_category(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_add_category.html')
-    context = Context({
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -248,7 +264,7 @@ def myadmin_add_category(request):
 def edit_category(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_edit_category.html')
-    context = Context({
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -260,33 +276,9 @@ def edit_category(request):
 def myadmin_orders(request):
     orders = Transaction.objects.all()
     t = loader.get_template('myadmin_orders.html')
-    context = Context({
+    context = RequestContext(request, {
         'orders'    : orders,
         'orders_no' : len(orders),
-    })
-    return HttpResponse(t.render(context))
-
-
-##
-# Render a page to add a new order.
-# TODO: this is juast a copy paste from add product.
-def myadmin_add_order(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_order.html')
-    context = Context({
-        'form': form,
-    })
-    return HttpResponse(t.render(context))
-
-
-##
-# Render a page to edit an order.
-# TODO: this is juast a copy paste from add product.
-def edit_order(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
-    context = Context({
-        'form': form,
     })
     return HttpResponse(t.render(context))
 
@@ -296,7 +288,7 @@ def edit_order(request):
 def myadmin_users(request):
     users = User.objects.all()
     t = loader.get_template('myadmin_users.html')
-    context = Context({
+    context = RequestContext(request, {
         'users'    : users,
         'users_no' : len(users),
     })
@@ -305,11 +297,10 @@ def myadmin_users(request):
 
 ##
 # Render a page to add a new user.
-# TODO: this is juast a copy paste from add product.
 def myadmin_add_user(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
-    context = Context({
+    form = AddUserForm(request.POST)
+    t = loader.get_template('myadmin_add_user.html')
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -317,11 +308,10 @@ def myadmin_add_user(request):
 
 ##
 # Render a page to edit a user.
-# TODO: this is juast a copy paste from add product.
 def edit_user(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_product.html')
-    context = Context({
+    form = EditUserForm(request.POST)
+    t = loader.get_template('myadmin_edit_user.html')
+    context = RequestContext(request, {
         'form': form,
     })
     return HttpResponse(t.render(context))
@@ -416,7 +406,7 @@ def search(request):
             categories = Category.objects.all()            
             template = loader.get_template('list.html')
             message = "Search results for %s." % query
-            context = Context({
+            context = RequestContext(request, {
                 'message'     : message,
                 'categories'  : categories,
                 'products'    : products,
@@ -505,7 +495,7 @@ def register(request):
             check_email = None
         if check_username is not None or check_email is not None:
             t = loader.get_template('signup.html')
-            context = Context({
+            context = RequestContext(request, {
                 'username'       : request.POST['user'],
                 'fname'          : request.POST['fname'],
                 'sname'          : request.POST['sname'],
@@ -520,8 +510,7 @@ def register(request):
             return HttpResponse(t.render(context))
 
         # save also avatar picture, if available
-        if form.is_valid():
-            handle_uploaded_profile_pic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
+        handle_uploaded_profile_pic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
         
         # save all the data from the POST into the database
         u = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
@@ -577,7 +566,7 @@ def save_profile(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES)
         t = loader.get_template('profile.html')
-        context = Context({
+        context = RequestContext(request, {
             'username'       : request.POST['user'],
             'fname'          : request.POST['fname'],
             'sname'          : request.POST['sname'],
@@ -596,7 +585,7 @@ def save_profile(request):
             handle_uploaded_profile_pic(request.FILES['picture'], request.POST['user'] + '.jpg')
         
         # save all the data from the POST into the database
-        context = Context({
+        context = RequestContext(request, {
             'user'      : request.POST['user'],
         })
         u = User(
@@ -646,7 +635,7 @@ def render_new_category(request):
     category = Category()
     form = NewCategoryForm()
 
-    context = Context({
+    context = RequestContext(request, {
         'category':  category,
         'categoryForm': form,
     })
@@ -686,26 +675,62 @@ def insert_category(request):
     category = Category()
     form = NewCategoryForm()
 
-    context = Context({
+    context = RequestContext(request, {
         'category':  category,
         'categoryForm': form,
     })
     context.update(csrf(request))
     return HttpResponse(template.render(context))
 
+
 ##
-# delete selected categories
-def delete_selected_categories(request):
-    template = loader.get_template('categoryList.html')
-    
+# Delete a set of products.
+def deleteProducts(request):
+    t = loader.get_template('myadmin_products.html')
+
+    # delete products
+    # note: comments are not necessarily deleted, because the user miht want to
+    # check a comment he or she wrote in the past (even if the product does not
+    # exist anymore)
     if request.method == 'POST':
-        category_list   = request.POST.getlist('categoryList')
+        products = request.POST.getlist('product_list')
+        for p in products:
+            product = Product.objects.get(pk=p)
+            product.delete()
+            # also delete the picture of the product
+            os.remove('static/images/products/' + p + '.jpg')
+
+    # return to the products page
+    products = Category.objects.all()
+    context = RequestContext(request, {
+        'categories':  products,
+    })
+    return HttpResponse(t.render(context))
+
+##
+# Delete a set of categories.
+def deleteCategories(request):
+    t = loader.get_template('myadmin_categories.html')
+
+    # delete categories and set their products orphaned 
+    if request.method == 'POST':
+        category_list = request.POST.getlist('category_list')
         for category_id in category_list:
             category = Category.objects.get(pk=category_id)
+            try:
+                products = Product.objects.get(category=category_id)
+            except:
+                products = []
+            # orphan products corresponding to the deleted category
+            for p in products:
+                p.category = -1
+                p.save()
             category.delete()
+            # also delete the picture of the category
+            os.remove('static/images/categories/' + p.id + '.jpg')
 
     categories = Category.objects.all()
     context = RequestContext(request, {
         'categories':  categories,
     })
-    return HttpResponse(template.render(context))
+    return HttpResponse(t.render(context))
