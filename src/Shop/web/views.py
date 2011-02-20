@@ -7,6 +7,8 @@ from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
+import os.path
+PROJECT_DIR = os.path.dirname(__file__)
 
 
 ### necessary models (other than Django's) ###
@@ -14,7 +16,6 @@ from models import Category, Product, Comment, User, UserProfile, CartProduct
 from forms import *
 import datetime, hashlib, os
  
-
 
 ### plain web pages ###
 ##
@@ -53,7 +54,9 @@ def myadmin(request):
 # correctly.
 def myadmin_page(request):
     if request.method == 'POST':
-        f = open('web/master.passwd', 'r')
+        path = PROJECT_DIR + '/static/master.passwd'
+
+        f = open(path, 'r')
         masterpass = f.readline().rstrip()
         f.close()
         # if passwords match, enter the administrative page
