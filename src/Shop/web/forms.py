@@ -1,6 +1,20 @@
 ### necessary Django modules ###
 from django import forms
 from django.forms import widgets
+from models import *
+
+
+
+### custom functionality ###
+##
+# Retrieve a list of categories and create a list ready to be used as a dropdown
+# list.
+def mychoices():
+    cats = Category.objects.all()
+    categories = [('', '')]
+    for c in cats:
+        categories.append((c.id, c.name))
+    return categories
 
 
 ### custom forms ###
@@ -61,6 +75,7 @@ class AddProductForm(forms.Form):
     price           = forms.IntegerField( min_value=1 )
     units           = forms.IntegerField( min_value=0 )
     tags            = forms.CharField( max_length=64 )
+    category        = forms.ChoiceField( choices=mychoices() )
  
  
 ##

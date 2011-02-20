@@ -58,7 +58,9 @@ def cart(request):
         return HttpResponse(template.render(context))
     
     else:
-        return HttpResponse("You have to be logged")
+        t = loader.get_template('index.html')
+        context = Context({ })
+        return HttpResponse(t.render(context))
 
 
 
@@ -142,17 +144,18 @@ def add_product(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST, request.FILES)
         # if the form is valid, add the product
-        if form.is_valid():
+        #if form.is_valid():
             # save all the data from the POST into the database
-            p = Product.objects.create(
-                name    = request.POST['name'],
-                description = request.POST['desc'],
-                price   = request.POST['price'],
-                stock_count = request.POST['units'],
-                #tags    = request.POST['tags'],
-            )
+        p = Product.objects.create(
+            name    = request.POST['name'],
+            description = request.POST['desc'],
+            price   = request.POST['price'],
+            stock_count = request.POST['units'],
+            #tags    = request.POST['tags'],
+        )
+        p.save()
+        if form.is_valid():
             handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id))
-            p.save()
 
             # redirect the products management page
             t = loader.get_template('myadmin_products.html')
