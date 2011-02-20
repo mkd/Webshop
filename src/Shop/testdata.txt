@@ -7,3 +7,9 @@ INSERT INTO "auth_user" VALUES(3,'javi','Javier','Berlana','jberlana@gmail.com',
 INSERT INTO "auth_user" VALUES(4,'furkan','Tercan','Furkan','furkan.tercan@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:08:06.133204','2011-02-19 11:06:06.133218');
 INSERT INTO "auth_user" VALUES(5,'pepe','José','Marchal','pepe@gmail.com','40bd001563085fc35165329ea1ff5c5ecbdbbeef',0,1,0,'2011-02-19 11:08:06.133204','2011-02-19 11:06:06.133218');
 COMMIT;
+
+INSERT INTO "web_category" VALUES(1,'Shoes','','images/categories/shoes.png');
+INSERT INTO "web_category" VALUES(2,'Guitars','','images/categories/guitars.png');
+INSERT INTO "web_category" VALUES(3,'Mobile Phones','','images/categories/phones.png');
+INSERT INTO "web_category" VALUES(4,'Watches','','images/categories/watches.png');
+INSERT INTO "web_category" VALUES(5,'Jackets','','images/categories/jackets.png');
