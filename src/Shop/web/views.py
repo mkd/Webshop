@@ -12,7 +12,7 @@ PROJECT_DIR = os.path.dirname(__file__)
 
 
 ### necessary models (other than Django's) ###
-from models import Category, Product, Comment, User, UserProfile, CartProduct
+from models import *
 from forms import *
 import datetime, hashlib, os
  
@@ -24,7 +24,7 @@ def index(request):
     # build the page for the staff
     if request.user.is_authenticated() and request.user.is_staff:
         t = loader.get_template('myadmin_page.html')
-        context = Context({ })
+        context = RequestContext(request, { })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
 
@@ -145,11 +145,11 @@ def product(request, product_id):
 # Render the categories administration page.
 # TODO: this is just a copy paste from products
 def myadmin_categories(request):
-    products = Product.objects.all()
-    t = loader.get_template('myadmin_products.html')
+    categories = Category.objects.all()
+    t = loader.get_template('myadmin_categories.html')
     context = Context({
-        'products'    : products,
-        'products_no' : len(products),
+        'categories'    : categories,
+        'categories_no' : len(categories),
     })
     return HttpResponse(t.render(context))
 
@@ -181,13 +181,12 @@ def edit_category(request):
 
 ##
 # Render the orders administration page.
-# TODO: this is just a copy paste from products
 def myadmin_orders(request):
-    products = Product.objects.all()
-    t = loader.get_template('myadmin_products.html')
+    orders = Transaction.objects.all()
+    t = loader.get_template('myadmin_orders.html')
     context = Context({
-        'products'    : products,
-        'products_no' : len(products),
+        'orders'    : orders,
+        'orders_no' : len(orders),
     })
     return HttpResponse(t.render(context))
 
@@ -218,13 +217,12 @@ def edit_order(request):
 
 ##
 # Render the users administration page.
-# TODO: this is just a copy paste from products
 def myadmin_users(request):
-    products = Product.objects.all()
-    t = loader.get_template('myadmin_products.html')
+    users = User.objects.all()
+    t = loader.get_template('myadmin_users.html')
     context = Context({
-        'products'    : products,
-        'products_no' : len(products),
+        'users'    : users,
+        'users_no' : len(users),
     })
     return HttpResponse(t.render(context))
 

@@ -6,7 +6,8 @@
  */
 ul#admin
 {
-    margin:     0 auto;
+    float: left;
+    text-align: left;
 }
 
 ul#admin li
@@ -24,30 +25,24 @@ ul#admin li
 
     list-style:             none;
     margin:                 1em auto;
-    padding:                2em;
+    padding:                1.2em;
+    width:                  16em;
 }
 
 ul#admin li:hover
 {
-    cursor:                 pointer;
-
     /* background */
 	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#bfbbfb', endColorstr='#cfcfcf'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#bfb), to(#cfcfcf)); /* for webkit browsers */
 	background: -moz-linear-gradient(top,  #bfb,  #cfcfcf); /* for firefox 3.6+ */
-
-    /* border */
-	border:                 solid 1px #b4b4b4;
-	-webkit-border-radius:  10px;
-	-moz-border-radius:     10px;
-	border-radius:          10px;
-
-    list-style:             none;
-    margin:                 1em auto;
-    padding:                2em;
 }
 
 ul#admin li a
 {
     text-decoration:        none;
+}
+
+ul#admin li a:hover
+{
+    text-decoration:        underline;
 }

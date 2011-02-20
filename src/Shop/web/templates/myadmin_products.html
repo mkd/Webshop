@@ -17,9 +17,10 @@
     {% ifequal products_no 0 %}
         <div class="error">There are no products in the system!</div>
     {% else %}
+        <ul id="admin">
         {% for p in products %}
-        <a href="/edit_product/{{ p.id }}">product id={{ p.id }}</a>
-        <br />
+            <li><a href="/edit_product/{{ p.id }}">{{ p.name }}</a></li>
         {% endfor %}
+        </ul>
     {% endifequal %}
 {% endblock %}
