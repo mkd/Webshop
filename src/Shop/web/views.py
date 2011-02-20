@@ -328,7 +328,7 @@ def comment(request, product_id):
         
         if form.is_valid() and request.user.is_authenticated():
             product = get_object_or_404(Product, id=product_id)
-            user_id = get_object_or_404(User, id=request.POST['user'])
+            user = request.user
             text = form.cleaned_data['comment']         
             reply = request.POST['in_reply']
             product.comment_count +=1;
@@ -336,13 +336,13 @@ def comment(request, product_id):
             if reply != '0':
                 reply = Comment.objects.get(id=reply)
                 new_comment = Comment(product = product, 
-                                      user = user_id,
+                                      user = user,
                                       timestamp = datetime.datetime.now(),
                                       comment = text,
                                       parent_id = reply)
             else:
                 new_comment = Comment(product = product, 
-                                      user = user_id,
+                                      user = user,
                                       timestamp = datetime.datetime.now(),
                                       comment = text)
             
@@ -462,8 +462,10 @@ def try_login(request):
         
     else:
         t = loader.get_template('signin.html')
+        categories = Category.objects.all()
         context = RequestContext(request, {
             'login_failed' : True,
+            'categories'   : categories,
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
@@ -473,9 +475,7 @@ def try_login(request):
 # Close the session for an user.
 def signout(request):
     logout(request)
-    t = loader.get_template('index.html')
-    context = RequestContext(request, { })
-    return HttpResponse(t.render(context))
+    return HttpResponseRedirect('/')  
 
 
 ##

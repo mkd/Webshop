@@ -103,7 +103,6 @@ function showReplyBox(comment){
 							<form action="/product/{{ product.id }}/comment/" method="post">
 								{% csrf_token %}
 								{{ form.as_p }}
-								<input type="hidden" name="user" value="1"/>
 								<input type="hidden" name="in_reply" value="{{ comment.id }}"/>
 							<input type="submit" value="Post" />
 							</form>
@@ -118,7 +117,6 @@ function showReplyBox(comment){
 					<form action="/product/{{ product.id }}/comment/" method="post">
 						{% csrf_token %}
 						{{ form.as_p }}
-						<input type="hidden" name="user" value="1"/>
 						<input type="hidden" name="in_reply" value="0"/>
 					<input type="submit" value="Post" />
 					</form>
