@@ -60,9 +60,6 @@ def myadmin_page(request):
         f.close()
         # if passwords match, enter the administrative page
         if hashlib.sha1(request.POST['pass']).hexdigest() == masterpass:
-            # FIXME: these session variables are not stored!
-            request.session['id'] = -1
-            request.session['user'] = 'superuser'
             t = loader.get_template('myadmin_page.html')
             context = Context({
                 'login_failed' : False,
@@ -461,12 +458,10 @@ def register(request):
         context = Context({
             'user'      : request.POST['user'],
         })
+        u = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
         u = User(
-            username       = request.POST['user'],
             first_name     = request.POST['fname'],
             last_name      = request.POST['sname'],
-            email          = request.POST['email'],
-            password       = hashlib.sha1(request.POST['passwd']).hexdigest(),
         )
         u.save()
 
