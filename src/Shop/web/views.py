@@ -654,7 +654,7 @@ def delete_selected_categories(request):
     template = loader.get_template('categoryList.html')
     
     if request.method == 'POST':
-        category_list   = request.POST['categoryList']
+        category_list   = request.POST.getlist('categoryList')
         for category_id in category_list:
             category = Category.objects.get(pk=category_id)
             category.delete()
