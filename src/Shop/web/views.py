@@ -353,7 +353,7 @@ def category(request, category_name):
     categories = Category.objects.all()
     best_products = Product.objects.filter(category=thisCategorie.id).filter(stock_count__gt=0).order_by('-average_rating')[:10]
     
-    context = Context({
+    context = RequestContext(request, {
         'this' : thisCategorie,
         'categories'  : categories,
         'products'    : best_products,
