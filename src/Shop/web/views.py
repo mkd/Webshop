@@ -278,26 +278,6 @@ def edit_user(request):
     return HttpResponse(t.render(context))
 
 
-##
-# Render the user cart page.    
-def cart(request, user_id):
-    print user_id
-    template = loader.get_template('cart.html')
-    user = get_object_or_404(User, id=user_id)
-    userProducts = CartProduct.objects.filter(user=user)
-        
-    context = Context({
-        'cart'  : userProducts,
-    })
-    context.update(csrf(request))
-    return HttpResponse(template.render(context))
-
-def deleteFromCart(request):
-    if request.method == 'POST':
-        element = request.POST['product']
-
-
-
 ### comments functionality ###
 ##
 # Publish a comment on a page 
