@@ -683,18 +683,27 @@ def insert_category(request):
     return HttpResponse(template.render(context))
 
 ##
-# delete selected categories
+# Delete selected categories.
 def delete_selected_categories(request):
-    template = loader.get_template('categoryList.html')
-    
+    t = loader.get_template('myadmin_categories.html')
+
+    # delete categories and set their products orphaned 
     if request.method == 'POST':
-        category_list   = request.POST.getlist('categoryList')
+        category_list = request.POST.getlist('category_list')
         for category_id in category_list:
             category = Category.objects.get(pk=category_id)
+            try:
+                products = Product.objects.get(category=category_id)
+            except:
+                products = []
+            # orphan products corresponding to the deleted category
+            for p in products:
+                p.category = -1
+                p.save()
             category.delete()
 
     categories = Category.objects.all()
     context = RequestContext(request, {
         'categories':  categories,
     })
-    return HttpResponse(template.render(context))
+    return HttpResponse(t.render(context))

@@ -140,7 +140,7 @@ class Tag(models.Model):
 
 class Product(models.Model):
     tags            = models.ManyToManyField( Tag, blank=True)
-    category        = models.ManyToManyField(Category, blank=True)
+    category        = models.ManyToManyField(Category, blank=True, default=-1)
     name            = models.CharField( max_length=32 )
     description     = models.CharField( max_length=512, default = '' )   
     picture         = models.CharField( max_length=256, default = '/static/images/products/unknown.png' )
