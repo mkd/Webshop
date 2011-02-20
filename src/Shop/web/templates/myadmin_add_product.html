@@ -1,0 +1,83 @@
+<!--
+  - myadmin_add_product.html
+  -
+  - This form is used to add a new product.
+-->
+{% extends "base.html" %}
+
+{% block title %} Webshop -- New Product {% endblock %}
+
+{% block main_content %}
+    {% block new_product_form %}
+        <h1>New Product</h1>
+        <form enctype="multipart/form-data" id="register_form" method="post" action="/register">
+        {% csrf_token %}
+        <table>
+        <tr>
+            <td colspan="2">
+                <img src="/static/images/categories/products/unknown.png" align="middle"
+                     height="64" id="picture_enabler"
+                     style="cursor: pointer;" title="Add your own picture" />
+                <em>Click on the image to add a product picture</em>
+                <br />
+                {{ form.picture }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="name">Product name:</label>
+            </td>
+            <td>
+            {{ form.name }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="desc">Description:</label>
+            </td>
+            <td>
+            {{ form.desc }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="category">Category:</label>
+            </td>
+            <td>
+            {{ form.category }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="units">Units:</label>
+            </td>
+            <td>
+            {{ form.units }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="price">Price:</label>
+            </td>
+            <td>
+            {{ form.price }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="price">Tags (comma-separated):</label>
+            </td>
+            <td>
+            {{ form.tags }}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" id="submit" value="Add" />
+                <input type="reset" value="Clear" />
+            </td>
+        </tr>
+        </table>
+        </form>
+    {% endblock %}
+{% endblock %}

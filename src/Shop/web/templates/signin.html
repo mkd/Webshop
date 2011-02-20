@@ -5,9 +5,20 @@
 {% block main_content %}
     {% block login_form %}
         <h1>Sign in</h1>
+
+        <!-- in case of sign-in failed -->
         {% if login_failed %}
             <div class="error">Username or password incorrect!</div>
         {% endif %}
+
+        <!-- welcome to newly registered user -->
+        {% if registered %}
+            <p>Welcome to Webshop! To start purchasing
+            products, rating comments and enjoying the webshop retail
+            experience, please sign in.</p>
+        {% endif %}
+
+        <!-- sign-in form -->
         <form method="post" action="/login">
         {% csrf_token %}
         <table>

@@ -1,12 +1,14 @@
 ### necessary Django modules ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate
+from django.contrib.auth import *
 from django.template import Context, RequestContext, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
+import os.path
+PROJECT_DIR = os.path.dirname(__file__)
 
 
 ### necessary models (other than Django's) ###
@@ -15,25 +17,34 @@ from forms import *
 import datetime, hashlib, os
  
 
-
 ### plain web pages ###
 ##
 # Render the home page. 
 def index(request):
-    t = loader.get_template('index.html')
-    categories = Category.objects.all()
-    best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
-    searchForm = SearchForm()
-    
-    context = Context({
-        'categories'  : categories,
-        'products'    : best_products,
-        'form'        : searchForm,
-    })
+    # build the page for the staff
+    if request.user.is_authenticated() and request.user.is_staff:
+        t = loader.get_template('myadmin_page.html')
+        context = Context({ })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
 
-    # render the home page
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+
+    # build the page for normal users
+    else:
+        t = loader.get_template('index.html')
+        categories = Category.objects.all()
+        best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
+        searchForm = SearchForm()
+        
+        context = Context({
+            'categories'  : categories,
+            'products'    : best_products,
+            'form'        : searchForm,
+        })
+
+        # render the home page
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
 
 
 ##
@@ -53,14 +64,12 @@ def myadmin(request):
 # correctly.
 def myadmin_page(request):
     if request.method == 'POST':
-        f = open('web/master.passwd', 'r')
+        path = PROJECT_DIR + '/static/master.passwd'
+        f = open(path, 'r')
         masterpass = f.readline().rstrip()
         f.close()
         # if passwords match, enter the administrative page
         if hashlib.sha1(request.POST['pass']).hexdigest() == masterpass:
-            # FIXME: these session variables are not stored!
-            request.session['id'] = -1
-            request.session['user'] = 'superuser'
             t = loader.get_template('myadmin_page.html')
             context = Context({
                 'login_failed' : False,
@@ -393,36 +402,19 @@ def signin(request):
 # This function checks the user and password against the users in the database
 # and tries to log in. If successful, the user is redirected to the home page,
 # otherwise an error is displayed.
-def login(request):
-    try:
-        u = User.objects.get(username=request.POST['user'])
-    except User.DoesNotExist:
-        t = loader.get_template('signin.html')
-        context = Context({
-            'login_failed' : True,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
-    p = u.password
-    # user and password match
-    if u.password == hashlib.sha1(request.POST['pass']).hexdigest():
-        request.session['id']   = u.id
-        request.session['user'] = u.username
+def try_login(request):
+    username = request.POST['user']
+    password = request.POST['pass']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request, user)
         t = loader.get_template('index.html')
-        context = Context({
-            'user': request.POST['user'],
-            'pass': request.POST['pass'],
-            'stored_pass': u.password,
-            'login_failed' : False,
-        })
-        context.update(csrf(request))
+        context = RequestContext(request, { })
         return HttpResponse(t.render(context))
-    # login failed
     else:
         t = loader.get_template('signin.html')
-        context = Context({
-            'user': None,
-            'login_failed': True,
+        context = RequestContext(request, {
+            'login_failed' : True,
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
@@ -431,21 +423,16 @@ def login(request):
 ##
 # Close the session for an user.
 def signout(request):
+    logout(request)
     t = loader.get_template('index.html')
-    context = RequestContext(request, { 
-        'user': None,
-    })
-    try:
-        del request.session['id']
-    except KeyError:
-        pass
+    context = RequestContext(request, { })
     return HttpResponse(t.render(context))
 
 
 ##
 # Add a new user.
 def register(request):
-    t = loader.get_template('index.html')
+    t = loader.get_template('signin.html')
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         # check if the user already exists in the database
@@ -478,19 +465,17 @@ def register(request):
             handle_uploaded_profile_pic(request.FILES['picture'], request.POST['user'] + '.jpg')
         
         # save all the data from the POST into the database
-        context = Context({
-            'user'      : request.POST['user'],
-        })
-        u = User(
-            username       = request.POST['user'],
-            first_name     = request.POST['fname'],
-            last_name      = request.POST['sname'],
-            email          = request.POST['email'],
-            password       = hashlib.sha1(request.POST['passwd']).hexdigest(),
-        )
+        u = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
+        u.is_staff   = False
+        u.first_name = request.POST['fname']
+        u.last_name  = request.POST['sname'],
         u.save()
 
-        # redirect the user to the home page (already logged-in)
+        # redirect the user to the login page with a welcome
+        context = RequestContext(request, {
+            'user'       : request.POST['user'],
+            'registered' : True,
+        })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
 
@@ -499,12 +484,12 @@ def register(request):
 # Render the user profile page.
 def profile(request):
     # check for an existing session
-    if request.session.get('id', False):
+    if request.user.is_authenticated():
         t = loader.get_template('profile.html')
         form = ProfileForm(request.POST, request.FILES)
 
         # obtain the data from the user and display his/her profile
-        u = User.objects.get(id=request.session.get('id'))
+        u = User.objects.get(id=request.user.id)
         context = Context({
             'picture'        : '/static/images/users/' + u.username + '.jpg',
             'user'           : u.username,
