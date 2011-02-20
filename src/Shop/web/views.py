@@ -139,7 +139,6 @@ def myadmin_add_product(request):
 #
 # TODO: implement tags selection (drop-down list)
 def add_product(request):
-    t = loader.get_template('myadmin_add_product.html')
     if request.method == 'POST':
         form = AddProductForm(request.POST, request.FILES)
         # if the form is valid, add the product
@@ -155,7 +154,8 @@ def add_product(request):
             handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id))
             p.save()
 
-            # redirect the user to the login page with a welcome
+            # redirect the products management page
+            t = loader.get_template('myadmin_products.html')
             context = RequestContext(request, {
                 'product_added' : True,
             })
@@ -163,8 +163,9 @@ def add_product(request):
             return HttpResponse(t.render(context))
         # if the form is not valid, return with an error
         else:
+            t = loader.get_template('myadmin_add_product.html')
             context = RequestContext(request, {
-                'product_added' : False,
+                'product_not_added' : True,
             })
             context.update(csrf(request))
             return HttpResponse(t.render(context))

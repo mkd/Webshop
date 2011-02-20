@@ -9,6 +9,9 @@
 
 {% block main_content %}
     {% block new_product_form %}
+    {% if product_not_added %}
+        <div class="error">Product could not be added!</div>
+    {% endif %}
         <h1>New Product</h1>
         <form enctype="multipart/form-data" id="register_form" method="post" action="/add_product">
         {% csrf_token %}
