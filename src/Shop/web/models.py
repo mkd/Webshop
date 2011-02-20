@@ -61,7 +61,7 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 class Category(models.Model):
     name        = models.CharField( max_length=32, blank = False )
     description = models.CharField( max_length=256, blank=True )
-    icon        = models.CharField( max_length=256, default = 'images/products/unknown.png' )
+    icon        = models.CharField( max_length=256, default = 'images/categories/unknown.png' )
     #parent_id   = models.ForeignKey(Category, default = -1) 
 
     def __unicode__(self):
@@ -106,7 +106,7 @@ class Category(models.Model):
 # id          implicit ID field (automatically generated)
 # name        name of the tag
 class Tag(models.Model):
-    name        = models.CharField( max_length=20, blank=False )
+    name        = models.CharField( max_length=16, blank=False )
 
     def __unicode__(self):
         return self.name
@@ -141,9 +141,9 @@ class Tag(models.Model):
 class Product(models.Model):
     tags            = models.ManyToManyField( Tag, blank=True)
     category        = models.ManyToManyField(Category, blank=True)
-    name            = models.CharField( max_length=20 )
-    description     = models.CharField( max_length=500, default = '' )   
-    picture         = models.CharField( max_length=100, default = '/static/images/categories/unknown.png' )
+    name            = models.CharField( max_length=32 )
+    description     = models.CharField( max_length=512, default = '' )   
+    picture         = models.CharField( max_length=256, default = '/static/images/products/unknown.png' )
     price           = models.FloatField( default=1 )
     stock_count     = models.IntegerField( default=0 )
     sold_count      = models.IntegerField( default=0 )
