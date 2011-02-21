@@ -126,7 +126,33 @@ def editQuantityInCart(request):
         return HttpResponseRedirect("/")
         
 def checkout(request):
-    return HttpResponseRedirect("/")
+    if request.user.is_authenticated():
+        template = loader.get_template('payment.html')
+        products = CartProduct.objects.filter(user=request.user)
+    
+        prices = []
+        total = 0
+        for product in products:
+            thisProd = get_object_or_404(Product, id=product.product.id)
+            product.total = product.quantity * thisProd.price
+            total += product.total
+             
+        payment = Payment( user=request.user, amount=total)
+        payment.save()
+    
+        no_items = request.user.get_profile().products_in_cart
+        context = RequestContext(request, {
+            'products_in_cart' : no_items,
+            'cost'    : prices,
+            'cart'    : products,
+            'payment' : payment,
+        })
+    
+        context.update(csrf(request))
+        return HttpResponse(template.render(context))
+    
+    else:
+        return HttpResponseRedirect("/")
 
 
 ##

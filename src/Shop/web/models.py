@@ -4,7 +4,7 @@ from django.utils.datetime_safe import datetime
 from django.template.defaultfilters import default
 from django.contrib.admin.models import User
 from django.db.models.signals import post_save
-import math
+import math, md5
 
 
 ##
@@ -173,6 +173,7 @@ class CartProduct(models.Model):
     user        = models.ForeignKey(User)
     timestamp   = models.DateTimeField( default=datetime.now)
     quantity    = models.IntegerField( default=0 )
+    total       = 0
     
     def save(self, force_insert=False, force_update=False):
         self.user.get_profile().products_in_cart += self.quantity
@@ -182,6 +183,28 @@ class CartProduct(models.Model):
     def __unicode__(self):
         return self.product + " by " + self.user
 
+
+class Payment(models.Model):
+    pid             = 'uiop'
+    sid            = 'bionixmalo'
+    key            = '463ee095dceaeb8c198130a4d73f5371'
+    user           = models.ForeignKey(User)
+    checksum       = models.CharField( max_length=300 )   
+    amount         = models.IntegerField( default=0 )   
+    payment_date   = models.DateTimeField( default=datetime.now )
+    postal_address = models.CharField( max_length=160 )
+    postal_code    = models.CharField( max_length=5 )
+    postal_city    = models.CharField( max_length=20 )
+    postal_country = models.CharField( max_length=20 )
+    
+    def save(self, force_insert=False, force_update=False):
+        checksumstr = "pid=%s&sid=%s&amount=%s&token=%s" % (self.pid, self.sid, self.amount, self.key)
+        m = md5.new(checksumstr)
+        self.checksum = m.hexdigest()
+        print checksumstr
+        print self.checksum
+        super(Payment, self).save()
+        return self
 
 ##
 # Model: Transaction
@@ -197,20 +220,14 @@ class CartProduct(models.Model):
 # postal_city      The city.
 # postal_country   The country.
 class Transaction( models.Model ):
-    product        = models.ForeignKey(Product)
-    user           = models.ForeignKey(User)
-    payment_date   = models.DateTimeField( default=datetime.now )
+    product        = models.ForeignKey( Product )
+    payment        = models.ForeignKey( Payment )
     quantity       = models.IntegerField( default=1 )
     unit_price     = models.FloatField( default=0) 
     rate           = models.IntegerField()
-    postal_address = models.CharField( max_length=160 )
-    postal_code    = models.CharField( max_length=5 )
-    postal_city    = models.CharField( max_length=20 )
-    postal_country = models.CharField( max_length=20 )
     
     def __unicode__(self):
         return "%s: %s (%d)" % (self.user.username, self.product.name, self.quantity)
-
 
 ##
 # Model: Comment

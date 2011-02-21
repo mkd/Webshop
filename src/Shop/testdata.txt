@@ -30,6 +30,4 @@ INSERT INTO "web_product" VALUES(5,'Samsung Galaxy S II','Second version of the 
 INSERT INTO "web_product" VALUES(6,'Fender Telecaster Classic','Classic Telecaster from Fender (MEX)','/static/images/products/telecaster.gif',1340.0,16,0,0,0,0,0);
 INSERT INTO "web_product" VALUES(7,'Gibson SG','Gibson SG, plain model with 6 strings','/static/images/products/gibson_sg.jpg',899.0,4,0,0,0,0,0);
 
-INSERT INTO "web_transaction" VALUES(1,1,2,'2011-02-20 14:00:14',1,10.0,1,'Alberganesplanadi 2B 046','02600','Espoo','Finland');
-
 COMMIT;
