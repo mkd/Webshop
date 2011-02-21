@@ -72,13 +72,12 @@ def cart(request):
         return HttpResponse(t.render(context))
         
 
-def addToCart(request, product_id):
+def addToCart(request):
     if request.user.is_authenticated():
-        
         profile = get_object_or_404(UserProfile, user=request.user) 
         profile.products_in_cart += 1
         profile.save()
-        product = get_object_or_404(Product, id=product_id)
+        product = get_object_or_404(Product, id=request.POST['product'])
         
         try: 
             new_prod = CartProduct.objects.get(product=product, user=request.user)
@@ -100,7 +99,34 @@ def addToCart(request, product_id):
 
 def deleteFromCart(request):
     if request.method == 'POST':
-        element = request.POST['product']
+        prod = get_object_or_404(CartProduct, id=request.POST['product'])
+        profile = get_object_or_404(UserProfile, user=request.user) 
+        profile.products_in_cart -= prod.quantity
+        profile.save()
+        prod.delete()
+        return HttpResponse(profile.products_in_cart)
+    else:
+        return HttpResponseRedirect("/")
+        
+def editQuantityInCart(request):
+    if request.method == 'POST':
+        prod = get_object_or_404(CartProduct, id=request.POST['product'])
+        profile = get_object_or_404(UserProfile, user=request.user) 
+        
+        if prod.quantity > request.POST['quantity']:
+            profile.products_in_cart -= prod.quantity - int(request.POST['quantity'])
+        else:
+            profile.products_in_cart += int(request.POST['quantity']) - prod.quantity
+         
+        prod.quantity = int(request.POST['quantity'])
+        profile.save()
+        prod.save()
+        return HttpResponse(profile.products_in_cart)
+    else:
+        return HttpResponseRedirect("/")
+        
+def checkout(request):
+    return HttpResponseRedirect("/")
 
 
 ##

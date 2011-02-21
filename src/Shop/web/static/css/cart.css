@@ -23,7 +23,7 @@ td.name a
 
 td.total
 {
-	text-align: right;
+    text-align: right;
 	font-size: 18px;
 	font-weight: bold;
 	padding: 12px;
@@ -32,10 +32,10 @@ td.total
 
 #checkout
 {
-	float: right;
     text-align: center;
     font-size: 14px;
     font-weight: 800;
+    display: inline;
         
 	background: #d1d1d1; /* for non-css3 browsers */
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* for IE */
@@ -49,8 +49,21 @@ td.total
 	box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 	text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
 	
-	margin-top: -4px;
+	margin-left: 10px;
 	padding:  3px 10px;
 	-webkit-border-radius: 1.6em;
 	-moz-border-radius: 1.6em;
+}
+
+#checkout:hover
+{
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#a1a1a1', endColorstr='#ebebeb'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#a1a1a1), to(#ebebeb)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #a1a1a1,  #ebebeb); /* for firefox 3.6+ */
+	cursor: pointer;
+}
+
+.delete
+{
+    cursor: pointer;
 }

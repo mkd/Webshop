@@ -23,10 +23,11 @@ function showReplyBox(comment){
 }
 
 function add(){
-	$.get('/cart/add/{{product.id}}', function(data) {
+	$.post('/cart/add', { product: '{{product.id}}' },
+	 function(data) {
 		$('#products-in-cart').html(data);
 		$("#my-cart").hide();
-		$("#my-cart").fadeIn();;
+		$("#my-cart").fadeIn();
 	});
 }
 
