@@ -20,8 +20,8 @@ import math
 # postal_city      The city.
 # postal_country   The country.
 class UserProfile( models.Model ):
-    #user           = models.ForeignKey( User, unique=True )
-    user           = models.OneToOneField( User )
+    user           = models.ForeignKey( User, unique=True)
+    products_in_cart = models.IntegerField( default=0 )
     picture        = models.CharField(  max_length=256 )
     postal_address = models.CharField(  max_length=160 )
     postal_code    = models.CharField(  max_length=5 )
@@ -36,7 +36,6 @@ class UserProfile( models.Model ):
    
     def __unicode__(self):
         return self.user.name
-    user = property(get_user, set_user, None, None)
 
 ##
 # Activates the create_user_profile handler when a new user is saved.
@@ -174,6 +173,14 @@ class CartProduct(models.Model):
     user        = models.ForeignKey(User)
     timestamp   = models.DateTimeField( default=datetime.now)
     quantity    = models.IntegerField( default=0 )
+    
+    def save(self, force_insert=False, force_update=False):
+        self.user.get_profile().products_in_cart += self.quantity
+        super(CartProduct, self).save()
+        return self
+        
+    def __unicode__(self):
+        return self.product + " by " + self.user
 
 
 ##

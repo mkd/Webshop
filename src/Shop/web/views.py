@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 import os.path
 PROJECT_DIR = os.path.dirname(__file__)
 
-
 ### necessary models (other than Django's) ###
 from models import *
 from forms import *
@@ -24,14 +23,21 @@ def index(request):
     t = loader.get_template('index.html')
     categories = Category.objects.all()
     best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
-    searchForm = SearchForm()
     
-    context = RequestContext(request, {
-        'categories'  : categories,
-        'products'    : best_products,
-        'form'        : searchForm,
-    })
-
+    if request.user.is_authenticated():
+        no_items = request.user.get_profile().products_in_cart
+        context = RequestContext(request, {
+            'categories'  : categories,
+            'products'    : best_products,
+            'products_in_cart' : no_items,
+        })
+    
+    else:
+        context = RequestContext(request, {
+            'categories'  : categories,
+            'products'    : best_products,
+        })
+        
     # render the home page
     context.update(csrf(request))
     return HttpResponse(t.render(context))
@@ -50,10 +56,13 @@ def cart(request):
         for product in userProducts:
             total += product.quantity * product.product.price
             
+        no_items = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
+            'products_in_cart' : no_items,
             'cart'  : userProducts,
             'total' : total,
         })
+        
         context.update(csrf(request))
         return HttpResponse(template.render(context))
     
@@ -61,8 +70,33 @@ def cart(request):
         t = loader.get_template('index.html')
         context = Context({ })
         return HttpResponse(t.render(context))
+        
 
-
+def addToCart(request, product_id):
+    if request.user.is_authenticated():
+        
+        profile = get_object_or_404(UserProfile, user=request.user) 
+        profile.products_in_cart += 1
+        profile.save()
+        product = get_object_or_404(Product, id=product_id)
+        
+        try: 
+            new_prod = CartProduct.objects.get(product=product, user=request.user)
+            new_prod.quantity += 1
+        
+        except CartProduct.DoesNotExist: 
+            new_prod = CartProduct(product = product, 
+                              user = request.user,
+                              timestamp = datetime.datetime.now(),
+                              quantity = 1)
+        
+        new_prod.save()
+        product.save()
+        return HttpResponse("%s" % profile.products_in_cart)
+        
+    else:
+        return HttpResponse("No registered")
+        
 
 def deleteFromCart(request):
     if request.method == 'POST':
@@ -211,13 +245,15 @@ def product(request, product_id):
     
     if request.user.is_authenticated():
         user = request.user
+        no_items = user.get_profile().products_in_cart
         context = RequestContext(request, {
             'user'     : user,
             'product'  : product,
             'comments' : comments,
             'form'     : form,
+            'products_in_cart' : no_items,
         })
-        
+            
     else:
         context = RequestContext(request, {
             'product'  : product,
@@ -379,12 +415,25 @@ def category(request, category_id):
     categories = Category.objects.all()
     best_products = Product.objects.filter(category=thisCategory.id).filter(stock_count__gt=0).order_by('-average_rating')[:10]
     message = "Products on " + thisCategory.name
-    context = RequestContext(request, {
-        'message' : message,
-        'this' : thisCategory,
-        'categories'  : categories,
-        'products'    : best_products,
-    })
+    
+    if request.user.is_authenticated():
+        no_items = request.user.get_profile().products_in_cart
+        context = RequestContext(request, {
+            'message'     : message,
+            'categories'  : categories,
+            'products'    : best_products,
+            'products_in_cart' : no_items,
+        })
+
+    else:
+        context = RequestContext(request, {
+            'message' : message,
+            'this' : thisCategory,
+            'categories'  : categories,
+            'products'    : best_products,
+        })
+    
+    
     context.update(csrf(request))
     return HttpResponse(template.render(context))
 
@@ -406,11 +455,22 @@ def search(request):
             categories = Category.objects.all()            
             template = loader.get_template('list.html')
             message = "Search results for %s." % query
-            context = RequestContext(request, {
-                'message'     : message,
-                'categories'  : categories,
-                'products'    : products,
-            })
+            
+            if request.user.is_authenticated():
+                no_items = request.user.get_profile().products_in_cart
+                context = RequestContext(request, {
+                    'message'     : message,
+                    'categories'  : categories,
+                    'products'    : products,
+                    'products_in_cart' : no_items,
+                })
+
+            else:
+                context = RequestContext(request, {
+                    'message'     : message,
+                    'categories'  : categories,
+                    'products'    : products,
+                })
             
             context.update(csrf(request))
             return HttpResponse(template.render(context))
@@ -538,12 +598,14 @@ def profile(request):
 
         # obtain the data from the user and display his/her profile
         u = User.objects.get(id=request.user.id)
-        context = Context({
+        no_items = u.get_profile().products_in_cart
+        context = RequestContext(request, {
             'picture'        : '/static/images/users/' + u.username + '.jpg',
             'user'           : u.username,
             'fname'          : u.first_name,
             'sname'          : u.last_name,
             'email'          : u.email,
+            'products_in_cart' : no_items,
             #'postal_address' : u.get_profile().postal_address,
             #'postal_code'    : u.get_profile().postal_code,
             #'postal_city'    : u.get_profile().postal_city,

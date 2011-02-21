@@ -25,25 +25,24 @@
 						</form>
 					</li>
 					
-	                {% if request.user.is_authenticated %}
-					    <li><a href="/signout">Sign out</a></li>
-	                {% else %}
+	                {% if not request.user.is_authenticated %}
 					    <li><a href="/signin">Sign in</a></li> 
 	                {% endif %}
-	                    
-					<li id="nav-separator"></li>
 				
                     {% if request.user.is_authenticated %}
-                        {% if request.user.is_staff %}
-                            <li><a href="/myadmin">Administration</a></li>
-                        {% endif %}
                         <li><a href="/profile">{{ request.user.username }}</a> 
                             <ul> 
                                 <li><a href="/cart">My cart</a></li> 
                                 <li><a href="/profile">My profile</a></li> 
+								<li><a href="/signout">Sign out</a></li>
                             </ul> 
                         </li> 
-                        <li><a href="/cart"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
+
+                        {% if request.user.is_staff %}
+                            <li><a href="/myadmin">Administration</a></li>
+                        {% endif %}
+
+                        <li id="my-cart"><a href="/cart"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> <span id="products-in-cart">{{ products_in_cart }}</span> items</a> </li>
                     {% else %}
 					    <li><a href="/signup">Sign up</a></li>
                     {% endif %}

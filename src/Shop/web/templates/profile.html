@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %} Webshop -- My Profile {% endblock %}
+{% block title %} Webshop | My Profile {% endblock %}
 
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/profile">Your profile</a></li>
+			<li><a href="/cart">Your cart</a></li>
+			<li><a href="/myProducts">Your buy products</a></li>
+		</ul>	
+	</div>
+{% endblock %}
 
 {% block main_content %}
     {% block profile_form %}

@@ -41,6 +41,7 @@
 	
 	</script>
 
+	{% if cart %}
 	<table cellspacing="0" callpadding="50" border="0" width="660">
 		<tr>
 			<td>pic</td>
@@ -67,5 +68,8 @@
 			</div></td>
 		</tr>
 	</table>
+	{% else %}
+		<center><h2>Your cart is empty!</h2></center>
+	{% endif %}
 	
 {% endblock %}

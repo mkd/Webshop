@@ -22,6 +22,14 @@ function showReplyBox(comment){
 	$('#comment_reply_box_'+comment).css("display","block");
 }
 
+function add(){
+	$.get('/cart/add/{{product.id}}', function(data) {
+		$('#products-in-cart').html(data);
+		$("#my-cart").hide();
+		$("#my-cart").fadeIn();;
+	});
+}
+
 </script>
 
 	<div id="product-content">
@@ -34,7 +42,7 @@ function showReplyBox(comment){
 				<h1>{{ product.name }}</h1>
 			</div>			
 			
-			<div id="p-price">
+			<div id="p-price" onclick="add();">
 				 {{ product.price }}&euro; | BUY 
 			</div>
 			
