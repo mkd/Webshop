@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 
 import os.path
 PROJECT_DIR = os.path.dirname(__file__)
+SID = 'keyforme'
+KEY = '8c0593199894c8135c13bf15a31240ad'
 
 ### necessary models (other than Django's) ###
 from models import *
@@ -136,13 +138,18 @@ def checkout(request):
             thisProd = get_object_or_404(Product, id=product.product.id)
             product.total = product.quantity * thisProd.price
             total += product.total
-             
+            
         payment = Payment( user=request.user, amount=total)
+        payment.pid = "%d-%s" % (request.user.id, datetime.datetime.now())
+        checksumstr = "pid=%s&sid=%s&amount=%s&token=%s" % (payment.pid, SID, payment.amount, KEY)
+        m = md5.new(checksumstr)
+        payment.checksum = m.hexdigest()
         payment.save()
     
         no_items = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
             'products_in_cart' : no_items,
+            'sid'     : SID,
             'cost'    : prices,
             'cart'    : products,
             'payment' : payment,
@@ -153,6 +160,49 @@ def checkout(request):
     
     else:
         return HttpResponseRedirect("/")
+        
+def paymentOk(request):
+    if request.user.is_authenticated():
+        pid = request.GET.get('pid')
+        ref = request.GET.get('ref')
+        checksum = request.GET.get('checksum')
+        
+        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
+        m = md5.new(checksumstr)
+        myChecksum = m.hexdigest()
+        
+        print myChecksum
+        print checksum
+        
+        if checksum == myChecksum:
+            user = request.user
+            payment = get_object_or_404(Payment, pid=pid)
+            payment.ref = ref
+            payment.save()
+            products = CartProduct.objects.filter(user=user)
+            
+            for product in products:
+                transaction = Transaction( 
+                    product = product.product,
+                    payment = payment,
+                    quantity = product.quantity,
+                    unit_price = product.product.price)
+                transaction.save()
+                product.delete()
+            
+            profile = get_object_or_404(UserProfile, user=user) 
+            profile.products_in_cart = 0
+            profile.save()
+            
+            return HttpResponseRedirect("/")
+            
+        else:
+            return HttpResponseRedirect("/")
+    
+def paymentNo(request):
+    payment = get_object_or_404(Payment, pid=pid)
+    payment.delete()
+    return HttpResponseRedirect("/checkout")
 
 
 ##

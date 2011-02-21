@@ -185,26 +185,17 @@ class CartProduct(models.Model):
 
 
 class Payment(models.Model):
-    pid             = 'uiop'
-    sid            = 'bionixmalo'
-    key            = '463ee095dceaeb8c198130a4d73f5371'
+    pid            = models.CharField( max_length=500 )
     user           = models.ForeignKey(User)
-    checksum       = models.CharField( max_length=300 )   
+    checksum       = models.CharField( max_length=300 )
+    ref            = models.IntegerField( default=-1 )
     amount         = models.IntegerField( default=0 )   
     payment_date   = models.DateTimeField( default=datetime.now )
+    status         = models.CharField( max_length=100, default='Procesing' )
     postal_address = models.CharField( max_length=160 )
     postal_code    = models.CharField( max_length=5 )
     postal_city    = models.CharField( max_length=20 )
     postal_country = models.CharField( max_length=20 )
-    
-    def save(self, force_insert=False, force_update=False):
-        checksumstr = "pid=%s&sid=%s&amount=%s&token=%s" % (self.pid, self.sid, self.amount, self.key)
-        m = md5.new(checksumstr)
-        self.checksum = m.hexdigest()
-        print checksumstr
-        print self.checksum
-        super(Payment, self).save()
-        return self
 
 ##
 # Model: Transaction
@@ -224,7 +215,7 @@ class Transaction( models.Model ):
     payment        = models.ForeignKey( Payment )
     quantity       = models.IntegerField( default=1 )
     unit_price     = models.FloatField( default=0) 
-    rate           = models.IntegerField()
+    rate           = models.IntegerField( default=0 )
     
     def __unicode__(self):
         return "%s: %s (%d)" % (self.user.username, self.product.name, self.quantity)
