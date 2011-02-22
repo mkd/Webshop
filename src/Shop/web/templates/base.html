@@ -17,7 +17,6 @@
 		  		<ul id="nav"> 
 					<li class="logo"><div id="logo"><img src="/static/images/logo.png" width="63" height="59"  onclick="window.location.href='/';" /></div></li>
 					<li class="search">
-
 						<form class="searchform"  action="/search" method="post">
 							{% csrf_token %}
 							<input class="searchfield" name="query" type="text" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
@@ -26,7 +25,37 @@
 					</li>
 					
 	                {% if not request.user.is_authenticated %}
-					    <li><a href="/signin">Sign in</a></li> 
+					    <li><a href="/signin">Sign in</a>
+						    <ul> <center>
+                                <form method="post" action="/login">
+						        {% csrf_token %}
+						        <table>
+						        <tr>
+						            <td>
+							        <label for="user">User:</label>
+						            </td>
+						            <td>
+						            <input type="text" id="user" name="user" maxlength="16" />
+						            </td>
+						        </tr>
+						        <tr>
+						            <td>
+							        <label for="pass">Pass:</label>
+						            </td>
+						            <td>
+						            <input type="password" id="pass" name="pass" />
+						            </td>
+						        </tr>
+						        <tr>
+						            <td colspan="2" align="right">
+						                <input type="submit" name="submit" value="Sign in" />
+						            </td>
+						        </tr>
+						        </table>
+						        </form>
+								</center>
+                            </ul>					
+						</li> 
 	                {% endif %}
 				
                     {% if request.user.is_authenticated %}
