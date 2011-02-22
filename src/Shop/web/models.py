@@ -8,7 +8,7 @@ import math, md5
 
 
 ##
-# Model: User
+# Model: UserProfile
 # 
 # Uses the built in django.contrib.auth to manage users and athentication.
 # Adds fields to manage the postal information of the user.

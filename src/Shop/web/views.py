@@ -35,7 +35,7 @@ def index(request):
         })
     
     else:
-        context = RequestContext(request, {
+        context = Context({
             'categories'  : categories,
             'products'    : best_products,
         })
@@ -689,6 +689,7 @@ def register(request):
     t = loader.get_template('signin.html')
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
+
         # check if the user already exists in the database
         try:
             check_username = User.objects.get(username=request.POST['user'])
@@ -698,6 +699,7 @@ def register(request):
             check_email = User.objects.get(email=request.POST['email'])
         except:
             check_email = None
+
         if check_username is not None or check_email is not None:
             t = loader.get_template('signup.html')
             context = RequestContext(request, {
@@ -715,14 +717,19 @@ def register(request):
             return HttpResponse(t.render(context))
 
         # save also avatar picture, if available
-        handle_uploaded_profile_pic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
+        try:
+            handle_uploaded_profile_pic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
+        except:
+            pass
         
         # save all the data from the POST into the database
-        u = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
+        u  = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
+        up = UserProfile.objects.create(user_id=u.id)
         u.is_staff   = False
         u.first_name = request.POST['fname']
         u.last_name  = request.POST['sname'],
         u.save()
+        up.save()
 
         # redirect the user to the login page with a welcome
         context = RequestContext(request, {
@@ -777,7 +784,7 @@ def save_profile(request):
         # if no picture given, then don't try to save it
         except:
             pass
-        
+
         # save all the data from the POST into the database
         up = UserProfile.objects.get(user=request.user.id)
         u = User.objects.get(id=request.user.id)
@@ -787,6 +794,13 @@ def save_profile(request):
         up.postal_code    = request.POST['postal_code']
         up.postal_city    = request.POST['city']
         up.postal_country = request.POST['country']
+
+        # TODO: implement password saving
+        # if pass and pass2 match, save them as the new password
+        #if request.POST['passwd'] == request.POST['pass2']:
+        #    u.password =  XXXX
+
+        # commit to the database
         u.save()
         up.save()
 
