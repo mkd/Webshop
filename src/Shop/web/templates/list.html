@@ -1,3 +1,9 @@
+<!--
+   - list.html
+   -
+   - TODO: document me!
+   -
+-->
 {% extends "base.html" %}
 
 {% block main_content %}
@@ -9,7 +15,7 @@
 			<div id='product' onclick="window.location.href='/product/{{ product.id }}'; ">
 				<h1 class="product"><a href="/product/{{ product.id }}/">{{ product.short_name }}</a></h1>
 				<div class="product-image">
-					<div class="middle"><img src="{{ product.picture }}" width="130" height="130"  /></div>
+					<div class="middle"><img src="/static/images/products/{{ product.id }}" width="130" height="130"  /></div>
 					<div class="price">{{ product.price }} &euro;</div>
 				</div>
 				<p>
@@ -20,16 +26,16 @@
 				{% if product.average_rating == 1 %}
 					<center><img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> </center>
 				{% endif %}
-				{% if product.average_rating == 2%}
+				{% if product.average_rating == 2 %}
 					<center><img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> </center>
 				{% endif %}
-				{% if product.average_rating == 3%}
+				{% if product.average_rating == 3 %}
 					<center><img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /></center>
 				{% endif %}
-				{% if product.average_rating == 4%}
+				{% if product.average_rating == 4 %}
 					<center><img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic-no.png" /> </center>
 				{% endif %}
-				{% if product.average_rating == 5%}
+				{% if product.average_rating == 5 %}
 					<center><img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> </center>
 				{% endif %}
 				</p>

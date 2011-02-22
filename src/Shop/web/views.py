@@ -407,13 +407,6 @@ def editProduct(request, product_id):
 def saveProduct(request, product_id):
     t = loader.get_template('myadmin_edit_product.html')
     if request.method == 'POST':
-        # save the icon, if available
-        try:
-            handleUploadedPic('products', request.FILES['picture'], product_id)
-        # if no picture given, then don't try to save it
-        except:
-            pass
-
         # save all the data from the POST into the database
         p = Product.objects.get(id=product_id)
         p.name          = request.POST['name']
@@ -422,6 +415,13 @@ def saveProduct(request, product_id):
         p.units         = request.POST['units']
         p.price         = request.POST['price']
         p.save()
+
+        # save the icon, if available
+        try:
+            handleUploadedPic('products', request.FILES['picture'], str(p.id))
+        # if no picture given, then don't try to save it
+        except:
+            pass
 
         # display editProduct again
         data = {
@@ -434,14 +434,18 @@ def saveProduct(request, product_id):
         form = EditProductForm(data)
 
         # load unknown avatar if no profile picture
-        pic = 'static/images/products/' + str(p.id)
+        pic = 'web/static/images/products/' + str(p.id)
         if not os.path.exists(pic):
             pic = 'static/images/products/unknown.png'
-            form = EditProductForm(data)
-
+        else:
+            pic = 'static/images/products/' + str(p.id)
+        
         # redirect the user to the home page (already logged-in)
+        form = EditProductForm(data)
         context = RequestContext(request, {
+            'icon'          : pic,
             'form'          : form,
+            'product_name'  : p.name,
             'product_saved' : True,
             'product_id'    : product_id,
         })
@@ -481,6 +485,9 @@ def product(request, product_id):
     context.update(csrf(request))
     return HttpResponse(template.render(context))
 
+
+##
+# Set a rating for a given product.
 def rateProduct(request):
     if request.user.is_authenticated() and request.method == 'POST':
         element = request.POST['product']
