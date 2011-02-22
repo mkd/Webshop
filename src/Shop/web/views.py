@@ -832,7 +832,7 @@ def register(request):
 
 ##
 # Render the user profile page.
-def profile(request):
+def editProfile(request):
     # check for an existing session
     if request.user.is_authenticated():
         t = loader.get_template('profile.html')

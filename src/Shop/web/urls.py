@@ -28,7 +28,7 @@ urlpatterns = patterns('',
     (r'^signout$', 'web.views.signout'),
     (r'^login$', 'web.views.tryLogin'),
     (r'^register$', 'web.views.register'),
-    (r'^profile$', 'web.views.profile'),
+    (r'^editProfile$', 'web.views.editProfile'),
     (r'^forgot_password$', 'web.views.forgot_password'),
     (r'^saveProfile$', 'web.views.saveProfile'),
     
