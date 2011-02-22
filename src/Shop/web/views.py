@@ -771,8 +771,15 @@ def profile(request):
         # obtain the data from the user and display his/her profile
         u = User.objects.get(id=request.user.id)
         no_items = u.get_profile().products_in_cart
+
+        # load unknown avatar if no profile picture
+        pic = 'static/images/users/' + u.username + '.jpg'
+        if not os.path.exists(pic):
+            pic = 'static/images/users/new_user.png'
+
+        # set the rest of the data
         context = RequestContext(request, {
-            'picture'        : '/static/images/users/' + u.username + '.jpg',
+            'picture'        : pic,
             'user'           : u.username,
             'fname'          : u.first_name,
             'sname'          : u.last_name,
