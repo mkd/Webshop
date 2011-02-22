@@ -388,11 +388,11 @@ def editProduct(request, product_id):
     form = EditProductForm(data)
 
     # load unknown avatar if no profile picture
-    pic = 'web/static/images/products/' + str(p.id)
+    pic = 'web/static/images/products/' + str(product_id)
     if not os.path.exists(pic):
         pic = 'static/images/products/unknown.png'
     else:
-        pic = 'static/images/products/' + str(p.id)
+        pic = 'static/images/products/' + str(product_id)
 
     context = RequestContext(request, {
         'icon' : pic,
@@ -441,8 +441,9 @@ def saveProduct(request, product_id):
 
         # redirect the user to the home page (already logged-in)
         context = RequestContext(request, {
-            'form'  : form,
+            'form'          : form,
             'product_saved' : True,
+            'product_id'    : product_id,
         })
 
     # render response
@@ -894,10 +895,9 @@ def saveProfile(request):
         up.postal_city    = request.POST['city']
         up.postal_country = request.POST['country']
 
-        # TODO: implement password saving
         # if pass and pass2 match, save them as the new password
-        #if request.POST['passwd'] == request.POST['pass2']:
-        #    u.password =  XXXX
+        if request.POST['passwd'] is not '' and request.POST['passwd'] == request.POST['pass2']:
+            u.set_password(request.POST['passwd'])
 
         # commit to the database
         u.save()
@@ -906,7 +906,7 @@ def saveProfile(request):
         # display profile again
         form = ProfileForm(request.POST, request.FILES)
         context = RequestContext(request, {
-            'picture'        : '/static/images/users/' + u.username + '.jpg',
+            'picture'        : '/static/images/users/' + str(u.id),
             'user'           : u.username,
             'fname'          : u.first_name,
             'sname'          : u.last_name,

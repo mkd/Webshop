@@ -560,3 +560,11 @@ textarea
     font-weight:            bold;
     margin:                 1em 0;
 }
+
+.success
+{
+    color:                  green;
+    display:                block;
+    font-weight:            bold;
+    margin:                 1em 0;
+}

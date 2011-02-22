@@ -16,7 +16,7 @@
     {% block profile_form %}
         <h1>My Profile</h1>
         {% if saved %}
-            <p>Profile data saved successfully!</p>
+            <div class="success">Profile data saved successfully!</div>
         {% endif %}
         <form id="profile_form" method="post" action="/saveProfile">
         {% csrf_token %}
