@@ -308,7 +308,7 @@ def myadmin_products(request):
 
 ##
 # Render a page to add a new product.
-def myadmin_add_product(request):
+def myadmin_addProduct(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_add_product.html')
     context = RequestContext(request, {
@@ -319,7 +319,7 @@ def myadmin_add_product(request):
 
 ##
 # Add a product to the database.
-def add_product(request):
+def addProduct(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST, request.FILES)
         # save all the data from the POST into the database
@@ -333,7 +333,7 @@ def add_product(request):
         p.save()
 
         # save icon
-        handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id) + 'jpg')
+        handleUploadedProfilePic('products', request.FILES['picture'], str(p.id) + 'jpg')
 
         # redirect the products management page
         t = loader.get_template('myadmin_products.html')
@@ -346,7 +346,7 @@ def add_product(request):
 
 ##
 # Add a category to the database.
-def add_category(request):
+def addCategory(request):
     if request.method == 'POST':
         form = AddCategoryForm(request.POST, request.FILES)
         # save all the data from the POST into the database
@@ -358,7 +358,7 @@ def add_category(request):
         c.save()
 
         # save icon
-        handle_uploaded_profile_pic('categories', request.FILES['picture'], str(c.id))
+        handleUploadedProfilePic('categories', request.FILES['picture'], str(c.id))
 
         # redirect the products management page
         t = loader.get_template('myadmin_categories.html')
@@ -371,7 +371,7 @@ def add_category(request):
 
 ##
 # Render a page to edit a product.
-def edit_product(request):
+def editProduct(request, pid):
     form = EditProductForm(request.POST)
     t = loader.get_template('myadmin_edit_product.html')
     context = RequestContext(request, {
@@ -453,7 +453,7 @@ def myadmin_categories(request):
 ##
 # Render a page to add a new category.
 # TODO: this is juast a copy paste from add product.
-def myadmin_add_category(request):
+def myadmin_addCategory(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_add_category.html')
     context = RequestContext(request, {
@@ -465,7 +465,7 @@ def myadmin_add_category(request):
 ##
 # Render a page to edit a category.
 # TODO: this is juast a copy paste from add product.
-def edit_category(request):
+def editCategory(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_edit_category.html')
     context = RequestContext(request, {
@@ -501,7 +501,7 @@ def myadmin_users(request):
 
 ##
 # Render a page to add a new user.
-def myadmin_add_user(request):
+def myadmin_addUser(request):
     form = AddUserForm(request.POST)
     t = loader.get_template('myadmin_add_user.html')
     context = RequestContext(request, {
@@ -512,7 +512,7 @@ def myadmin_add_user(request):
 
 ##
 # Render a page to edit a user.
-def edit_user(request):
+def editUser(request):
     form = EditUserForm(request.POST)
     t = loader.get_template('myadmin_edit_user.html')
     context = RequestContext(request, {
@@ -680,7 +680,7 @@ def signin(request):
 # This function checks the user and password against the users in the database
 # and tries to log in. If successful, the user is redirected to the home page,
 # otherwise an error is displayed.
-def try_login(request):
+def tryLogin(request):
     username = request.POST['user']
     password = request.POST['pass']
     user = authenticate(username=username, password=password)
@@ -741,7 +741,7 @@ def register(request):
 
         # save also avatar picture, if available
         try:
-            handle_uploaded_profile_pic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
+            handleUploadedProfilePic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
         except:
             pass
         
@@ -805,12 +805,12 @@ def profile(request):
 
 ##
 # Save the user's profile.
-def save_profile(request):
+def saveProfile(request):
     t = loader.get_template('profile.html')
     if request.method == 'POST':
         # save the avatar picture, if available
         try:
-            handle_uploaded_profile_pic(request.FILES['picture'], request.user + '.jpg')
+            handleUploadedProfilePic(request.FILES['picture'], request.user + '.jpg')
         # if no picture given, then don't try to save it
         except:
             pass
@@ -874,7 +874,7 @@ def forgot_password(request):
 # @param d Directory where to store the picture.
 # @param f File to be handled.
 # @param n Name of the file.
-def handle_uploaded_profile_pic(d, f, n):
+def handleUploadedProfilePic(d, f, n):
     fo = open('web/static/images/' + d + '/' + n, 'wb+')
     for chunk in f.chunks():
         fo.write(chunk)
@@ -883,7 +883,7 @@ def handle_uploaded_profile_pic(d, f, n):
     
 ##
 # Render add categry page (sign up)
-def render_new_category(request):
+def renderNewCategory(request):
     template = loader.get_template('categoryNew.html')
     category = Category()
     form = NewCategoryForm()
@@ -898,7 +898,7 @@ def render_new_category(request):
 
 ##
 # Render list categry page (sign up)
-def render_list_category(request):
+def renderListCategory(request):
     template = loader.get_template('categoryList.html')
     categories = Category.objects.all()
     
@@ -910,7 +910,7 @@ def render_list_category(request):
        
 ##
 # Add a new category.
-def insert_category(request):
+def insertCategory(request):
     template = loader.get_template('categoryNew.html')
     
     if request.method == 'POST':

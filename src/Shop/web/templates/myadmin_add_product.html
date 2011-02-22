@@ -13,7 +13,8 @@
         <div class="error">Product could not be added!</div>
     {% endif %}
         <h1>New Product</h1>
-        <form enctype="multipart/form-data" id="add_product_form" method="post" action="/add_product">
+        <form enctype="multipart/form-data" id="add_product_form" method="post"
+              action="/addProduct">
         {% csrf_token %}
         <table>
         <tr>

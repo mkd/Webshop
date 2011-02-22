@@ -13,7 +13,7 @@
     <div class="functions">
         <form method="post" action="/deleteProducts">
         {% csrf_token %}
-        <a href="/myadmin_add_product">Add product</a>
+        <a href="/myadmin_addProduct">Add product</a>
         {% ifnotequal products_no 0 %}
             |
             <input type="submit" value="Delete selected products" />

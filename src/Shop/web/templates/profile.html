@@ -18,7 +18,7 @@
         {% if saved %}
             <p>Profile data saved successfully!</p>
         {% endif %}
-        <form id="profile_form" method="post" action="/save_profile">
+        <form id="profile_form" method="post" action="/saveProfile">
         {% csrf_token %}
         <table>
         <tr>
