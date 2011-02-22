@@ -323,7 +323,6 @@ def myadmin_addProduct(request):
 # Add a product to the database.
 def addProduct(request):
     if request.method == 'POST':
-        form = AddProductForm(request.POST, request.FILES)
         # save all the data from the POST into the database
         p = Product.objects.create(
             name            = request.POST['name'],
@@ -332,6 +331,7 @@ def addProduct(request):
             stock_count     = request.POST['units'],
             #tags           = request.POST['tags'],
         )
+        p.save()
 
         # save icon
         try:
@@ -380,12 +380,12 @@ def editProduct(request, product_id):
     p = Product.objects.get(id=product_id)
     data = {
         'name'        : p.name,
-        'description' : p.description,
-        'category'    : p.category,
+        'desc'        : p.description,
         'units'       : p.stock_count,
         'price'       : p.price,
     }
     form = EditProductForm(data)
+    form.fields['category'].initial = p.category
 
     # load unknown avatar if no profile picture
     pic = 'web/static/images/products/' + str(product_id)
@@ -412,8 +412,8 @@ def saveProduct(request, product_id):
         p.name          = request.POST['name']
         p.description   = request.POST['desc']
         p.category      = request.POST['category']
-        p.units         = request.POST['units']
-        p.price         = request.POST['price']
+#        p.stock_count   = int(request.POST['units'])
+        p.price         = int(request.POST['price'])
         p.save()
 
         # save the icon, if available
@@ -426,7 +426,7 @@ def saveProduct(request, product_id):
         # display editProduct again
         data = {
             'name'        : p.name,
-            'description' : p.description,
+            'desc'        : p.description,
             'category'    : p.category,
             'units'       : p.stock_count,
             'price'       : p.price,
@@ -1062,5 +1062,56 @@ def deleteCategories(request):
     categories = Category.objects.all()
     context = RequestContext(request, {
         'categories':  categories,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Delete a set of orders.
+def deleteOrders(request):
+    t = loader.get_template('myadmin_orders.html')
+
+    # delete categories and set their products orphaned 
+    if request.method == 'POST':
+        order_list = request.POST.getlist('order_list')
+        for oid in order_list:
+            o = Transaction.objects.get(pk=oid)
+            o.delete()
+
+    orders = Transaction.objects.all()
+    context = RequestContext(request, {
+        'orders':  orders,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to edit a user.
+#
+# TODO: this is just a copy from editProduct.
+def editProduct(request, product_id):
+    t = loader.get_template('myadmin_edit_product.html')
+    p = Product.objects.get(id=product_id)
+    data = {
+        'name'        : p.name,
+        'desc'        : p.description,
+        'units'       : p.stock_count,
+        'price'       : p.price,
+    }
+    form = EditProductForm(data)
+    return HttpResponse(p.category)
+    form.fields['category'].initial = p.category
+
+    # load unknown avatar if no profile picture
+    pic = 'web/static/images/products/' + str(product_id)
+    if not os.path.exists(pic):
+        pic = 'static/images/products/unknown.png'
+    else:
+        pic = 'static/images/products/' + str(product_id)
+
+    context = RequestContext(request, {
+        'icon' : pic,
+        'form' : form,
+        'product_id' : product_id,
     })
     return HttpResponse(t.render(context))
