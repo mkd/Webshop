@@ -335,7 +335,7 @@ def addProduct(request):
 
         # save icon
         try:
-            handleUploadedProfilePic('products', request.FILES['picture'], str(p.id) + 'jpg')
+            handleUploadedPic('products', request.FILES['picture'], str(p.id) + 'jpg')
         except:
             pass
 
@@ -362,7 +362,7 @@ def addCategory(request):
         c.save()
 
         # save icon
-        handleUploadedProfilePic('categories', request.FILES['picture'], str(c.id))
+        handleUploadedPic('categories', request.FILES['picture'], str(c.id))
 
         # redirect the products management page
         t = loader.get_template('myadmin_categories.html')
@@ -409,7 +409,7 @@ def saveProduct(request, product_id):
     if request.method == 'POST':
         # save the icon, if available
         try:
-            handleUploadedProfilePic('products', request.FILES['picture'], product_id)
+            handleUploadedPic('products', request.FILES['picture'], product_id)
         # if no picture given, then don't try to save it
         except:
             pass
@@ -818,7 +818,7 @@ def register(request):
 
         # save also avatar picture, if available
         try:
-            handleUploadedProfilePic('users', request.FILES['picture'], u.id)
+            handleUploadedPic('users', request.FILES['picture'], u.id)
         except:
             pass
 
@@ -878,13 +878,6 @@ def editProfile(request):
 def saveProfile(request):
     t = loader.get_template('profile.html')
     if request.method == 'POST':
-        # save the avatar picture, if available
-        try:
-            handleUploadedProfilePic(request.FILES['picture'], request.user + '.jpg')
-        # if no picture given, then don't try to save it
-        except:
-            pass
-
         # save all the data from the POST into the database
         up = UserProfile.objects.get(user=request.user.id)
         u = User.objects.get(id=request.user.id)
@@ -896,8 +889,16 @@ def saveProfile(request):
         up.postal_country = request.POST['country']
 
         # if pass and pass2 match, save them as the new password
-        if request.POST['passwd'] is not '' and request.POST['passwd'] == request.POST['pass2']:
-            u.set_password(request.POST['passwd'])
+        pwd = request.POST['passwd']
+        if pwd is not '' and pwd is not None and pwd == request.POST['pass2']:
+            u.set_password(pwd)
+
+        # save the avatar picture, if available
+        try:
+            handleUploadedPic('users', request.FILES['picture'], str(u.id))
+        # if no picture given, then don't try to save it
+        except:
+            pass
 
         # commit to the database
         u.save()
@@ -943,7 +944,7 @@ def forgot_password(request):
 # @param d Directory where to store the picture.
 # @param f File to be handled.
 # @param n Name of the file.
-def handleUploadedProfilePic(d, f, n):
+def handleUploadedPic(d, f, n):
     fo = open('web/static/images/' + d + '/' + n, 'wb+')
     for chunk in f.chunks():
         fo.write(chunk)
@@ -1020,7 +1021,7 @@ def deleteProducts(request):
             product = Product.objects.get(pk=p)
             product.delete()
             # also delete the picture of the product
-            os.remove('static/images/products/' + p + '.jpg')
+            os.remove('static/images/products/' + str(p.id))
 
     # return to the products page
     products = Category.objects.all()
@@ -1049,7 +1050,7 @@ def deleteCategories(request):
                 p.save()
             category.delete()
             # also delete the picture of the category
-            os.remove('static/images/categories/' + p.id + '.jpg')
+            os.remove('static/images/categories/' + str(category_id))
 
     categories = Category.objects.all()
     context = RequestContext(request, {
