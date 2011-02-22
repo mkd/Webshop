@@ -413,7 +413,30 @@ def product(request, product_id):
     context.update(csrf(request))
     return HttpResponse(template.render(context))
 
-
+def rateProduct(request):
+    if request.user.is_authenticated() and request.method == 'POST':
+        element = request.POST['product']
+        rate = request.POST['rate']
+        
+        prodTransaction = Transaction.objects.get(user=request.user, id=element)  
+        product = Product.objects.get(id=prodTransaction.product.id)
+        
+        if prodTransaction.rate == 0:
+            product.votes += 1
+            product.points += int(rate)
+        
+        else:
+            product.points -= prodTransaction.rate
+            product.points += int(rate)
+        
+        prodTransaction.rate = int(rate)
+        prodTransaction.save()
+        product.save()
+        
+        return HttpResponse(rate)
+        
+    else:
+        return HttpResponseRedirect("/checkout")
 ##
 # Render the categories administration page.
 # TODO: this is just a copy paste from products

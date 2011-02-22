@@ -148,8 +148,15 @@ class Product(models.Model):
     sold_count      = models.IntegerField( default=0 )
     comment_count   = models.IntegerField( default=0 )
     visit_count     = models.IntegerField( default=0 )
-    average_rating  = models.DecimalField( max_digits=3, decimal_places=2, default=0) 
+    average_rating  = models.DecimalField( max_digits=1, decimal_places=0, default=0) 
     votes           = models.IntegerField( default=0 )
+    points           = models.IntegerField( default=0 )
+    
+    def save(self, force_insert=False, force_update=False):
+        if self.votes > 0:
+            self.average_rating = self.points / self.votes
+        super(Product, self).save()
+        return self
       
     def __unicode__(self):
         return self.name
