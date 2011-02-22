@@ -141,6 +141,7 @@ class Product(models.Model):
     tags            = models.ManyToManyField( Tag, blank=True)
     category        = models.ManyToManyField(Category, blank=True, default=-1)
     name            = models.CharField( max_length=32 )
+    short_name      = models.CharField( max_length=14, default = '' )
     description     = models.CharField( max_length=512, default = '' )   
     picture         = models.CharField( max_length=256, default = '/static/images/products/unknown.png' )
     price           = models.FloatField( default=1 )
@@ -155,6 +156,13 @@ class Product(models.Model):
     def save(self, force_insert=False, force_update=False):
         if self.votes > 0:
             self.average_rating = self.points / self.votes
+            
+        if self.short_name[:10] != self.name[:10]:
+            if len(self.name) > 10:
+                self.short_name = self.name[:10] + '...'
+            else: 
+                self.short_name = self.name    
+                
         super(Product, self).save()
         return self
       
