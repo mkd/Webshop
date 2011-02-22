@@ -74,7 +74,19 @@ class AddProductForm(forms.Form):
     desc            = forms.CharField( max_length=500, widget=forms.Textarea )
     price           = forms.IntegerField( min_value=1 )
     units           = forms.IntegerField( min_value=0 )
-    tags            = forms.CharField( max_length=64 )
+    #tags            = forms.CharField( max_length=64 )
+    category        = forms.ChoiceField( choices=mychoices() )
+
+
+##
+# Form to edit a product.
+class EditProductForm(forms.Form):
+    picture         = forms.FileField()
+    name            = forms.CharField( max_length=20 )
+    desc            = forms.CharField( max_length=500, widget=forms.Textarea )
+    price           = forms.IntegerField( min_value=1 )
+    units           = forms.IntegerField( min_value=0 )
+    #tags            = forms.CharField( max_length=64 )
     category        = forms.ChoiceField( choices=mychoices() )
 
 

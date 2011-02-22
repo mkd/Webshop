@@ -3,6 +3,7 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('',
     (r'^product/(?P<product_id>\d+)', 'web.views.product'),
     (r'^editProduct/(?P<product_id>\d+)', 'web.views.editProduct'),
+    (r'^saveProduct/(?P<product_id>\d+)', 'web.views.saveProduct'),
     (r'^product/(?P<product_id>\d+)/comment', 'web.views.comment'),
     (r'^category/(?P<category_id>\d+)', 'web.views.category'),
     (r'^editCategory/(?P<category_name>\w+)', 'web.views.editCategory'),

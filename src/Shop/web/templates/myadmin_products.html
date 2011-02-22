@@ -26,7 +26,7 @@
         {% for p in products %}
             <li>
 			    <input type="checkbox" value="{{ p.id }}" name="product_list" />
-                <a href="/edit_product/{{ p.id }}">{{ p.name }}</a>
+                <a href="/editProduct/{{ p.id }}">{{ p.name }}</a>
             </li>
         {% endfor %}
         </ul>

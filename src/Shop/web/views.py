@@ -12,6 +12,8 @@ PROJECT_DIR = os.path.dirname(__file__)
 SID = 'keyforme'
 KEY = '8c0593199894c8135c13bf15a31240ad'
 
+
+
 ### necessary models (other than Django's) ###
 from models import *
 from forms import *
@@ -324,16 +326,18 @@ def addProduct(request):
         form = AddProductForm(request.POST, request.FILES)
         # save all the data from the POST into the database
         p = Product.objects.create(
-            name    = request.POST['name'],
-            description = request.POST['desc'],
-            price   = request.POST['price'],
-            stock_count = request.POST['units'],
-            tags    = request.POST['tags'],
+            name            = request.POST['name'],
+            description     = request.POST['desc'],
+            price           = request.POST['price'],
+            stock_count     = request.POST['units'],
+            #tags           = request.POST['tags'],
         )
-        p.save()
 
         # save icon
-        handleUploadedProfilePic('products', request.FILES['picture'], str(p.id) + 'jpg')
+        try:
+            handleUploadedProfilePic('products', request.FILES['picture'], str(p.id) + 'jpg')
+        except:
+            pass
 
         # redirect the products management page
         t = loader.get_template('myadmin_products.html')
@@ -371,12 +375,78 @@ def addCategory(request):
 
 ##
 # Render a page to edit a product.
-def editProduct(request, pid):
-    form = EditProductForm(request.POST)
+def editProduct(request, product_id):
     t = loader.get_template('myadmin_edit_product.html')
+    p = Product.objects.get(id=product_id)
+    data = {
+        'name'        : p.name,
+        'description' : p.description,
+        'category'    : p.category,
+        'units'       : p.stock_count,
+        'price'       : p.price,
+    }
+    form = EditProductForm(data)
+
+    # load unknown avatar if no profile picture
+    pic = 'web/static/images/products/' + str(p.id)
+    if not os.path.exists(pic):
+        pic = 'static/images/products/unknown.png'
+    else:
+        pic = 'static/images/products/' + str(p.id)
+
     context = RequestContext(request, {
-        'form': form,
+        'icon' : pic,
+        'form' : form,
+        'product_id' : product_id,
     })
+    return HttpResponse(t.render(context))
+
+
+##
+# Save a modified product.
+def saveProduct(request, product_id):
+    t = loader.get_template('myadmin_edit_product.html')
+    if request.method == 'POST':
+        # save the icon, if available
+        try:
+            handleUploadedProfilePic('products', request.FILES['picture'], product_id)
+        # if no picture given, then don't try to save it
+        except:
+            pass
+
+        # save all the data from the POST into the database
+        p = Product.objects.get(id=product_id)
+        p.name          = request.POST['name']
+        p.description   = request.POST['desc']
+        p.category      = request.POST['category']
+        p.units         = request.POST['units']
+        p.price         = request.POST['price']
+        p.save()
+
+        # display editProduct again
+        data = {
+            'name'        : p.name,
+            'description' : p.description,
+            'category'    : p.category,
+            'units'       : p.stock_count,
+            'price'       : p.price,
+        }
+        form = EditProductForm(data)
+
+        # load unknown avatar if no profile picture
+        pic = 'static/images/products/' + str(p.id)
+        if not os.path.exists(pic):
+            pic = 'static/images/products/unknown.png'
+            form = EditProductForm(data)
+
+        # redirect the user to the home page (already logged-in)
+        context = RequestContext(request, {
+            'form'  : form,
+            'product_saved' : True,
+        })
+
+    # render response
+    context.update(csrf(request))
     return HttpResponse(t.render(context))
    
     
