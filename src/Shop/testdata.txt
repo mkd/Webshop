@@ -29,4 +29,12 @@ INSERT INTO "web_product" VALUES(5,'Samsung Galaxy S II','Samsung Ga...','Second
 INSERT INTO "web_product" VALUES(6,'Fender Telecaster Classic','Fender Tel...','Classic Telecaster from Fender (MEX)','/static/images/products/telecaster.gif',1340.0,16,0,0,0,4,2,8);
 INSERT INTO "web_product" VALUES(7,'Gibson SG','Gibson SG','Gibson SG, plain model with 6 strings','/static/images/products/gibson_sg.jpg',899.0,4,0,0,0,1,1,1);
 
+INSERT INTO "web_product_category" VALUES(1,1,5);
+INSERT INTO "web_product_category" VALUES(2,2,1);
+INSERT INTO "web_product_category" VALUES(3,3,3);
+INSERT INTO "web_product_category" VALUES(4,4,3);
+INSERT INTO "web_product_category" VALUES(5,5,3);
+INSERT INTO "web_product_category" VALUES(6,6,2);
+INSERT INTO "web_product_category" VALUES(7,7,2);
+
 COMMIT;

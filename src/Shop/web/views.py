@@ -386,13 +386,11 @@ def product(request, product_id):
     template = loader.get_template('product.html')   
     product = get_object_or_404(Product, id=product_id)
     comments = Comment.objects.filter(product=product_id).order_by('timestamp')
-    form = CommentForm()
     
     if request.user.is_authenticated():
-        user = request.user
-        no_items = user.get_profile().products_in_cart
+        form = CommentForm()
+        no_items = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
-            'user'     : user,
             'product'  : product,
             'comments' : comments,
             'form'     : form,
@@ -403,7 +401,6 @@ def product(request, product_id):
         context = RequestContext(request, {
             'product'  : product,
             'comments' : comments,
-            'form'     : form,
         })
    
     # increment the number of visits to the product 
@@ -549,7 +546,7 @@ def comment(request, product_id):
                                       user = user,
                                       timestamp = datetime.datetime.now(),
                                       comment = text)
-
+    
             new_comment.save()
             product.save()
     
