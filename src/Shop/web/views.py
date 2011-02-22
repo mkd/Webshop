@@ -335,7 +335,7 @@ def addProduct(request):
 
         # save icon
         try:
-            handleUploadedPic('products', request.FILES['picture'], str(p.id) + 'jpg')
+            handleUploadedPic('products', request.FILES['picture'], str(p.id))
         except:
             pass
 
