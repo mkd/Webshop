@@ -12,6 +12,8 @@ PROJECT_DIR = os.path.dirname(__file__)
 SID = 'keyforme'
 KEY = '8c0593199894c8135c13bf15a31240ad'
 
+
+
 ### necessary models (other than Django's) ###
 from models import *
 from forms import *
@@ -308,7 +310,7 @@ def myadmin_products(request):
 
 ##
 # Render a page to add a new product.
-def myadmin_add_product(request):
+def myadmin_addProduct(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_add_product.html')
     context = RequestContext(request, {
@@ -319,21 +321,23 @@ def myadmin_add_product(request):
 
 ##
 # Add a product to the database.
-def add_product(request):
+def addProduct(request):
     if request.method == 'POST':
-        form = AddProductForm(request.POST, request.FILES)
         # save all the data from the POST into the database
         p = Product.objects.create(
-            name    = request.POST['name'],
-            description = request.POST['desc'],
-            price   = request.POST['price'],
-            stock_count = request.POST['units'],
-            tags    = request.POST['tags'],
+            name            = request.POST['name'],
+            description     = request.POST['desc'],
+            price           = request.POST['price'],
+            stock_count     = request.POST['units'],
+            #tags           = request.POST['tags'],
         )
         p.save()
 
         # save icon
-        handle_uploaded_profile_pic('products', request.FILES['picture'], str(p.id) + 'jpg')
+        try:
+            handleUploadedPic('products', request.FILES['picture'], str(p.id))
+        except:
+            pass
 
         # redirect the products management page
         t = loader.get_template('myadmin_products.html')
@@ -346,7 +350,7 @@ def add_product(request):
 
 ##
 # Add a category to the database.
-def add_category(request):
+def addCategory(request):
     if request.method == 'POST':
         form = AddCategoryForm(request.POST, request.FILES)
         # save all the data from the POST into the database
@@ -358,7 +362,7 @@ def add_category(request):
         c.save()
 
         # save icon
-        handle_uploaded_profile_pic('categories', request.FILES['picture'], str(c.id))
+        handleUploadedPic('categories', request.FILES['picture'], str(c.id))
 
         # redirect the products management page
         t = loader.get_template('myadmin_categories.html')
@@ -371,12 +375,83 @@ def add_category(request):
 
 ##
 # Render a page to edit a product.
-def edit_product(request):
-    form = EditProductForm(request.POST)
+def editProduct(request, product_id):
     t = loader.get_template('myadmin_edit_product.html')
+    p = Product.objects.get(id=product_id)
+    data = {
+        'name'        : p.name,
+        'desc'        : p.description,
+        'units'       : p.stock_count,
+        'price'       : p.price,
+    }
+    form = EditProductForm(data)
+    form.fields['category'].initial = p.category_id
+
+    # load unknown avatar if no profile picture
+    pic = 'web/static/images/products/' + str(product_id)
+    if not os.path.exists(pic):
+        pic = 'static/images/products/unknown.png'
+    else:
+        pic = 'static/images/products/' + str(product_id)
+
     context = RequestContext(request, {
-        'form': form,
+        'icon' : pic,
+        'form' : form,
+        'product_id' : product_id,
     })
+    return HttpResponse(t.render(context))
+
+
+##
+# Save a modified product.
+def saveProduct(request, product_id):
+    t = loader.get_template('myadmin_edit_product.html')
+    if request.method == 'POST':
+        # save all the data from the POST into the database
+        p = Product.objects.get(id=product_id)
+        p.name          = request.POST['name']
+        p.description   = request.POST['desc']
+        p.category_id   = request.POST['category']
+        p.stock_count   = int(request.POST['units'])
+        p.price         = int(request.POST['price'])
+        p.save()
+
+        # save the icon, if available
+        try:
+            handleUploadedPic('products', request.FILES['picture'], str(p.id))
+        # if no picture given, then don't try to save it
+        except:
+            pass
+
+        # display editProduct again
+        data = {
+            'name'        : p.name,
+            'desc'        : p.description,
+            'category'    : p.category_id,
+            'units'       : p.stock_count,
+            'price'       : p.price,
+        }
+        form = EditProductForm(data)
+
+        # load unknown avatar if no profile picture
+        pic = 'web/static/images/products/' + str(p.id)
+        if not os.path.exists(pic):
+            pic = 'static/images/products/unknown.png'
+        else:
+            pic = 'static/images/products/' + str(p.id)
+        
+        # redirect the user to the home page (already logged-in)
+        form = EditProductForm(data)
+        context = RequestContext(request, {
+            'icon'          : pic,
+            'form'          : form,
+            'product_name'  : p.name,
+            'product_saved' : True,
+            'product_id'    : product_id,
+        })
+
+    # render response
+    context.update(csrf(request))
     return HttpResponse(t.render(context))
    
     
@@ -410,6 +485,9 @@ def product(request, product_id):
     context.update(csrf(request))
     return HttpResponse(template.render(context))
 
+
+##
+# Set a rating for a given product.
 def rateProduct(request):
     if request.user.is_authenticated() and request.method == 'POST':
         element = request.POST['product']
@@ -450,7 +528,7 @@ def myadmin_categories(request):
 ##
 # Render a page to add a new category.
 # TODO: this is juast a copy paste from add product.
-def myadmin_add_category(request):
+def myadmin_addCategory(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_add_category.html')
     context = RequestContext(request, {
@@ -462,7 +540,7 @@ def myadmin_add_category(request):
 ##
 # Render a page to edit a category.
 # TODO: this is juast a copy paste from add product.
-def edit_category(request):
+def editCategory(request):
     form = AddProductForm(request.POST)
     t = loader.get_template('myadmin_edit_category.html')
     context = RequestContext(request, {
@@ -498,7 +576,7 @@ def myadmin_users(request):
 
 ##
 # Render a page to add a new user.
-def myadmin_add_user(request):
+def myadmin_addUser(request):
     form = AddUserForm(request.POST)
     t = loader.get_template('myadmin_add_user.html')
     context = RequestContext(request, {
@@ -509,7 +587,7 @@ def myadmin_add_user(request):
 
 ##
 # Render a page to edit a user.
-def edit_user(request):
+def editUser(request):
     form = EditUserForm(request.POST)
     t = loader.get_template('myadmin_edit_user.html')
     context = RequestContext(request, {
@@ -677,7 +755,7 @@ def signin(request):
 # This function checks the user and password against the users in the database
 # and tries to log in. If successful, the user is redirected to the home page,
 # otherwise an error is displayed.
-def try_login(request):
+def tryLogin(request):
     username = request.POST['user']
     password = request.POST['pass']
     user = authenticate(username=username, password=password)
@@ -736,12 +814,6 @@ def register(request):
             context.update(csrf(request))
             return HttpResponse(t.render(context))
 
-        # save also avatar picture, if available
-        try:
-            handle_uploaded_profile_pic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
-        except:
-            pass
-        
         # save all the data from the POST into the database
         u  = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
         up = UserProfile.objects.create(user_id=u.id)
@@ -750,6 +822,12 @@ def register(request):
         u.last_name  = request.POST['sname'],
         u.save()
         up.save()
+
+        # save also avatar picture, if available
+        try:
+            handleUploadedPic('users', request.FILES['picture'], u.id)
+        except:
+            pass
 
         # redirect the user to the login page with a welcome
         context = RequestContext(request, {
@@ -762,7 +840,7 @@ def register(request):
 
 ##
 # Render the user profile page.
-def profile(request):
+def editProfile(request):
     # check for an existing session
     if request.user.is_authenticated():
         t = loader.get_template('profile.html')
@@ -773,9 +851,11 @@ def profile(request):
         no_items = u.get_profile().products_in_cart
 
         # load unknown avatar if no profile picture
-        pic = 'static/images/users/' + u.username + '.jpg'
+        pic = 'web/static/images/users/' + str(u.id)
         if not os.path.exists(pic):
             pic = 'static/images/users/new_user.png'
+        else:
+            pic = 'static/images/users/' + str(u.id)
 
         # set the rest of the data
         context = RequestContext(request, {
@@ -802,16 +882,9 @@ def profile(request):
 
 ##
 # Save the user's profile.
-def save_profile(request):
+def saveProfile(request):
     t = loader.get_template('profile.html')
     if request.method == 'POST':
-        # save the avatar picture, if available
-        try:
-            handle_uploaded_profile_pic(request.FILES['picture'], request.user + '.jpg')
-        # if no picture given, then don't try to save it
-        except:
-            pass
-
         # save all the data from the POST into the database
         up = UserProfile.objects.get(user=request.user.id)
         u = User.objects.get(id=request.user.id)
@@ -822,10 +895,17 @@ def save_profile(request):
         up.postal_city    = request.POST['city']
         up.postal_country = request.POST['country']
 
-        # TODO: implement password saving
         # if pass and pass2 match, save them as the new password
-        #if request.POST['passwd'] == request.POST['pass2']:
-        #    u.password =  XXXX
+        pwd = request.POST['passwd']
+        if pwd is not '' and pwd is not None and pwd == request.POST['pass2']:
+            u.set_password(pwd)
+
+        # save the avatar picture, if available
+        try:
+            handleUploadedPic('users', request.FILES['picture'], str(u.id))
+        # if no picture given, then don't try to save it
+        except:
+            pass
 
         # commit to the database
         u.save()
@@ -834,7 +914,7 @@ def save_profile(request):
         # display profile again
         form = ProfileForm(request.POST, request.FILES)
         context = RequestContext(request, {
-            'picture'        : '/static/images/users/' + u.username + '.jpg',
+            'picture'        : '/static/images/users/' + str(u.id),
             'user'           : u.username,
             'fname'          : u.first_name,
             'sname'          : u.last_name,
@@ -871,7 +951,7 @@ def forgot_password(request):
 # @param d Directory where to store the picture.
 # @param f File to be handled.
 # @param n Name of the file.
-def handle_uploaded_profile_pic(d, f, n):
+def handleUploadedPic(d, f, n):
     fo = open('web/static/images/' + d + '/' + n, 'wb+')
     for chunk in f.chunks():
         fo.write(chunk)
@@ -880,7 +960,7 @@ def handle_uploaded_profile_pic(d, f, n):
     
 ##
 # Render add categry page (sign up)
-def render_new_category(request):
+def renderNewCategory(request):
     template = loader.get_template('categoryNew.html')
     category = Category()
     form = NewCategoryForm()
@@ -895,7 +975,7 @@ def render_new_category(request):
 
 ##
 # Render list categry page (sign up)
-def render_list_category(request):
+def renderListCategory(request):
     template = loader.get_template('categoryList.html')
     categories = Category.objects.all()
     
@@ -907,7 +987,7 @@ def render_list_category(request):
        
 ##
 # Add a new category.
-def insert_category(request):
+def insertCategory(request):
     template = loader.get_template('categoryNew.html')
     
     if request.method == 'POST':
@@ -948,7 +1028,7 @@ def deleteProducts(request):
             product = Product.objects.get(pk=p)
             product.delete()
             # also delete the picture of the product
-            os.remove('static/images/products/' + p + '.jpg')
+            os.remove('static/images/products/' + str(p.id))
 
     # return to the products page
     products = Category.objects.all()
@@ -977,10 +1057,61 @@ def deleteCategories(request):
                 p.save()
             category.delete()
             # also delete the picture of the category
-            os.remove('static/images/categories/' + p.id + '.jpg')
+            os.remove('static/images/categories/' + str(category_id))
 
     categories = Category.objects.all()
     context = RequestContext(request, {
         'categories':  categories,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Delete a set of orders.
+def deleteOrders(request):
+    t = loader.get_template('myadmin_orders.html')
+
+    # delete categories and set their products orphaned 
+    if request.method == 'POST':
+        order_list = request.POST.getlist('order_list')
+        for oid in order_list:
+            o = Transaction.objects.get(pk=oid)
+            o.delete()
+
+    orders = Transaction.objects.all()
+    context = RequestContext(request, {
+        'orders':  orders,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to edit a user.
+#
+# TODO: this is just a copy from editProduct.
+def editProduct(request, product_id):
+    t = loader.get_template('myadmin_edit_product.html')
+    p = Product.objects.get(id=product_id)
+    data = {
+        'name'        : p.name,
+        'desc'        : p.description,
+        'units'       : p.stock_count,
+        'price'       : p.price,
+    }
+    form = EditProductForm(data)
+    return HttpResponse(p.category)
+    form.fields['category'].initial = p.category
+
+    # load unknown avatar if no profile picture
+    pic = 'web/static/images/products/' + str(product_id)
+    if not os.path.exists(pic):
+        pic = 'static/images/products/unknown.png'
+    else:
+        pic = 'static/images/products/' + str(product_id)
+
+    context = RequestContext(request, {
+        'icon' : pic,
+        'form' : form,
+        'product_id' : product_id,
     })
     return HttpResponse(t.render(context))

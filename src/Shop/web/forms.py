@@ -9,7 +9,7 @@ from models import *
 ##
 # Retrieve a list of categories and create a list ready to be used as a dropdown
 # list.
-def mychoices():
+def all_categories():
     cats = Category.objects.all()
     categories = [('', '')]
     for c in cats:
@@ -74,8 +74,20 @@ class AddProductForm(forms.Form):
     desc            = forms.CharField( max_length=500, widget=forms.Textarea )
     price           = forms.IntegerField( min_value=1 )
     units           = forms.IntegerField( min_value=0 )
-    tags            = forms.CharField( max_length=64 )
-    category        = forms.ChoiceField( choices=mychoices() )
+    #tags            = forms.CharField( max_length=64 )
+    category        = forms.ChoiceField( choices=all_categories() )
+
+
+##
+# Form to edit a product.
+class EditProductForm(forms.Form):
+    picture         = forms.FileField()
+    name            = forms.CharField( max_length=20 )
+    desc            = forms.CharField( max_length=500, widget=forms.Textarea )
+    price           = forms.IntegerField( min_value=1 )
+    units           = forms.IntegerField( min_value=0 )
+    #tags            = forms.CharField( max_length=64 )
+    category        = forms.ChoiceField( choices=all_categories() )
 
 
 ##
@@ -84,7 +96,7 @@ class AddCategoryForm(forms.Form):
     picture         = forms.FileField()
     name            = forms.CharField( max_length=20 )
     desc            = forms.CharField( max_length=500, widget=forms.Textarea )
-    parent          = forms.ChoiceField( choices=mychoices() )
+    parent          = forms.ChoiceField( choices=all_categories() )
  
  
 ##

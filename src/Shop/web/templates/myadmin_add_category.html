@@ -1,0 +1,63 @@
+<!--
+  - myadmin_add_category.html
+  -
+  - This form is used to add a new category.
+-->
+{% extends "base.html" %}
+
+{% block title %} Webshop -- New Category {% endblock %}
+
+{% block main_content %}
+    {% block new_category_form %}
+    {% if category_not_added %}
+        <div class="error">Category could not be added!</div>
+    {% endif %}
+        <h1>New Category</h1>
+        <form enctype="multipart/form-data" id="add_category_form" method="post"
+              action="/addCategory">
+        {% csrf_token %}
+        <table>
+        <tr>
+            <td colspan="2">
+                <img src="/static/images/categories/unknown.png" align="middle"
+                     height="64" id="picture_enabler"
+                     style="cursor: pointer;" title="Add your own picture" />
+                <em>Click on the image to add a category picture</em>
+                <br />
+                {{ form.picture }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="name">Category name:</label>
+            </td>
+            <td>
+            {{ form.name }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="desc">Description:</label>
+            </td>
+            <td>
+            {{ form.desc }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="category">Parent:</label>
+            </td>
+            <td>
+            {{ form.parent }}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" id="submit" value="Add" />
+                <input type="reset" value="Clear" />
+            </td>
+        </tr>
+        </table>
+        </form>
+    {% endblock %}
+{% endblock %}

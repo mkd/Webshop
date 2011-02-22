@@ -21,20 +21,12 @@ INSERT INTO "web_category" VALUES(3,'Mobile Phones','','images/categories/phones
 INSERT INTO "web_category" VALUES(4,'Watches','','images/categories/watches.png', -1);
 INSERT INTO "web_category" VALUES(5,'Jackets','','images/categories/jackets.png', -1);
 
-INSERT INTO "web_product" VALUES(1,'NorthFace woman coat','North Face...','NorthFace woman coat with slim design and standing high temperatures','/static/images/products/north_face_coat.jpg',69.9,10,0,0,0,2,1,2);
-INSERT INTO "web_product" VALUES(2,'Manolos Sommer','Manolos So...','Hand-made manolos semi-sandals, a creation from Nordic elite','/static/images/products/manolos.jpg',2400.0,2,0,0,0,3,1,3);
-INSERT INTO "web_product" VALUES(3,'Nexus S','Nexus S','Google''s Android flaghsip phone, the Nexus S','/static/images/products/nexusS.png',499.0,25,0,0,0,0,0,0);
-INSERT INTO "web_product" VALUES(4,'Samsung Galaxy S','Samsung Ga...','Most sold Samsung Galaxy S, with Android Froyo 2.2.1','/static/images/products/galaxyS.png',399.0,50,0,0,0,1,1,1);
-INSERT INTO "web_product" VALUES(5,'Samsung Galaxy S II','Samsung Ga...','Second version of the most sold Samsung Galaxy S, with Android Gingerbread 2.3.3','/static/images/products/galaxyS2.jpg',599.0,5,0,0,0,5,1,5);
-INSERT INTO "web_product" VALUES(6,'Fender Telecaster Classic','Fender Tel...','Classic Telecaster from Fender (MEX)','/static/images/products/telecaster.gif',1340.0,16,0,0,0,4,2,8);
-INSERT INTO "web_product" VALUES(7,'Gibson SG','Gibson SG','Gibson SG, plain model with 6 strings','/static/images/products/gibson_sg.jpg',899.0,4,0,0,0,1,1,1);
-
-INSERT INTO "web_product_category" VALUES(1,1,5);
-INSERT INTO "web_product_category" VALUES(2,2,1);
-INSERT INTO "web_product_category" VALUES(3,3,3);
-INSERT INTO "web_product_category" VALUES(4,4,3);
-INSERT INTO "web_product_category" VALUES(5,5,3);
-INSERT INTO "web_product_category" VALUES(6,6,2);
-INSERT INTO "web_product_category" VALUES(7,7,2);
+INSERT INTO "web_product" VALUES(1,5,'NorthFace woman coat','North Face...','NorthFace woman coat with slim design and standing high temperatures','/static/images/products/north_face_coat.jpg',69.9,10,0,0,0,2,1,2);
+INSERT INTO "web_product" VALUES(2,1,'Manolos Sommer','Manolos So...','Hand-made manolos semi-sandals, a creation from Nordic elite','/static/images/products/manolos.jpg',2400.0,2,0,0,0,3,1,3);
+INSERT INTO "web_product" VALUES(3,3,'Nexus S','Nexus S','Google''s Android flaghsip phone, the Nexus S','/static/images/products/nexusS.png',499.0,25,0,0,0,0,0,0);
+INSERT INTO "web_product" VALUES(4,3,'Samsung Galaxy S','Samsung Ga...','Most sold Samsung Galaxy S, with Android Froyo 2.2.1','/static/images/products/galaxyS.png',399.0,50,0,0,0,1,1,1);
+INSERT INTO "web_product" VALUES(5,3,'Samsung Galaxy S II','Samsung Ga...','Second version of the most sold Samsung Galaxy S, with Android Gingerbread 2.3.3','/static/images/products/galaxyS2.jpg',599.0,5,0,0,0,5,1,5);
+INSERT INTO "web_product" VALUES(6,2,'Fender Telecaster Classic','Fender Tel...','Classic Telecaster from Fender (MEX)','/static/images/products/telecaster.gif',1340.0,16,0,0,0,4,2,8);
+INSERT INTO "web_product" VALUES(7,2,'Gibson SG','Gibson SG','Gibson SG, plain model with 6 strings','/static/images/products/gibson_sg.jpg',899.0,4,0,0,0,1,1,1);
 
 COMMIT;

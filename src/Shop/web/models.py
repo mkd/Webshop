@@ -139,7 +139,7 @@ class Tag(models.Model):
 
 class Product(models.Model):
     tags            = models.ManyToManyField( Tag, blank=True)
-    category        = models.ManyToManyField(Category, blank=True, default=-1)
+    category        = models.ForeignKey(Category)
     name            = models.CharField( max_length=32 )
     short_name      = models.CharField( max_length=14, default = '' )
     description     = models.CharField( max_length=512, default = '' )   
@@ -151,9 +151,9 @@ class Product(models.Model):
     visit_count     = models.IntegerField( default=0 )
     average_rating  = models.DecimalField( max_digits=1, decimal_places=0, default=0) 
     votes           = models.IntegerField( default=0 )
-    points           = models.IntegerField( default=0 )
+    points          = models.IntegerField( default=0 )
     
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
         if self.votes > 0:
             self.average_rating = self.points / self.votes
             
@@ -163,7 +163,7 @@ class Product(models.Model):
             else: 
                 self.short_name = self.name    
                 
-        super(Product, self).save()
+        super(Product, self).save(*args, **kwargs)
         return self
       
     def __unicode__(self):

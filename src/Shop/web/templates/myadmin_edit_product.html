@@ -1,28 +1,31 @@
 <!--
-  - myadmin_add_product.html
+  - myadmin_edit_product.html
   -
-  - This form is used to add a new product.
+  - This form is used to edit a product.
 -->
 {% extends "base.html" %}
 
-{% block title %} Webshop -- New Product {% endblock %}
+{% block title %} Webshop -- Edit Product {% endblock %}
 
 {% block main_content %}
     {% block new_product_form %}
-    {% if product_not_added %}
-        <div class="error">Product could not be added!</div>
+    <h1>{{ product_name }}</h1>
+    {% if product_not_saved %}
+        <div class="error">Product could not be modified!</div>
     {% endif %}
-        <h1>New Product</h1>
+    {% if product_saved %}
+        <div class="success">Product data saved successfully!</div>
+    {% endif %}
         <form enctype="multipart/form-data" id="add_product_form" method="post"
-              action="/addProduct">
+              action="/saveProduct/{{ product_id }}">
         {% csrf_token %}
         <table>
         <tr>
             <td colspan="2">
-                <img src="/static/images/products/unknown.png" align="middle"
+                <img src="/{{ icon }}" align="middle"
                      height="64" id="picture_enabler"
-                     style="cursor: pointer;" title="Add your own picture" />
-                <em>Click on the image to add a product picture</em>
+                     style="cursor: pointer;" title="Edit picture" />
+                <em>Click on the image to change the product picture</em>
                 <br />
                 {{ form.picture }}
             </td>
@@ -79,7 +82,7 @@
         -->
         <tr>
             <td colspan="2" align="right">
-                <input type="submit" id="submit" value="Add" />
+                <input type="submit" id="submit" value="Save" />
                 <input type="reset" value="Clear" />
             </td>
         </tr>

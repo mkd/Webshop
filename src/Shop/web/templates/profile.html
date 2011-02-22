@@ -5,7 +5,7 @@
 {% block side_bar %}
 	<div id="side_bar">
 		<ul id="side_bar">
-			<li><a href="/profile">Your profile</a></li>
+			<li><a href="/editProfile">Your profile</a></li>
 			<li><a href="/cart">Your cart</a></li>
 			<li><a href="/myProducts">Your buy products</a></li>
 		</ul>	
@@ -16,9 +16,9 @@
     {% block profile_form %}
         <h1>My Profile</h1>
         {% if saved %}
-            <p>Profile data saved successfully!</p>
+            <div class="success">Profile data saved successfully!</div>
         {% endif %}
-        <form id="profile_form" method="post" action="/save_profile">
+        <form enctype="multipart/form-data" id="profile_form" method="post" action="/saveProfile">
         {% csrf_token %}
         <table>
         <tr>
