@@ -806,12 +806,6 @@ def register(request):
             context.update(csrf(request))
             return HttpResponse(t.render(context))
 
-        # save also avatar picture, if available
-        try:
-            handleUploadedProfilePic('users', request.FILES['picture'], request.POST['user'] + '.jpg')
-        except:
-            pass
-        
         # save all the data from the POST into the database
         u  = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
         up = UserProfile.objects.create(user_id=u.id)
@@ -820,6 +814,12 @@ def register(request):
         u.last_name  = request.POST['sname'],
         u.save()
         up.save()
+
+        # save also avatar picture, if available
+        try:
+            handleUploadedProfilePic('users', request.FILES['picture'], u.id)
+        except:
+            pass
 
         # redirect the user to the login page with a welcome
         context = RequestContext(request, {
@@ -843,9 +843,11 @@ def editProfile(request):
         no_items = u.get_profile().products_in_cart
 
         # load unknown avatar if no profile picture
-        pic = 'static/images/users/' + u.username + '.jpg'
+        pic = 'web/static/images/users/' + str(u.id)
         if not os.path.exists(pic):
             pic = 'static/images/users/new_user.png'
+        else:
+            pic = 'static/images/users/' + str(u.id)
 
         # set the rest of the data
         context = RequestContext(request, {
