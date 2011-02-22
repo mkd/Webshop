@@ -72,7 +72,9 @@
                             <li><a href="/myadmin">Administration</a></li>
                         {% endif %}
 
+						{% if products_in_cart != '' %}
                         <li id="my-cart"><a href="/cart"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> <span id="products-in-cart">{{ products_in_cart }}</span> items</a> </li>
+						{% endif %}
                     {% else %}
 					    <li><a href="/signup">Sign up</a></li>
                     {% endif %}
