@@ -139,7 +139,7 @@ class Tag(models.Model):
 
 class Product(models.Model):
     tags            = models.ManyToManyField( Tag, blank=True)
-    category        = models.ManyToManyField(Category, blank=True, default=-1)
+    category        = models.ForeignKey(Category)
     name            = models.CharField( max_length=32 )
     short_name      = models.CharField( max_length=14, default = '' )
     description     = models.CharField( max_length=512, default = '' )   

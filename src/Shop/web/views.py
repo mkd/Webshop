@@ -385,7 +385,7 @@ def editProduct(request, product_id):
         'price'       : p.price,
     }
     form = EditProductForm(data)
-    form.fields['category'].initial = p.category
+    form.fields['category'].initial = p.category_id
 
     # load unknown avatar if no profile picture
     pic = 'web/static/images/products/' + str(product_id)
@@ -411,8 +411,8 @@ def saveProduct(request, product_id):
         p = Product.objects.get(id=product_id)
         p.name          = request.POST['name']
         p.description   = request.POST['desc']
-        p.category      = request.POST['category']
-#        p.stock_count   = int(request.POST['units'])
+        p.category_id   = request.POST['category']
+        p.stock_count   = int(request.POST['units'])
         p.price         = int(request.POST['price'])
         p.save()
 
@@ -427,7 +427,7 @@ def saveProduct(request, product_id):
         data = {
             'name'        : p.name,
             'desc'        : p.description,
-            'category'    : p.category,
+            'category'    : p.category_id,
             'units'       : p.stock_count,
             'price'       : p.price,
         }
