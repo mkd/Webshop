@@ -751,10 +751,10 @@ def profile(request):
             'sname'          : u.last_name,
             'email'          : u.email,
             'products_in_cart' : no_items,
-            #'postal_address' : u.get_profile().postal_address,
-            #'postal_code'    : u.get_profile().postal_code,
-            #'postal_city'    : u.get_profile().postal_city,
-            #'postal_country' : u.get_profile().postal_country,
+            'address'        : u.get_profile().postal_address,
+            'postal_code'    : u.get_profile().postal_code,
+            'city'           : u.get_profile().postal_city,
+            'country'        : u.get_profile().postal_country,
             'form'           : form,
         })
         context.update(csrf(request))
@@ -769,44 +769,46 @@ def profile(request):
 ##
 # Save the user's profile.
 def save_profile(request):
-    t = loader.get_template('index.html')
+    t = loader.get_template('profile.html')
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES)
-        t = loader.get_template('profile.html')
-        context = RequestContext(request, {
-            'username'       : request.POST['user'],
-            'fname'          : request.POST['fname'],
-            'sname'          : request.POST['sname'],
-            'email'          : request.POST['email'],
-            'email2'         : request.POST['email2'],
-            'passwd'         : request.POST['passwd'],
-            'pass2'          : request.POST['pass2'],
-            'user_exists'    : True,
-            'form'           : form
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
-
-        # save also avatar picture, if available
-        if form.is_valid():
-            handle_uploaded_profile_pic(request.FILES['picture'], request.POST['user'] + '.jpg')
+        # save the avatar picture, if available
+        try:
+            handle_uploaded_profile_pic(request.FILES['picture'], request.user + '.jpg')
+        # if no picture given, then don't try to save it
+        except:
+            pass
         
         # save all the data from the POST into the database
-        context = RequestContext(request, {
-            'user'      : request.POST['user'],
-        })
-        u = User(
-            username       = request.POST['user'],
-            first_name     = request.POST['fname'],
-            last_name      = request.POST['sname'],
-            email          = request.POST['email'],
-            password       = hashlib.sha1(request.POST['passwd']).hexdigest(),
-        )
+        up = UserProfile.objects.get(user=request.user.id)
+        u = User.objects.get(id=request.user.id)
+        u.first_name = request.POST['fname']
+        u.last_name  = request.POST['sname']
+        up.postal_address = request.POST['address'],
+        up.postal_code    = request.POST['postal_code']
+        up.postal_city    = request.POST['city']
+        up.postal_country = request.POST['country']
         u.save()
+        up.save()
 
-        # redirect the user to the home page (already logged-in)
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
+        # display profile again
+        form = ProfileForm(request.POST, request.FILES)
+        context = RequestContext(request, {
+            'picture'        : '/static/images/users/' + u.username + '.jpg',
+            'user'           : u.username,
+            'fname'          : u.first_name,
+            'sname'          : u.last_name,
+            'email'          : u.email,
+            'address'        : u.get_profile().postal_address,
+            'postal_code'    : u.get_profile().postal_code,
+            'city'           : u.get_profile().postal_city,
+            'country'        : u.get_profile().postal_country,
+            'form'           : form,
+            'saved'          : True,
+        })
+
+    # redirect the user to the home page (already logged-in)
+    context.update(csrf(request))
+    return HttpResponse(t.render(context))
   
 
 ##
