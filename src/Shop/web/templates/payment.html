@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %} My cart {% endblock %}
+{% block extra_head %}
+	<link rel=stylesheet href="/static/css/cart.css" type="text/css" />
+{% endblock %}
+
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/profile">Your profile</a></li>
+			<li><a href="/cart">Your cart</a></li>
+			<li><a href="/myProducts">Your buy products</a></li>
+		</ul>	
+	</div>
+{% endblock %}
+
+{% block main_content %}
+
+	{% if cart %}
+	<center><h2>My cart</h2>
+	<table cellspacing="0" callpadding="50" border="0" width="500">
+		<form action="/checkout" method="post" id="form-myCart">
+			{% csrf_token %}
+			
+			{% for product in cart %}
+			<tr class="item" id="item-{{ product.id }}">
+				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
+				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }} {{ product.id }}</a></td>
+				<td class="quantity" width="100"> {{ product.quantity }}</td>
+				<td class="value" width="75">{{ product.total }} &euro;</td>
+			</tr>
+			{% endfor %}
+			
+			<tr>
+				<td colspan="4" class="total">Total: <span id="total">{{ payment.amount }}</span> &euro; <br/><br/>
+				<div id="checkout" onclick="$('#payment-form').submit()">
+					 Pay 
+				</div></td>
+			</tr>
+		</form>
+	</table>
+	</center>
+
+	<form action="http://webcourse.cs.hut.fi/payment/pay/" method="POST" id="payment-form">
+	    <input type="hidden" name="pid" value="{{ payment.pid }}" />
+	    <input type="hidden" name="sid" value="{{ sid }}" />
+	    <input type="hidden" id="id_amount" name="amount" value="{{ payment.amount }}" />
+	    <input type="hidden" name="success_url" value="http://localhost:8000/success" />
+	    <input type="hidden" name="cancel_url" value="http://localhost:8000/cancel" />
+	    <input type="hidden" name="error_url" value="http://localhost:8000/error" />
+		<input name="dev" type="hidden" id="id_dev">
+	    <input type="hidden" name="checksum" value="{{ payment.checksum }}" />
+	</form>
+	
+	{% else %}
+		<center><h2>Your cart is empty!</h2></center>
+	{% endif %}
+	
+{% endblock %}

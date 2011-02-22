@@ -73,6 +73,41 @@ def cart(request):
         context = Context({ })
         return HttpResponse(t.render(context))
         
+def myProducts(request, payment_id):
+    if request.user.is_authenticated():
+        template = loader.get_template('myProducts.html')
+        payment = get_object_or_404(Payment, id=payment_id) 
+        
+        if payment.user != request.user:
+            return HttpResponseRedirect("/")
+        
+        products = Transaction.objects.filter(payment=payment)          
+        no_items = request.user.get_profile().products_in_cart
+        context = RequestContext(request, {
+            'products_in_cart' : no_items,
+            'payment'  : payment,
+            'products'  : products,
+            'message'   : request.GET.get('m',''),
+        })
+        return HttpResponse(template.render(context))
+        
+    else:
+        return HttpResponseRedirect("/")
+    
+def myTransactions(request):
+    if request.user.is_authenticated():
+        template = loader.get_template('transactions.html')
+        payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
+        no_items = request.user.get_profile().products_in_cart
+        context = RequestContext(request, {
+            'products_in_cart' : no_items,
+            'payments'  : payments,
+            'message'   : request.GET.get('m',''),
+        })
+        return HttpResponse(template.render(context))
+        
+    else:
+        return HttpResponseRedirect("/")
 
 def addToCart(request):
     if request.user.is_authenticated():
@@ -184,9 +219,15 @@ def paymentOk(request):
             for product in products:
                 transaction = Transaction( 
                     product = product.product,
+                    user = user,
                     payment = payment,
                     quantity = product.quantity,
                     unit_price = product.product.price)
+                
+                theProduct = product.product
+                theProduct.stock_count -= product.quantity
+                theProduct.sold_count += product.quantity
+                theProduct.save()
                 transaction.save()
                 product.delete()
             
@@ -194,10 +235,12 @@ def paymentOk(request):
             profile.products_in_cart = 0
             profile.save()
             
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect("/myTransactions?m=Payment succesful!")
             
         else:
-            return HttpResponseRedirect("/")
+            payment = get_object_or_404(Payment, pid=pid)
+            payment.delete()
+            return HttpResponseRedirect("/checkout")
     
 def paymentNo(request):
     payment = get_object_or_404(Payment, pid=pid)
@@ -483,7 +526,7 @@ def comment(request, product_id):
                                       user = user,
                                       timestamp = datetime.datetime.now(),
                                       comment = text)
-            
+
             new_comment.save()
             product.save()
     

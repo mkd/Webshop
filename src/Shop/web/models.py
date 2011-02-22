@@ -191,7 +191,7 @@ class Payment(models.Model):
     ref            = models.IntegerField( default=-1 )
     amount         = models.IntegerField( default=0 )   
     payment_date   = models.DateTimeField( default=datetime.now )
-    status         = models.CharField( max_length=100, default='Procesing' )
+    status         = models.CharField( max_length=100, default='Delivered' )
     postal_address = models.CharField( max_length=160 )
     postal_code    = models.CharField( max_length=5 )
     postal_city    = models.CharField( max_length=20 )
@@ -211,11 +211,18 @@ class Payment(models.Model):
 # postal_city      The city.
 # postal_country   The country.
 class Transaction( models.Model ):
+    user           = models.ForeignKey(User)
     product        = models.ForeignKey( Product )
     payment        = models.ForeignKey( Payment )
     quantity       = models.IntegerField( default=1 )
-    unit_price     = models.FloatField( default=0) 
+    unit_price     = models.FloatField( default=0)
+    total          = models.IntegerField( default=0 )
     rate           = models.IntegerField( default=0 )
+    
+    def save(self, force_insert=False, force_update=False):
+        self.total = self.unit_price * self.quantity
+        super(Transaction, self).save()
+        return self
     
     def __unicode__(self):
         return "%s: %s (%d)" % (self.user.username, self.product.name, self.quantity)
@@ -252,10 +259,12 @@ class Comment(models.Model):
         return self.user.username + " en " + self.product.name
     
     def save(self, force_insert=False, force_update=False):
-        # do custom stuff
         try:
-            transaction = Transaction.objects.get(user=self.user, product=self.product)
-            self.hasProduct = True
+            transaction = Transaction.objects.filter(product=self.product, user=self.user)
+            if transaction:
+                self.hasProduct = True
+            else:
+                self.hasProduct = False
             
         except Transaction.DoesNotExist: 
             self.hasProduct = False

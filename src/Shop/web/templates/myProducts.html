@@ -63,32 +63,36 @@
 	
 	</script>
 
-	{% if cart %}
-	<center><h2>My cart</h2></center>
-	<table cellspacing="0" callpadding="50" border="0" width="660">
-		<form action="/checkout" method="post" id="form-myCart">
-			{% csrf_token %}
-			{% for product in cart %}
+	{% if products %}
+	<center><h2>My order on {{ payment.payment_date }}</h2>
+		<h2>Status: {{ payment.status }}</h2>
+	<table cellspacing="0" callpadding="50" border="0" width="550">
+
+			{% for product in products %}
 			<tr class="item" id="item-{{ product.id }}">
 				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
 				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
-				<td class="quantity" width="100"><input type="text" name="quantity-{{ product.id }}" id="quantity-{{ product.id }}" value="{{ product.quantity }}" size="8" onChange="editQuantity({{ product.id }}, {{ product.product.price }} )"/>
-					<input type="hidden" id="before-quantity-{{ product.id }}" value="{{ product.quantity }}" /></td>
-				<td class="value" width="75">{{ product.product.price }} &euro;</td>
-				<td class="delete" width="40"><img src="/static/images/delete-icon.png" onclick="deleteProduct({{ product.id }}, {{ product.product.price }})" /></td>
+				<td class="rate">
+					{% if payment.status == 'Delivered' %}
+					{% else %}
+						<img src="/static/images/heart-pic-no.png" />
+						<img src="/static/images/heart-pic-no.png" />
+						<img src="/static/images/heart-pic-no.png" />
+						<img src="/static/images/heart-pic-no.png" />
+						<img src="/static/images/heart-pic-no.png" />
+					{% endif %}
+				
+				</td>
+				<td class="value" >{{ product.quantity }} x {{ product.unit_price }} &euro; = {{ product.total }} &euro;</td>
+
 			</tr>
 			{% endfor %}
 			
-			<tr>
-				<td colspan="5" class="total">Total: <span id="total">{{ total }}</span> &euro; 
-				<div id="checkout" onclick="$('#form-myCart').submit()">
-					 Checkout 
-				</div></td>
-			</tr>
-		</form>
 	</table>
+	</center>
+	
 	{% else %}
-		<center><h2>Your cart is empty!</h2></center>
+		<center><h2>This order does not have products.</h2></center>
 	{% endif %}
 	
 {% endblock %}

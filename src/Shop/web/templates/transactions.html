@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %} My cart {% endblock %}
+
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/profile">Your profile</a></li>
+			<li><a href="/cart">Your cart</a></li>
+			<li><a href="/myProducts">Your buy products</a></li>
+		</ul>	
+	</div>
+{% endblock %}
+
+{% block main_content %}
+
+	{% if payments %}
+	<center><h2>My transactions</h2></center>
+	
+	<div id='message'>{{ message }}</div>	
+		
+	<center>	
+	<table cellspacing="0" callpadding="50" border="0" width="500">
+			{% for payment in payments %}
+			<tr class="transaction" id="">
+				<td id="date"><a href='/myProducts/{{ payment.id }}'>{{ payment.payment_date }}</a></td>
+				<td id="cost">Transaction amount: {{ payment.amount }} &euro;</td>
+				<td id="status">Status: {{ payment.status }}</td>
+			</tr>
+			{% endfor %}
+	</table>
+	</center>
+	
+	{% else %}
+		<center><h2>You don't have any transaction yet!</h2></center>
+	{% endif %}
+	
+{% endblock %}
