@@ -347,7 +347,13 @@ def myadmin(request):
 
 ##
 # Render the products administration page.
+#
+# The products admin page renders a table with all the products, that can be
+# sorted by name, price, popularity, etcetera.
 def myadmin_products(request):
+    # fetch the sorting criteria from GET
+
+    # retrieve the products from the database
     products = Product.objects.all()
     t = loader.get_template('myadmin_products.html')
     context = RequestContext(request, {
@@ -413,7 +419,7 @@ def editProduct(request, product_id):
     p = Product.objects.get(id=product_id)
     form = ProductForm(instance=p)
 
-    # load unknown avatar if no profile picture
+    # load the picture for the product
     pic = 'web/static/images/products/' + str(product_id)
     if not os.path.exists(pic):
         pic = 'static/images/products/unknown.png'
@@ -448,7 +454,7 @@ def saveProduct(request, product_id):
         # display editProduct again
         form = ProductForm(instance=p)
 
-        # load unknown avatar if no profile picture
+        # load the picture for the product
         pic = 'web/static/images/products/' + str(p.id)
         if not os.path.exists(pic):
             pic = 'static/images/products/unknown.png'
