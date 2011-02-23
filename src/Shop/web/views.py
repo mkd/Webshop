@@ -369,7 +369,7 @@ def editProduct(request, product_id):
         'price'       : p.price,
     }
     form = EditProductForm(data)
-    forms.fields['category'].initial = p.category_id
+#    forms.fields['category'].initial = 1
 
     # load unknown avatar if no profile picture
     pic = 'web/static/images/products/' + str(product_id)
