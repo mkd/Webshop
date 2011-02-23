@@ -361,12 +361,17 @@ def myadmin_products(request):
 
     # retrieve the products from the database
     products = Product.objects.all().order_by(criteria)
+    if len(products) <= 0:
+        products_no_0 = True
+    else:
+        products_no_0 = False
     t = loader.get_template('myadmin_products.html')
     context = RequestContext(request, {
-        'products'    : products,
-        'products_no' : len(products),
-        'column'      : column,
-        'order'       : order,
+        'products'      : products,
+        'products_no'   : len(products),
+        'products_no_0' : products_no_0,
+        'column'        : column,
+        'order'         : order,
     })
     return HttpResponse(t.render(context))
 
@@ -963,19 +968,29 @@ def handleUploadedPic(d, f, n):
 ##
 # Delete a set of products.
 def deleteProducts(request):
-    t = loader.get_template('myadmin_products.html')
+    # if the user is not staff, go back to home page
+    if not request.user.is_authenticated() or not request.user.is_staff:
+        return HttpResponseRedirect('/')
 
     # delete products
-    # note: comments are not necessarily deleted, because the user miht want to
+    # note: comments are not necessarily deleted, because the user might want to
     # check a comment he or she wrote in the past (even if the product does not
     # exist anymore)
+    t = loader.get_template('myadmin_products.html')
     if request.method == 'POST':
         products = request.POST.getlist('product_list')
+        # if no products to delete, then go back to products admin
+        if len(products) <= 0:
+            return HttpResponseRedirect('/myadmin_products')
+
+        # if there are products to delete, go one by one
+        # note: the picture of the product must be also deleted
         for p in products:
             product = Product.objects.get(pk=p)
             product.delete()
             # also delete the picture of the product
-            os.remove('static/images/products/' + str(p.id))
+            if os.path.exists('web/static/images/products/' + str(p)):
+                os.remove('web/static/images/products/' + str(p))
 
     # return to the products page
     products = Category.objects.all()
