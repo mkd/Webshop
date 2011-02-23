@@ -116,6 +116,8 @@ def myTransactions(request):
         
     else:
         return HttpResponseRedirect("/")
+        
+        
 
 def addToCart(request):
     if request.user.is_authenticated():
