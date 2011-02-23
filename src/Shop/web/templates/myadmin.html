@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %} Administrative Functions {% endblock %}
+{% block extra_head %}
+	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
+{% endblock %}
+
+{% block main_content %}
+    <h1>Administrative Functions</h1>
+    {% if not_signed_in %}
+        <div class="error">The administration pages are only for registered
+        staff members of Webshop.</div>
+
+        <p><a href="/signin">Sign in now!</a></p>
+    {% else %}
+        {% if not_staff %}
+            <div class="error">The administration pages are only for
+            staff members of Webshop.</div>
+        {% else %}
+            <p>Welcome to the administrative pages. You can add new products,
+            edit existing units in the stock, check the most popular items,
+            administrate categories and users, and manage users' purchases
+            through orders.</p>
+
+            <table id="admin">
+                <tr>
+                    <td onclick="window.location='/myadmin_products'">
+                        <a href="/myadmin_products"><img
+                           src="/static/images/products.png"
+                           alt="admin_products" /></a>
+                        <br />
+                        <a href="/myadmin_products">Administrate products</a>
+                    </td>
+                    <td onclick="window.location='/myadmin_orders'">
+                        <a href="/myadmin_orders"><img
+                           src="/static/images/orders.png"
+                           alt="admin_orders" /></a>
+                        <br />
+                        <a href="/myadmin_orders">Administrate orders</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td onclick="window.location='/myadmin_users'">
+                        <a href="/admin/auth/user"><img
+                           src="/static/images/users.png"
+                           alt="admin_users" /></a>
+                        <br />
+                        <a href="/admin/auth/user">Administrate users</a>
+                    </td>
+                    <td onclick="window.location='/myadmin_category'">
+                        <a href="/admin/web/category"><img
+                           src="/static/images/categories.png"
+                           alt="admin_categories" /></a>
+                        <br />
+                        <a href="/admin/web/category">Administrate categories</a>
+                    </td>
+                </tr>
+            </table>
+        {% endif %}
+    {% endif %}
+{% endblock %}
