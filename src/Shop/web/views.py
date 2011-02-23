@@ -117,13 +117,15 @@ def myTransactions(request):
     else:
         return HttpResponseRedirect("/")
 
+##
+# TODO: document me!
 def addToCart(request):
     if request.user.is_authenticated():
         profile = get_object_or_404(UserProfile, user=request.user) 
         profile.products_in_cart += 1
         profile.save()
         product = get_object_or_404(Product, id=request.POST['product'])
-        
+
         try: 
             new_prod = CartProduct.objects.get(product=product, user=request.user)
             new_prod.quantity += 1
@@ -847,8 +849,8 @@ def saveProfile(request):
         up.postal_country = request.POST.get('country')
 
         # if pass and pass2 match, save them as the new password
-        pwd = request.POST.get('passwd')
-        if pwd is not '' and pwd is not None and pwd == request.POST.get('pass2'):
+        pwd = request.POST.get('passwd', None)
+        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')):
             u.set_password(pwd)
 
         # save the avatar picture, if available
