@@ -13,7 +13,6 @@
 	<div id='products'>
 		
 		{% if icons == 'OK' %}
-		
 			{% for product in products %}
 				<div id='product' onclick="window.location.href='/product/{{ product.id }}'; ">
 					<h1 class="product"><a href="/product/{{ product.id }}/">{{ product.short_name }}</a></h1>
