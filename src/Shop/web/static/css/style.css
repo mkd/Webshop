@@ -501,7 +501,7 @@ h1.product  a
 	color: #666;
 }
 
-p.title
+div.title
 {
     margin-top: 0px;
     font-weight: bold;
@@ -512,14 +512,14 @@ p.title
 	color: #666;
 }
 
-p.title  a
+div.title  a
 {
 	text-decoration: none;
 	text-transform:capitalize;
 	color: #666;
 }
 
-p.title a:hover
+div.title a:hover
 {
 	text-decoration: underline;
 	color: #444;
@@ -583,6 +583,12 @@ p.title a:hover
 	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
 }
 
+.price-list
+{
+	cursor: pointer;
+	margin-bottom: -10px;
+}
+
 .middle
 {
 	display: table-cell; 
@@ -621,5 +627,20 @@ textarea
 td.product
 {
 	border-top: 1px solid #999;
-	padding-top: 24px;
+	padding-top: 10px;
+}
+
+img.product-pic
+{
+	width: 50px;
+	height: 50px;
+	padding:2px;
+	border: solid #888 1px;
+    -webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
+
+div.display-options
+{
+    text-align:right; 
 }

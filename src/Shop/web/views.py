@@ -12,6 +12,8 @@ PROJECT_DIR = os.path.dirname(__file__)
 SID = 'keyforme'
 KEY = '8c0593199894c8135c13bf15a31240ad'
 
+
+
 ### necessary models (other than Django's) ###
 from models import *
 from forms import *
@@ -23,28 +25,29 @@ import datetime, hashlib, os
 # Render the home page. 
 def index(request):
     t = loader.get_template('index.html')
+    
+    # Load the categories and the products ordered by rating.
     categories = Category.objects.all()
     best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
     
+    context = RequestContext(request, {
+        'categories'  : categories,
+        'products'    : best_products,
+    })
+    
+    # If the user is authenticated then send info about the card in the request.
     if request.user.is_authenticated():
         no_items = request.user.get_profile().products_in_cart
-        context = RequestContext(request, {
-            'categories'  : categories,
-            'products'    : best_products,
-            'products_in_cart' : no_items,
-        })
+        context.update({'products_in_cart': no_items})
     
-    else:
-        context = Context({
-            'categories'  : categories,
-            'products'    : best_products,
-        })
+    # If receives the option to show as icons the send this option to the template.    
+    if request.GET.get('l') == 'icons':
+        context.update({'icons': 'OK'})
         
     # render the home page
     context.update(csrf(request))
     return HttpResponse(t.render(context))
-
-
+    
 
 ##
 # Render the user cart page.    
@@ -378,7 +381,7 @@ def myadmin_products(request):
 ##
 # Render a page to add a new product.
 def myadmin_addProduct(request):
-    form = ProductForm()
+    form = AddProductForm()
     t = loader.get_template('myadmin_add_product.html')
     context = RequestContext(request, {
         'form': form,
@@ -418,7 +421,14 @@ def addProduct(request):
 def editProduct(request, product_id):
     t = loader.get_template('myadmin_edit_product.html')
     p = Product.objects.get(id=product_id)
-    form = ProductForm(instance=p)
+    data = {
+        'name'        : p.name,
+        'desc'        : p.description,
+        'units'       : p.stock_count,
+        'price'       : p.price,
+    }
+    form = EditProductForm(data)
+#    forms.fields['category'].initial = 1
 
     # load unknown avatar if no profile picture
     pic = 'web/static/images/products/' + str(product_id)
@@ -443,7 +453,7 @@ def saveProduct(request, product_id):
         # save all the data from the POST into the database
         p = Product.objects.get(id=product_id)
         p.name          = request.POST.get('name')
-        p.description   = request.POST.get('description', '')
+        p.description   = request.POST.get('desc')
         p.category_id   = request.POST.get('category', 0)
         p.stock_count   = request.POST.get('units', 0)
         p.price         = request.POST.get('price', 0)
@@ -451,6 +461,16 @@ def saveProduct(request, product_id):
 
         # save the icon, if available
         handleUploadedPic('products', request.FILES.get('picture'), str(p.id))
+
+        # display editProduct again
+        data = {
+            'name'        : p.name,
+            'desc'        : p.description,
+            'category'    : p.category_id,
+            'units'       : p.stock_count,
+            'price'       : p.price,
+        }
+        form = EditProductForm(data)
 
         # load unknown avatar if no profile picture
         pic = 'web/static/images/products/' + str(p.id)
@@ -460,7 +480,7 @@ def saveProduct(request, product_id):
             pic = 'static/images/products/' + str(p.id)
         
         # redirect the user to the home page (already logged-in)
-        form = ProductForm(instance=p)
+        form = EditProductForm(data)
         context = RequestContext(request, {
             'icon'          : pic,
             'form'          : form,
@@ -633,30 +653,29 @@ def rateComment(request, comment_id, option):
 ##
 # Render a page with all the products of a specific category. 
 def category(request, category_id):
+    # Loads the Category and the products in the category ordered by rate
     template = loader.get_template('list.html')
     thisCategory = get_object_or_404(Category, id=category_id)  
     categories = Category.objects.all()
     best_products = Product.objects.filter(category=thisCategory.id).filter(stock_count__gt=0).order_by('-average_rating')[:10]
     message = "Products on " + thisCategory.name
    
-    # TODO: document me! 
+   # Generate a base context
+    context = RequestContext(request, {
+        'message'           : message,
+        'this'              : thisCategory,
+        'categories'        : categories,
+        'products'          : best_products,
+    })
+   
+    # If the user is logged send about the products in the cart to the context 
     if request.user.is_authenticated():
         no_items = request.user.get_profile().products_in_cart
-        context = RequestContext(request, {
-            'message'           : message,
-            'categories'        : categories,
-            'products'          : best_products,
-            'products_in_cart'  : no_items,
-        })
+        context.update({'products_in_cart'  : no_items})
 
-    # TODO: document me!
-    else:
-        context = RequestContext(request, {
-            'message'           : message,
-            'this'              : thisCategory,
-            'categories'        : categories,
-            'products'          : best_products,
-        })
+    # If receives the option to show as icons the send this option to the template.    
+    if request.GET.get('l') == 'icons':
+        context.update({'icons': 'OK'})
     
     context.update(csrf(request))
     return HttpResponse(template.render(context))
