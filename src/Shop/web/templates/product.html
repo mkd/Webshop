@@ -31,6 +31,11 @@ function add(){
 	});
 }
 
+function refresh(id){
+	$("#"+id).hide();
+	$("#"+id).fadeIn();
+}
+
 </script>
 
 	<div id="product-content">
@@ -92,14 +97,14 @@ function add(){
 					{% for comment in comments %}
 						<a name="{{ comment.id }}"></a>
 						{% if comment.hasProduct %}
-							<div class="comment buyer" >
+							<div class="comment buyer" id="{{ comment.id }}">
 						{% else %}
-							<div class="comment">
+							<div class="comment" id="{{ comment.id }}">
 						{% endif %}
 						
 							{% if comment.parent_id %}
 								<blockquote>
-									<i>In reply to <a href="#{{ comment.parent_id.id }}">@{{ comment.parent_id.user }}</a></i><br/> 
+									<i>In reply to <a href="#{{ comment.parent_id.id }}" onclick="refresh({{ comment.parent_id.id }})">@{{ comment.parent_id.user }}</a></i><br/> 
 									{{ comment.comment }}
 								</blockquote>
 							{% else %}
