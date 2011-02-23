@@ -327,7 +327,7 @@ def myadmin_products(request):
 ##
 # Render a page to add a new product.
 def myadmin_addProduct(request):
-    form = AddProductForm(request.POST)
+    form = AddProductForm()
     t = loader.get_template('myadmin_add_product.html')
     context = RequestContext(request, {
         'form': form,
@@ -342,9 +342,10 @@ def addProduct(request):
         # save all the data from the POST into the database
         p = Product.objects.create(
             name            = request.POST.get('name'),
-            description     = request.POST('desc'),
-            price           = request.POST('price'),
-            stock_count     = request.POST('units'),
+            description     = request.POST.get('desc', ''),
+            category_id     = request.POST.get('category'),
+            price           = request.POST.get('price', 0),
+            stock_count     = request.POST.get('units', 0),
             #tags           = request.POST['tags'],
         )
         p.save()
