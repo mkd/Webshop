@@ -40,16 +40,72 @@
         <table id="products">
             <tr>
                 <th>
-                    Product name
+                    {% if column == 'name' %}
+                        {% if order == 'a' %}
+                            <a href="/myadmin_products?column=name&order=d">Product
+                            name</a>
+                            &darr;
+                        {% else %}
+                            <a href="/myadmin_products?column=name&order=a">Product
+                            name</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=name&order=a">Product
+                        name</a>
+                    {% endif %}
                 </th>
                 <th>
-                    Units in stock
+                    {% if column == 'stock_count' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_products?column=stock_count&order=d">Units
+                            in stock</a>
+                            &darr;
+                        {% else %}
+                            <a
+                            href="/myadmin_products?column=stock_count&order=a">Units
+                            in stock</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=stock_count&order=a">Units
+                        in stock</a>
+                    {% endif %}
                 </th>
                 <th>
-                    Popularity
+                    {% if column == 'visit_count' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_products?column=visit_count&order=d">Popularity</a>
+                            &darr;
+                        {% else %}
+                            <a
+                            href="/myadmin_products?column=visit_count&order=a">Popularity</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=visit_count&order=a">Popularity</a>
+                    {% endif %}
                 </th>
                 <th>
-                    Rating
+                    {% if column == 'average_rating' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_products?column=average_rating&order=d">Rating</a>
+                            &darr;
+                        {% else %}
+                            <a
+                            href="/myadmin_products?column=average_rating&order=a">Rating</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=average_rating&order=a">Rating</a>
+                    {% endif %}
                 </th>
             </tr>
         {% for p in products %}
