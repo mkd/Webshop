@@ -74,9 +74,7 @@ def cart(request):
         return HttpResponse(template.render(context))
     
     else:
-        t = loader.get_template('index.html')
-        context = Context({ })
-        return HttpResponse(t.render(context))
+        return HttpResponseRedirect("/")
 
 
 ##
