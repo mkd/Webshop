@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     (r'^checkout', 'web.views.checkout'),
     (r'^success', 'web.views.paymentOk'),
     (r'^cancel', 'web.views.paymentNo'),
+    (r'^error', 'web.views.paymentError'),
     
     (r'^signup$', 'web.views.signup'),
     (r'^signin$', 'web.views.signin'),

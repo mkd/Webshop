@@ -19,6 +19,11 @@
 
 	{% if cart %}
 	<center><h2>My cart</h2>
+	
+		{% if message %}
+			<p>{{ message }}<p>
+		{% endif %}
+		
 	<table cellspacing="0" callpadding="50" border="0" width="500">
 		<form action="/checkout" method="post" id="form-myCart">
 			{% csrf_token %}
