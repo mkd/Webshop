@@ -354,13 +354,21 @@ def myadmin(request):
 # sorted by name, price, popularity, etcetera.
 def myadmin_products(request):
     # fetch the sorting criteria from GET
+    column = request.GET.get('column', 'name')
+    order  = request.GET.get('order', 'a')
+    if order == 'a':
+        criteria = column
+    else:
+        criteria = '-' + column
 
     # retrieve the products from the database
-    products = Product.objects.all()
+    products = Product.objects.all().order_by(criteria)
     t = loader.get_template('myadmin_products.html')
     context = RequestContext(request, {
         'products'    : products,
         'products_no' : len(products),
+        'column'      : column,
+        'order'       : order,
     })
     return HttpResponse(t.render(context))
 
