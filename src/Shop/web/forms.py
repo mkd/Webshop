@@ -60,7 +60,7 @@ class ProfileForm(forms.Form):
     pass2           = forms.CharField( widget=forms.PasswordInput )
     email           = forms.CharField( max_length=32 )
     email2          = forms.CharField( max_length=32 )
-    postal_address  = forms.CharField( widget=forms.TextInput )
+    postal_address  = forms.CharField(  )
     postal_code     = forms.CharField( max_length=5 )
     postal_city     = forms.CharField( )
     postal_country  = forms.CharField( )
@@ -88,20 +88,3 @@ class EditProductForm(forms.Form):
     units           = forms.IntegerField( min_value=0 )
     #tags            = forms.CharField( max_length=64 )
     category        = forms.ChoiceField( choices=all_categories() )
-
-
-##
-# Form to add a new category.
-class AddCategoryForm(forms.Form):
-    picture         = forms.FileField()
-    name            = forms.CharField( max_length=20 )
-    desc            = forms.CharField( max_length=500, widget=forms.Textarea )
-    parent          = forms.ChoiceField( choices=all_categories() )
- 
- 
-##
-# Form to add a new category.  
-class NewCategoryForm(forms.Form):
-    name = forms.CharField(label=u'Category Name', max_length=20, widget=forms.TextInput) 
-    description = forms.CharField(label=u'Category Description', max_length=100, widget=forms.Textarea)
-    icon = forms.CharField(label=u'Directory', widget=forms.TextInput)
