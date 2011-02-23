@@ -12,8 +12,6 @@ PROJECT_DIR = os.path.dirname(__file__)
 SID = 'keyforme'
 KEY = '8c0593199894c8135c13bf15a31240ad'
 
-
-
 ### necessary models (other than Django's) ###
 from models import *
 from forms import *
