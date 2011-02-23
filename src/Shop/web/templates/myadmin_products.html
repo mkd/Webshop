@@ -1,34 +1,65 @@
 {% extends "base.html" %}
 
-{% block title %} Administrative Pages -- Products {% endblock %}
+{% block title %} Administrative Pages -- All Products {% endblock %}
 {% block extra_head %}
 	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
 {% endblock %}
 
 {% block main_content %}
     <h1>Administrate Products</h1>
-    {% if product_added %}
-        <p>Product added successfully!</p>
-    {% endif %}
     <div class="functions">
         <form method="post" action="/deleteProducts">
         {% csrf_token %}
-        <a href="/myadmin_addProduct">Add product</a>
-        {% ifnotequal products_no 0 %}
-            |
-            <input type="submit" value="Delete selected products" />
-        {% endifnotequal %}
+        <div class="button_text">
+            <a href="/myadmin_addProduct"><img src="/static/images/new_product.png"
+                                               width="32" align="middle" /></a>
+            <a href="/myadmin_addProduct"
+               style="font-style: oblique; text-decoration: none;">Add a new product</a>
+        </div>
+
+        <div class="button_text">
+            <a href="/myadmin_deleteProducts"><img src="/static/images/delete.png"
+                                               width="32" align="middle" /></a>
+            <a href="/myadmin_deleteProducts"
+               style="font-style: oblique; text-decoration: none;">Delete
+               selected products</a>
+         </div>
     </div>
     {% ifequal products_no 0 %}
         <div class="error">There are no products in the system!</div>
     {% else %}
-        <ul id="admin">
+        <table id="products">
+            <tr>
+                <th>
+                    Product name
+                </th>
+                <th>
+                    Units in stock
+                </th>
+                <th>
+                    Popularity
+                </th>
+                <th>
+                    Rating
+                </th>
+            </tr>
         {% for p in products %}
-            <li>
-			    <input type="checkbox" value="{{ p.id }}" name="product_list" />
-                <a href="/editProduct/{{ p.id }}">{{ p.name }}</a>
-            </li>
+            <tr>
+                <td>
+			        <input type="checkbox" value="{{ p.id }}" name="product_list" />
+                    <a href="/editProduct/{{ p.id }}">{{ p.name }}</a>
+                </td>
+                <td style="text-align: right;">
+                    {{ p.stock_count }}
+                </td>
+                <td style="text-align: right;">
+                    {{ p.visit_count }}
+                </td>
+                <td style="text-align: right;">
+                    {{ p.average_rating }}
+                </td>
+            </tr>
         {% endfor %}
-        </ul>
+        </table>
     {% endifequal %}
 {% endblock %}

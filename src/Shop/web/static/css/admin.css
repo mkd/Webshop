@@ -46,3 +46,44 @@ ul#admin li a:hover
 {
     text-decoration:        underline;
 }
+
+#picture_enabler
+{
+    border:                 1px ridge gray;
+}
+
+#products
+{
+    border-collapse:        collapse;
+}
+
+#products tr:nth-child(odd)   { background-color: #eee; }
+#products tr:nth-child(even)  { background-color: #fff; }
+#products tr:hover            { background-color: #dfd; }
+
+#products th
+{
+    background-color:       #dde;
+    border:                 2px solid black;
+    padding:                0.2em;
+    text-align:             center;
+}
+
+#products td
+{
+    border:                 1px solid #444;
+    padding:                0.2em;
+}
+
+.button_text
+{
+    color:                  #888;
+    display:                inline;
+    margin:                 2em;
+    font-style:             oblique;
+}
+
+.functions
+{
+    margin-bottom:          1em;
+}

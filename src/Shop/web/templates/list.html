@@ -24,9 +24,11 @@
 	<div id='products'>
 		
 		{% if icons == 'OK' %}
+		
 			<div class="display-options">
 				<a href="?l=no"><img src="/static/images/icons.png" /></a><br/><br/>
 			</div>
+			
 			{% for product in products %}
 				<div id='product' onclick="window.location.href='/product/{{ product.id }}'; ">
 					<h1 class="product"><a href="/product/{{ product.id }}/">{{ product.short_name }}</a></h1>
@@ -104,8 +106,7 @@
 				&nbsp; &nbsp;&nbsp;<img src="/static/images/comments.png" width="18" height="18"/> {{ product.comment_count }} comments
 				
 				</td>
-					
-			
+				
 			</tr>
 		{% endfor %}
 		</table>

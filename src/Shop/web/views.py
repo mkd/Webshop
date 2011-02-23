@@ -407,10 +407,21 @@ def addProduct(request):
         # save icon
         handleUploadedPic('products', request.FILES.get('picture'), str(p.id))
 
+        # load picture for the next view
+        pic = 'web/static/images/products/' + str(p.id)
+        if not os.path.exists(pic):
+            pic = 'static/images/products/unknown.png'
+        else:
+            pic = 'static/images/products/' + str(p.id)
+
         # redirect the products management page
-        t = loader.get_template('myadmin_products.html')
+        t = loader.get_template('myadmin_edit_product.html')
+        form = ProductForm(instance=p)
         context = RequestContext(request, {
+            'product_name'  : p.name,
+            'icon'          : pic,
             'product_added' : True,
+            'form'          : form,
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
