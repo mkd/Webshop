@@ -640,6 +640,14 @@ img.product-pic
 	-moz-border-radius: 1em;
 }
 
+img.pic
+{
+    padding:2px;
+	border: solid #888 1px;
+    -webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
+
 div.display-options
 {
     text-align:right; 

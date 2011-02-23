@@ -31,7 +31,7 @@ INSERT INTO "web_product" VALUES(5,3,'Samsung Galaxy S II','Samsung Ga...','Seco
 INSERT INTO "web_product" VALUES(6,2,'Fender Telecaster Classic','Fender Tel...','Classic Telecaster from Fender (MEX)','/static/images/products/6',1340.0,16,0,0,0,4,2,8);
 INSERT INTO "web_product" VALUES(7,2,'Gibson SG','Gibson SG','Gibson SG, plain model with 6 strings','/static/images/products/7',899.0,4,0,0,0,1,1,1);
 
-INSERT INTO "web_payment" VALUES(1,'3-2011-02-23 14:38:02.000483',2,'291ae7914eaeface7cae13821ef9941f',-1,1198,'2011-02-23 14:38:02.000420','Delivered','','','','');
+INSERT INTO "web_payment" VALUES(1,'3-2011-02-23 14:38:02.000483',2,'291ae7914eaeface7cae13821ef9941f',-1,1198,'2011-02-23 14:38:02.000420','Processing','','','','');
 INSERT INTO "web_payment" VALUES(2,'3-2011-02-23 14:40:46.516072',3,'72c4d8ab77caf6594760d0de6a1191da',147,1198,'2011-02-23 14:40:46.516007','Delivered','','','','');
 
 INSERT INTO "web_transaction" VALUES(1,2,5,1,2,599,1198,0);

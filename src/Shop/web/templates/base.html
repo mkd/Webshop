@@ -19,7 +19,7 @@
 					<li class="search">
 						<form class="searchform"  action="/search" method="post">
 							{% csrf_token %}
-							<input class="searchfield" name="query" type="text" title="search-box" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
+							<input class="searchfield" name="query" type="text" title="searchbox" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
 							<input class="searchbutton" type="submit" value="Go" /> 
 						</form>
 					</li>
@@ -99,7 +99,14 @@
 	  		<div id="footer">
 		  		{% block footer %}
 		        	&copy;2011 The Webshop Team, Finland | <a
-                    href="/myadmin">Administrative page</a>
+                    href="/myadmin">Administrative page</a><br/>
+					<p>This web is rendered as intended in
+								<img id="_chrome" class="browser" src="http://nvie.com/img/chrome0.png" alt="Google Chrome" title="Google Chrome" width="18" height="18">,
+								<img id="_safari" class="browser" src="http://nvie.com/img/safari0.png" alt="Safari" title="Safari" width="18" height="18">,
+								<img id="_firefox" class="browser" src="http://nvie.com/img/firefox0.png" alt="Firefox" title="Firefox" width="18" height="18">, and
+								<img id="_opera" class="browser" src="http://nvie.com/img/opera0.png" alt="Opera" title="Opera" width="18" height="18">, but not necessarily in
+								<img id="_ie" class="misfit" src="http://nvie.com/img/ie0.png" alt="Internet Exporer" title="...and I couldn't care less about it." width="18" height="18">.
+					</p>
 		        {% endblock %}
 	  		</div>
   		</div>
