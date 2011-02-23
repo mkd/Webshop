@@ -71,7 +71,7 @@
 		{% for product in products %}
 			<tr>
 				<td rowspan="2" class="product">
-					<a href="/product/{{ product.id }}/"> <img src="/static/images/products/{{ product.id }}" width="70" height="70" border="0" /></a>
+					<a href="/product/{{ product.id }}/"> <img class="product-pic" src="/static/images/products/{{ product.id }}" border="0" /></a>
 				</td>
 				<td class="product" with="470">
 					<div class="title"><a href="/product/{{ product.id }}/">{{ product.name }}</a></div>

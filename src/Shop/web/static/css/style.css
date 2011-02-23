@@ -583,10 +583,10 @@ div.title a:hover
 	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
 }
 
-.price-list
+.price-list:hover
 {
 	cursor: pointer;
-	margin-bottom: -10px;
+	margin-bottom: -2px;
 }
 
 .middle
@@ -632,8 +632,8 @@ td.product
 
 img.product-pic
 {
-	width: 50px;
-	height: 50px;
+	width: 70px;
+	height: 70px;
 	padding:2px;
 	border: solid #888 1px;
     -webkit-border-radius: 1em;
