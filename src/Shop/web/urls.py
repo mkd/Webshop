@@ -32,7 +32,6 @@ urlpatterns = patterns('',
     (r'^saveProfile$', 'web.views.saveProfile'),
     
     (r'^myadmin$', 'web.views.myadmin'),
-    (r'^myadmin_page$', 'web.views.myadmin_page'),
     (r'^myadmin_products$', 'web.views.myadmin_products'),
     (r'^myadmin_categories$', 'web.views.myadmin_categories'),
     (r'^myadmin_orders$', 'web.views.myadmin_orders'),

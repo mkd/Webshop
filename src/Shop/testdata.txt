@@ -15,6 +15,7 @@ INSERT INTO "web_UserProfile" VALUES(3,3,0,'','','','','');
 INSERT INTO "web_UserProfile" VALUES(4,4,0,'','','','','');
 INSERT INTO "web_UserProfile" VALUES(5,5,0,'','','','','');
 INSERT INTO "web_UserProfile" VALUES(6,6,0,'','','','','');
+INSERT INTO "web_UserProfile" VALUES(7,7,0,'','','','','');
 
 INSERT INTO "web_category" VALUES(1,'Shoes','','images/categories/shoes.png', -1);
 INSERT INTO "web_category" VALUES(2,'Guitars','','images/categories/guitars.png', -1);

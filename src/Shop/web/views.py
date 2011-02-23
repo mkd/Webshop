@@ -320,49 +320,30 @@ def paymentError(request):
         return HttpResponseRedirect("/")
 
 ##
-# Ask the user for the master password, in order to enter the administrative
-# pages.
+# Display the administration pages to staff personnel.
+#
+# Note: if the user is not staff, ask her to sign in with a staff account.
 def myadmin(request):
-    # if the user is authenticated and is staff, go straight to the admin page
-    if request.user.is_authenticated() and request.user.is_staff:
-        t = loader.get_template('myadmin_page.html')
-        context = RequestContext(request, { })
-        return HttpResponse(t.render(context))
+    t = loader.get_template('myadmin.html')
 
-    # if the user is not logged in, ask for master password
-    else:
-        t = loader.get_template('myadmin.html')
-        form = AdminForm(request.POST)
-        context = RequestContext(request, {
-            'form' : form
+    # if the user is not authenticated, ask to sign in
+    if not request.user.is_authenticated():
+        context = Context({
+            'not_signed_in' : True,
         })
         return HttpResponse(t.render(context))
 
+    # if the user is a staff member, ask her to sign in with a staf account
+    elif not request.user.is_staff:
+        context = RequestContext(request, {
+            'not_staff' : True,
+        })
+        return HttpResponse(t.render(context))
 
-##
-# Render the administrative page, after the master password has been entered
-# correctly.
-def myadmin_page(request):
-    if request.method == 'POST':
-        path = PROJECT_DIR + '/static/master.passwd'
-        f = open(path, 'r')
-        masterpass = f.readline().rstrip()
-        f.close()
-        # if passwords match, enter the administrative page
-        if hashlib.sha1(request.POST.get(['pass'])).hexdigest() == masterpass:
-            authenticate(username='root', password=request.POST.get(['pass']))
-            t = loader.get_template('myadmin_page.html')
-            context = RequestContext(request, {
-                'login_failed' : False,
-            })
-            
-        # if passwords do not match, go back and place an error
-        else:
-            t = loader.get_template('myadmin.html')
-            context = RequestContext(request, {
-                'login_failed' : True,
-            })
-        context.update(csrf(request))
+    # if the user is authenticated and is a staff member, render the
+    # administration pages
+    else:
+        context = RequestContext(request, { })
         return HttpResponse(t.render(context))
 
 
