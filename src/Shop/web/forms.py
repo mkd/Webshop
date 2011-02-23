@@ -60,7 +60,7 @@ class ProfileForm(forms.Form):
     pass2           = forms.CharField( widget=forms.PasswordInput )
     email           = forms.CharField( max_length=32 )
     email2          = forms.CharField( max_length=32 )
-    postal_address  = forms.CharField( widget=forms.TextInput )
+    postal_address  = forms.CharField(  )
     postal_code     = forms.CharField( max_length=5 )
     postal_city     = forms.CharField( )
     postal_country  = forms.CharField( )

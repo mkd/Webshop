@@ -74,7 +74,10 @@ def cart(request):
         t = loader.get_template('index.html')
         context = Context({ })
         return HttpResponse(t.render(context))
-        
+
+
+##
+# TODO: document me!        
 def myProducts(request, payment_id):
     if request.user.is_authenticated():
         template = loader.get_template('myProducts.html')
@@ -95,7 +98,10 @@ def myProducts(request, payment_id):
         
     else:
         return HttpResponseRedirect("/")
-    
+   
+
+##
+# TODO: document me! 
 def myTransactions(request):
     if request.user.is_authenticated():
         template = loader.get_template('transactions.html')
@@ -197,7 +203,10 @@ def checkout(request):
     
     else:
         return HttpResponseRedirect("/")
-        
+       
+
+##
+# TODO: document me! 
 def paymentOk(request):
     if request.user.is_authenticated():
         pid = request.GET.get('pid')
@@ -243,7 +252,9 @@ def paymentOk(request):
             payment = get_object_or_404(Payment, pid=pid)
             payment.delete()
             return HttpResponseRedirect("/checkout")
-    
+
+##
+# TODO: document me!    
 def paymentNo(request):
     payment = get_object_or_404(Payment, pid=pid)
     payment.delete()
@@ -259,6 +270,7 @@ def myadmin(request):
         t = loader.get_template('myadmin_page.html')
         context = RequestContext(request, { })
         return HttpResponse(t.render(context))
+
     # if the user is not logged in, ask for master password
     else:
         t = loader.get_template('myadmin.html')
@@ -279,8 +291,8 @@ def myadmin_page(request):
         masterpass = f.readline().rstrip()
         f.close()
         # if passwords match, enter the administrative page
-        if hashlib.sha1(request.POST['pass']).hexdigest() == masterpass:
-            authenticate(username='root', password=request.POST['pass'])
+        if hashlib.sha1(request.POST.get(['pass'])).hexdigest() == masterpass:
+            authenticate(username='root', password=request.POST.get(['pass']))
             t = loader.get_template('myadmin_page.html')
             context = RequestContext(request, {
                 'login_failed' : False,
@@ -325,19 +337,16 @@ def addProduct(request):
     if request.method == 'POST':
         # save all the data from the POST into the database
         p = Product.objects.create(
-            name            = request.POST['name'],
-            description     = request.POST['desc'],
-            price           = request.POST['price'],
-            stock_count     = request.POST['units'],
+            name            = request.POST.get('name'),
+            description     = request.POST('desc'),
+            price           = request.POST('price'),
+            stock_count     = request.POST('units'),
             #tags           = request.POST['tags'],
         )
         p.save()
 
         # save icon
-        try:
-            handleUploadedPic('products', request.FILES['picture'], str(p.id))
-        except:
-            pass
+        handleUploadedPic('products', request.FILES.get('picture'), str(p.id))
 
         # redirect the products management page
         t = loader.get_template('myadmin_products.html')
@@ -347,31 +356,6 @@ def addProduct(request):
         context.update(csrf(request))
         return HttpResponse(t.render(context))
 
-
-##
-# Add a category to the database.
-def addCategory(request):
-    if request.method == 'POST':
-        form = AddCategoryForm(request.POST, request.FILES)
-        # save all the data from the POST into the database
-        c = Category.objects.create(
-            name        = request.POST['name'],
-            description = request.POST['desc'],
-            parent_id   = request.POST['parent'],
-        )
-        c.save()
-
-        # save icon
-        handleUploadedPic('categories', request.FILES['picture'], str(c.id))
-
-        # redirect the products management page
-        t = loader.get_template('myadmin_categories.html')
-        context = RequestContext(request, {
-            'category_added' : True,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
-            
 
 ##
 # Render a page to edit a product.
@@ -385,7 +369,7 @@ def editProduct(request, product_id):
         'price'       : p.price,
     }
     form = EditProductForm(data)
-    form.fields['category'].initial = p.category_id
+    forms.fields['category'].initial = p.category_id
 
     # load unknown avatar if no profile picture
     pic = 'web/static/images/products/' + str(product_id)
@@ -409,19 +393,15 @@ def saveProduct(request, product_id):
     if request.method == 'POST':
         # save all the data from the POST into the database
         p = Product.objects.get(id=product_id)
-        p.name          = request.POST['name']
-        p.description   = request.POST['desc']
-        p.category_id   = request.POST['category']
-        p.stock_count   = int(request.POST['units'])
-        p.price         = int(request.POST['price'])
+        p.name          = request.POST.get('name')
+        p.description   = request.POST.get('desc')
+        p.category_id   = request.POST.get('category', 0)
+        p.stock_count   = request.POST.get('units', 0)
+        p.price         = request.POST.get('price', 0)
         p.save()
 
         # save the icon, if available
-        try:
-            handleUploadedPic('products', request.FILES['picture'], str(p.id))
-        # if no picture given, then don't try to save it
-        except:
-            pass
+        handleUploadedPic('products', request.FILES.get('picture'), str(p.id))
 
         # display editProduct again
         data = {
@@ -461,17 +441,19 @@ def product(request, product_id):
     template = loader.get_template('product.html')   
     product = get_object_or_404(Product, id=product_id)
     comments = Comment.objects.filter(product=product_id).order_by('timestamp')
-    
+   
+    # TODO: document me!
     if request.user.is_authenticated():
         form = CommentForm()
         no_items = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
-            'product'  : product,
-            'comments' : comments,
-            'form'     : form,
-            'products_in_cart' : no_items,
+            'product'           : product,
+            'comments'          : comments,
+            'form'              : form,
+            'products_in_cart'  : no_items,
         })
-            
+        
+    # TODO: document me!    
     else:
         context = RequestContext(request, {
             'product'  : product,
@@ -490,16 +472,19 @@ def product(request, product_id):
 # Set a rating for a given product.
 def rateProduct(request):
     if request.user.is_authenticated() and request.method == 'POST':
-        element = request.POST['product']
-        rate = request.POST['rate']
-        
+        element = request.POST.get('product')
+        rate    = request.POST.get('rate')
+       
+        # TODO: document me! 
         prodTransaction = Transaction.objects.get(user=request.user, id=element)  
         product = Product.objects.get(id=prodTransaction.product.id)
-        
+       
+        # TODO: document me! 
         if prodTransaction.rate == 0:
             product.votes += 1
             product.points += int(rate)
-        
+       
+        # TODO: document me! 
         else:
             product.points -= prodTransaction.rate
             product.points += int(rate)
@@ -507,47 +492,18 @@ def rateProduct(request):
         prodTransaction.rate = int(rate)
         prodTransaction.save()
         product.save()
-        
         return HttpResponse(rate)
-        
+       
+    # TODO: document me! 
     else:
         return HttpResponseRedirect("/checkout")
+
+
 ##
 # Render the categories administration page.
 # TODO: this is just a copy paste from products
 def myadmin_categories(request):
-    categories = Category.objects.all()
-    t = loader.get_template('myadmin_categories.html')
-    context = RequestContext(request, {
-        'categories'    : categories,
-        'categories_no' : len(categories),
-    })
-    return HttpResponse(t.render(context))
-
-
-##
-# Render a page to add a new category.
-# TODO: this is juast a copy paste from add product.
-def myadmin_addCategory(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_add_category.html')
-    context = RequestContext(request, {
-        'form': form,
-    })
-    return HttpResponse(t.render(context))
-
-
-##
-# Render a page to edit a category.
-# TODO: this is juast a copy paste from add product.
-def editCategory(request):
-    form = AddProductForm(request.POST)
-    t = loader.get_template('myadmin_edit_category.html')
-    context = RequestContext(request, {
-        'form': form,
-    })
-    return HttpResponse(t.render(context))
-
+    return HttpResponseRedirect('/admin/web/category/')
 
 
 ##
@@ -565,35 +521,8 @@ def myadmin_orders(request):
 ##
 # Render the users administration page.
 def myadmin_users(request):
-    users = User.objects.all()
-    t = loader.get_template('myadmin_users.html')
-    context = RequestContext(request, {
-        'users'    : users,
-        'users_no' : len(users),
-    })
-    return HttpResponse(t.render(context))
+    return HttpResponseRedirect('/admin/auth/user')
 
-
-##
-# Render a page to add a new user.
-def myadmin_addUser(request):
-    form = AddUserForm(request.POST)
-    t = loader.get_template('myadmin_add_user.html')
-    context = RequestContext(request, {
-        'form': form,
-    })
-    return HttpResponse(t.render(context))
-
-
-##
-# Render a page to edit a user.
-def editUser(request):
-    form = EditUserForm(request.POST)
-    t = loader.get_template('myadmin_edit_user.html')
-    context = RequestContext(request, {
-        'form': form,
-    })
-    return HttpResponse(t.render(context))
 
 
 ### comments functionality ###
@@ -601,33 +530,42 @@ def editUser(request):
 # Publish a comment on a page 
 def comment(request, product_id):
     template = loader.get_template('product.html')
-    
+   
+    # TODO: document me! 
     if request.method == 'POST':
         form = CommentForm(request.POST)
-        
+       
+        # TODO: document me! 
         if form.is_valid() and request.user.is_authenticated():
             product = get_object_or_404(Product, id=product_id)
-            user = request.user
-            text = form.cleaned_data['comment']         
-            reply = request.POST['in_reply']
-            product.comment_count +=1;
-            
+            user    = request.user
+            text    = form.cleaned_data['comment']         
+            reply   = request.POST.get('in_reply')
+            product.comment_count += 1
+      
+            # TODO: document me!      
             if reply != '0':
                 reply = Comment.objects.get(id=reply)
-                new_comment = Comment(product = product, 
-                                      user = user,
-                                      timestamp = datetime.datetime.now(),
-                                      comment = text,
-                                      parent_id = reply)
+                new_comment = Comment(
+                    product = product, 
+                    user = user,
+                    timestamp = datetime.datetime.now(),
+                    comment = text,
+                    parent_id = reply
+                )
+
+            # TODO: document me!
             else:
-                new_comment = Comment(product = product, 
-                                      user = user,
-                                      timestamp = datetime.datetime.now(),
-                                      comment = text)
-    
+                new_comment   = Comment(
+                    product   = product, 
+                    user      = user,
+                    timestamp = datetime.datetime.now(),
+                    comment   = text
+                    )
+   
+            # TODO: document me! 
             new_comment.save()
             product.save()
-    
             comments = Comment.objects.filter(product=product_id).order_by('timestamp')
     
     return HttpResponseRedirect('/product/%s' % (product_id))        
@@ -638,13 +576,16 @@ def comment(request, product_id):
 def rateComment(request, comment_id, option): 
     template = loader.get_template('product.html')
     comment = get_object_or_404(Comment, id=comment_id)
-    
-    if (option == '1'):
+   
+    # TODO: document me 
+    if option == '1':
         comment.positives += 1
     else:
         comment.negatives -= 1
     
     comment.save()
+
+    # TODO: clean up!
     return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\" /> %s" % (comment.id, comment.positives, comment.negatives))
 
 
@@ -658,24 +599,25 @@ def category(request, category_id):
     categories = Category.objects.all()
     best_products = Product.objects.filter(category=thisCategory.id).filter(stock_count__gt=0).order_by('-average_rating')[:10]
     message = "Products on " + thisCategory.name
-    
+   
+    # TODO: document me! 
     if request.user.is_authenticated():
         no_items = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
-            'message'     : message,
-            'categories'  : categories,
-            'products'    : best_products,
-            'products_in_cart' : no_items,
+            'message'           : message,
+            'categories'        : categories,
+            'products'          : best_products,
+            'products_in_cart'  : no_items,
         })
 
+    # TODO: document me!
     else:
         context = RequestContext(request, {
-            'message' : message,
-            'this' : thisCategory,
-            'categories'  : categories,
-            'products'    : best_products,
+            'message'           : message,
+            'this'              : thisCategory,
+            'categories'        : categories,
+            'products'          : best_products,
         })
-    
     
     context.update(csrf(request))
     return HttpResponse(template.render(context))
@@ -684,30 +626,34 @@ def category(request, category_id):
 ##
 # Search for a product.
 def search(request):
-    if request.method == 'POST': # If the form has been submitted...
-        form = SearchForm(request.POST) # A form bound to the POST data
-        
-        if form.is_valid(): # All validation rules pass
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+       
+        # TODO: document me! 
+        if form.is_valid():
             query = form.cleaned_data['query']
-            
+           
             try: 
                 products = Product.objects.filter(name__icontains = query)
             except Product.DoesNotExist: 
+                # TODO: redirect to a good-looking page!
                 return HttpResponse("Sorry, we couldn't find your product.")
            
             categories = Category.objects.all()            
             template = loader.get_template('list.html')
             message = "Search results for %s." % query
-            
+         
+            # TODO: document me! 
             if request.user.is_authenticated():
                 no_items = request.user.get_profile().products_in_cart
                 context = RequestContext(request, {
-                    'message'     : message,
-                    'categories'  : categories,
-                    'products'    : products,
-                    'products_in_cart' : no_items,
+                    'message'           : message,
+                    'categories'        : categories,
+                    'products'          : products,
+                    'products_in_cart'  : no_items,
                 })
 
+            # TODO: document me!
             else:
                 context = RequestContext(request, {
                     'message'     : message,
@@ -727,15 +673,15 @@ def search(request):
 ##
 # Render a simple registration form (sign up)
 def signup(request):
-    template = loader.get_template('signup.html')
+    t = loader.get_template('signup.html')
     form = RegisterForm()
     categories = Category.objects.all()
     context = RequestContext(request,
     {
-        'form': form,
+        'form'       : form,
         'categories' : categories,
     })
-    return HttpResponse(template.render(context))
+    return HttpResponse(t.render(context))
 
 
 ##
@@ -756,13 +702,15 @@ def signin(request):
 # and tries to log in. If successful, the user is redirected to the home page,
 # otherwise an error is displayed.
 def tryLogin(request):
-    username = request.POST['user']
-    password = request.POST['pass']
+    # authenticate the user
+    username = request.POST.get('user')
+    password = request.POST.get('pass')
     user = authenticate(username=username, password=password)
+
+    # on sign-in go to front-page, otherwise go back to sign-in form
     if user is not None:
         login(request, user)
-        return HttpResponseRedirect('/')      
-        
+        return HttpResponseRedirect('/')
     else:
         t = loader.get_template('signin.html')
         categories = Category.objects.all()
@@ -775,7 +723,7 @@ def tryLogin(request):
 
 
 ##
-# Close the session for an user.
+# Close the session for an user and go to the front page.
 def signout(request):
     logout(request)
     return HttpResponseRedirect('/')  
@@ -788,54 +736,59 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
 
-        # check if the user already exists in the database
-        try:
-            check_username = User.objects.get(username=request.POST['user'])
-        except:
-            check_username = None
-        try:
-            check_email = User.objects.get(email=request.POST['email'])
-        except:
-            check_email = None
+        # server-side validation
+        if form.is_valid():
+            # check if the user already exists in the database
+            try:
+                check_username = User.objects.get(username=request.POST.get('user'))
+            except:
+                check_username = None
+            try:
+                check_email = User.objects.get(email=request.POST.get('email'))
+            except:
+                check_email = None
 
-        if check_username is not None or check_email is not None:
-            t = loader.get_template('signup.html')
+            # if the username or email already exist, go back to the sign-up
+            # form and remember the entered data
+            if check_username is not None or check_email is not None:
+                t = loader.get_template('signup.html')
+                context = RequestContext(request, {
+                    'username'       : request.POST.get('user'),
+                    'fname'          : request.POST.get('fname'),
+                    'sname'          : request.POST.get('sname'),
+                    'email'          : request.POST.get('email'),
+                    'email2'         : request.POST.get('email2'),
+                    'passwd'         : request.POST.get('passwd'),
+                    'pass2'          : request.POST.get('pass2'),
+                    'user_exists'    : True,
+                    'form'           : form
+                })
+                context.update(csrf(request))
+                return HttpResponse(t.render(context))
+
+            # save all the data from the POST into the database
+            u  = User.objects.create_user(
+                request.POST.get('user'),
+                request.POST.get('email'),
+                request.POST.get('passwd')
+            )
+            up = UserProfile.objects.create(user_id=u.id)
+            u.is_staff   = False
+            u.first_name = request.POST.get('fname')
+            u.last_name  = request.POST.get('sname')
+            u.save()
+            up.save()
+
+            # save also avatar picture, if available
+            handleUploadedPic('users', request.FILES.get('picture'), u.id)
+
+            # redirect the user to the login page with a welcome
             context = RequestContext(request, {
-                'username'       : request.POST['user'],
-                'fname'          : request.POST['fname'],
-                'sname'          : request.POST['sname'],
-                'email'          : request.POST['email'],
-                'email2'         : request.POST['email2'],
-                'passwd'         : request.POST['passwd'],
-                'pass2'          : request.POST['pass2'],
-                'user_exists'    : True,
-                'form'           : form
+                'user'       : request.POST.get('user'),
+                'registered' : True,
             })
             context.update(csrf(request))
             return HttpResponse(t.render(context))
-
-        # save all the data from the POST into the database
-        u  = User.objects.create_user(request.POST['user'], request.POST['email'], request.POST['passwd'])
-        up = UserProfile.objects.create(user_id=u.id)
-        u.is_staff   = False
-        u.first_name = request.POST['fname']
-        u.last_name  = request.POST['sname'],
-        u.save()
-        up.save()
-
-        # save also avatar picture, if available
-        try:
-            handleUploadedPic('users', request.FILES['picture'], u.id)
-        except:
-            pass
-
-        # redirect the user to the login page with a welcome
-        context = RequestContext(request, {
-            'user'       : request.POST['user'],
-            'registered' : True,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
 
 
 ##
@@ -859,25 +812,23 @@ def editProfile(request):
 
         # set the rest of the data
         context = RequestContext(request, {
-            'picture'        : pic,
-            'user'           : u.username,
-            'fname'          : u.first_name,
-            'sname'          : u.last_name,
-            'email'          : u.email,
+            'picture'          : pic,
+            'user'             : u.username,
+            'fname'            : u.first_name,
+            'sname'            : u.last_name,
+            'email'            : u.email,
             'products_in_cart' : no_items,
-            'address'        : u.get_profile().postal_address,
-            'postal_code'    : u.get_profile().postal_code,
-            'city'           : u.get_profile().postal_city,
-            'country'        : u.get_profile().postal_country,
-            'form'           : form,
+            'address'          : u.get_profile().postal_address,
+            'postal_code'      : u.get_profile().postal_code,
+            'city'             : u.get_profile().postal_city,
+            'country'          : u.get_profile().postal_country,
+            'form'             : form,
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
     # if no session, use a standard context
     else:
-        t = loader.get_template('index.html')
-        context = Context({ })
-        return HttpResponse(t.render(context))
+        return HttpResponseRedirect('/')
 
 
 ##
@@ -888,24 +839,20 @@ def saveProfile(request):
         # save all the data from the POST into the database
         up = UserProfile.objects.get(user=request.user.id)
         u = User.objects.get(id=request.user.id)
-        u.first_name = request.POST['fname']
-        u.last_name  = request.POST['sname']
-        up.postal_address = request.POST['address'],
-        up.postal_code    = request.POST['postal_code']
-        up.postal_city    = request.POST['city']
-        up.postal_country = request.POST['country']
+        u.first_name = request.POST.get('fname')
+        u.last_name  = request.POST.get('sname')
+        up.postal_address = request.POST.get('address')
+        up.postal_code    = request.POST.get('postal_code')
+        up.postal_city    = request.POST.get('city')
+        up.postal_country = request.POST.get('country')
 
         # if pass and pass2 match, save them as the new password
-        pwd = request.POST['passwd']
-        if pwd is not '' and pwd is not None and pwd == request.POST['pass2']:
+        pwd = request.POST.get('passwd')
+        if pwd is not '' and pwd is not None and pwd == request.POST.get('pass2'):
             u.set_password(pwd)
 
         # save the avatar picture, if available
-        try:
-            handleUploadedPic('users', request.FILES['picture'], str(u.id))
-        # if no picture given, then don't try to save it
-        except:
-            pass
+        handleUploadedPic('users', request.FILES.get('picture'), str(u.id))
 
         # commit to the database
         u.save()
@@ -933,7 +880,9 @@ def saveProfile(request):
   
 
 ##
-# Show a 'foo' page telling that your password has been sent to your email.
+# Show a dummy page telling that your password has been sent to your email.
+#
+# TODO: implement this template and functionality!
 def forgot_password(request):
         t = loader.get_template('forgot_password.html')
         context = Context({ })
@@ -952,67 +901,17 @@ def forgot_password(request):
 # @param f File to be handled.
 # @param n Name of the file.
 def handleUploadedPic(d, f, n):
+    # if no file uploaded, don't change the picture
+    if f is None:
+        return
+
+    # if a file is provided, then save it where it belongs
     fo = open('web/static/images/' + d + '/' + n, 'wb+')
     for chunk in f.chunks():
         fo.write(chunk)
     fo.close()
     
     
-##
-# Render add categry page (sign up)
-def renderNewCategory(request):
-    template = loader.get_template('categoryNew.html')
-    category = Category()
-    form = NewCategoryForm()
-
-    context = RequestContext(request, {
-        'category':  category,
-        'categoryForm': form,
-    })
-    context.update(csrf(request))
-    return HttpResponse(template.render(context))
-
-
-##
-# Render list categry page (sign up)
-def renderListCategory(request):
-    template = loader.get_template('categoryList.html')
-    categories = Category.objects.all()
-    
-    context = RequestContext(request, {
-        'categories':  categories,
-    })
-    return HttpResponse(template.render(context))
-
-       
-##
-# Add a new category.
-def insertCategory(request):
-    template = loader.get_template('categoryNew.html')
-    
-    if request.method == 'POST':
-        form = NewCategoryForm(request.POST)
-        
-        if form.is_valid():
-            new_category = Category(
-                name           = request.POST['name'],
-                description    = request.POST['description'],
-                icon           = request.POST['icon']
-            )
-            
-            new_category.save()
-            
-    category = Category()
-    form = NewCategoryForm()
-
-    context = RequestContext(request, {
-        'category':  category,
-        'categoryForm': form,
-    })
-    context.update(csrf(request))
-    return HttpResponse(template.render(context))
-
-
 ##
 # Delete a set of products.
 def deleteProducts(request):
@@ -1034,34 +933,6 @@ def deleteProducts(request):
     products = Category.objects.all()
     context = RequestContext(request, {
         'categories':  products,
-    })
-    return HttpResponse(t.render(context))
-
-##
-# Delete a set of categories.
-def deleteCategories(request):
-    t = loader.get_template('myadmin_categories.html')
-
-    # delete categories and set their products orphaned 
-    if request.method == 'POST':
-        category_list = request.POST.getlist('category_list')
-        for category_id in category_list:
-            category = Category.objects.get(pk=category_id)
-            try:
-                products = Product.objects.get(category=category_id)
-            except:
-                products = []
-            # orphan products corresponding to the deleted category
-            for p in products:
-                p.category = -1
-                p.save()
-            category.delete()
-            # also delete the picture of the category
-            os.remove('static/images/categories/' + str(category_id))
-
-    categories = Category.objects.all()
-    context = RequestContext(request, {
-        'categories':  categories,
     })
     return HttpResponse(t.render(context))
 
@@ -1089,17 +960,16 @@ def deleteOrders(request):
 # Render a page to edit a user.
 #
 # TODO: this is just a copy from editProduct.
-def editProduct(request, product_id):
-    t = loader.get_template('myadmin_edit_product.html')
-    p = Product.objects.get(id=product_id)
+def editUser(request, user_id):
+    t = loader.get_template('myadmin_edit_user.html')
+    u = User.objects.get(id=user_id)
     data = {
-        'name'        : p.name,
-        'desc'        : p.description,
-        'units'       : p.stock_count,
-        'price'       : p.price,
+        'name'        : u.name,
+        'desc'        : u.description,
+        'units'       : u.stock_count,
+        'price'       : u.price,
     }
-    form = EditProductForm(data)
-    return HttpResponse(p.category)
+    form = EditUserForm(data)
     form.fields['category'].initial = p.category
 
     # load unknown avatar if no profile picture

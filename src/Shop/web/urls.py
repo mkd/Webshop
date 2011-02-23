@@ -6,8 +6,6 @@ urlpatterns = patterns('',
     (r'^saveProduct/(?P<product_id>\d+)', 'web.views.saveProduct'),
     (r'^product/(?P<product_id>\d+)/comment', 'web.views.comment'),
     (r'^category/(?P<category_id>\d+)', 'web.views.category'),
-    (r'^editCategory/(?P<category_name>\w+)', 'web.views.editCategory'),
-    (r'^editUser/(?P<user_id>\w+)', 'web.views.editUser'),
     (r'^comment/(?P<comment_id>\d+)/(?P<option>(0|1))', 'web.views.rateComment'),
     (r'^search', 'web.views.search'), 
     
@@ -36,16 +34,13 @@ urlpatterns = patterns('',
     (r'^myadmin_page$', 'web.views.myadmin_page'),
     (r'^myadmin_products$', 'web.views.myadmin_products'),
     (r'^myadmin_categories$', 'web.views.myadmin_categories'),
-    (r'^myadmin_users$', 'web.views.myadmin_users'),
     (r'^myadmin_orders$', 'web.views.myadmin_orders'),
 
     (r'^deleteOrders$', 'web.views.deleteOrders'),
     (r'^myadmin_addProduct', 'web.views.myadmin_addProduct'),
-    (r'^myadmin_addCategory', 'web.views.myadmin_addCategory'),
 
     (r'^deleteProducts', 'web.views.deleteProducts'),  
     (r'^addProduct', 'web.views.addProduct'),
-    (r'^addCategory', 'web.views.addCategory'),
 
     (r'^$', 'web.views.index'),
 )
