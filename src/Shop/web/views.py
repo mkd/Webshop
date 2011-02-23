@@ -327,7 +327,7 @@ def myadmin_products(request):
 ##
 # Render a page to add a new product.
 def myadmin_addProduct(request):
-    form = AddProductForm()
+    form = ProductForm()
     t = loader.get_template('myadmin_add_product.html')
     context = RequestContext(request, {
         'form': form,
@@ -367,14 +367,7 @@ def addProduct(request):
 def editProduct(request, product_id):
     t = loader.get_template('myadmin_edit_product.html')
     p = Product.objects.get(id=product_id)
-    data = {
-        'name'        : p.name,
-        'desc'        : p.description,
-        'units'       : p.stock_count,
-        'price'       : p.price,
-    }
-    form = EditProductForm(data)
-#    forms.fields['category'].initial = 1
+    form = ProductForm(instance=p)
 
     # load unknown avatar if no profile picture
     pic = 'web/static/images/products/' + str(product_id)
@@ -399,7 +392,7 @@ def saveProduct(request, product_id):
         # save all the data from the POST into the database
         p = Product.objects.get(id=product_id)
         p.name          = request.POST.get('name')
-        p.description   = request.POST.get('desc')
+        p.description   = request.POST.get('description', '')
         p.category_id   = request.POST.get('category', 0)
         p.stock_count   = request.POST.get('units', 0)
         p.price         = request.POST.get('price', 0)
@@ -407,16 +400,6 @@ def saveProduct(request, product_id):
 
         # save the icon, if available
         handleUploadedPic('products', request.FILES.get('picture'), str(p.id))
-
-        # display editProduct again
-        data = {
-            'name'        : p.name,
-            'desc'        : p.description,
-            'category'    : p.category_id,
-            'units'       : p.stock_count,
-            'price'       : p.price,
-        }
-        form = EditProductForm(data)
 
         # load unknown avatar if no profile picture
         pic = 'web/static/images/products/' + str(p.id)
@@ -426,7 +409,7 @@ def saveProduct(request, product_id):
             pic = 'static/images/products/' + str(p.id)
         
         # redirect the user to the home page (already logged-in)
-        form = EditProductForm(data)
+        form = ProductForm(instance=p)
         context = RequestContext(request, {
             'icon'          : pic,
             'form'          : form,
