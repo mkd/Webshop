@@ -7,12 +7,28 @@
 {% extends "base.html" %}
 
 {% block main_content %}
+
+	<script>
+	function add(id){
+		$.post('/cart/add', { product: id },
+		 function(data) {
+			$('#products-in-cart').html(data);
+			$("#my-cart").hide();
+			$("#my-cart").fadeIn();
+		});
+	}
+	</script>
 	
 	<h2>{{ message }}</h2>
 	
 	<div id='products'>
 		
 		{% if icons == 'OK' %}
+		
+			<div class="display-options">
+				<a href="?l=no"><img src="/static/images/icons.png" /></a><br/><br/>
+			</div>
+			
 			{% for product in products %}
 				<div id='product' onclick="window.location.href='/product/{{ product.id }}'; ">
 					<h1 class="product"><a href="/product/{{ product.id }}/">{{ product.short_name }}</a></h1>
@@ -45,18 +61,24 @@
 			{% endfor %}
 		
 		{% else %}
-		<table border="0" cellpadding="0" cellspacing="0">
+		
+		<div class="display-options">
+			<a href="?l=icons"><img src="/static/images/list.png" /></a><br/><br/>
+		</div>
+		
+		<center>
+		<table border="0" cellpadding="2" cellspacing="0" width="100%">
 		{% for product in products %}
 			<tr>
 				<td rowspan="2" class="product">
-					<img src="/static/images/products/{{ product.id }}" width="100" height="100" />
+					<a href="/product/{{ product.id }}/"> <img src="/static/images/products/{{ product.id }}" width="70" height="70" border="0" /></a>
 				</td>
-				<td class="product">
-					<p class="title"><a href="/product/{{ product.id }}/">{{ product.name }}</a></p>
-					<p>{{ product.description }}</p>
+				<td class="product" with="470">
+					<div class="title"><a href="/product/{{ product.id }}/">{{ product.name }}</a></div>
+					{{ product.description }}
 				</td>
 				<td class="product" >
-					<div class="price-list">{{ product.price }} &euro;</div>
+					<div class="price-list"  onclick="add({{product.id}});">{{ product.price }} &euro;</div>
 				</td>
 			
 			<tr height="30">
@@ -80,13 +102,15 @@
 				{% if product.average_rating == 5 %}
 					<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" />
 				{% endif %}
+				
+				&nbsp; &nbsp;&nbsp;<img src="/static/images/comments.png" width="18" height="18"/> {{ product.comment_count }} comments
+				
 				</td>
-					
-			
+				
 			</tr>
 		{% endfor %}
 		</table>
-		
+		</center>
 		{% endif %}
 	</div>
 {% endblock %}
