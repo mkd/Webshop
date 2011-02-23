@@ -121,13 +121,15 @@ def myTransactions(request):
         
         
 
+##
+# TODO: document me!
 def addToCart(request):
     if request.user.is_authenticated():
         profile = get_object_or_404(UserProfile, user=request.user) 
         profile.products_in_cart += 1
         profile.save()
         product = get_object_or_404(Product, id=request.POST['product'])
-        
+
         try: 
             new_prod = CartProduct.objects.get(product=product, user=request.user)
             new_prod.quantity += 1
@@ -378,7 +380,7 @@ def myadmin_products(request):
 ##
 # Render a page to add a new product.
 def myadmin_addProduct(request):
-    form = AddProductForm(request.POST)
+    form = AddProductForm()
     t = loader.get_template('myadmin_add_product.html')
     context = RequestContext(request, {
         'form': form,
@@ -393,9 +395,10 @@ def addProduct(request):
         # save all the data from the POST into the database
         p = Product.objects.create(
             name            = request.POST.get('name'),
-            description     = request.POST('desc'),
-            price           = request.POST('price'),
-            stock_count     = request.POST('units'),
+            description     = request.POST.get('desc', ''),
+            category_id     = request.POST.get('category'),
+            price           = request.POST.get('price', 0),
+            stock_count     = request.POST.get('units', 0),
             #tags           = request.POST['tags'],
         )
         p.save()
@@ -424,7 +427,7 @@ def editProduct(request, product_id):
         'price'       : p.price,
     }
     form = EditProductForm(data)
-    forms.fields['category'].initial = p.category_id
+#    forms.fields['category'].initial = 1
 
     # load unknown avatar if no profile picture
     pic = 'web/static/images/products/' + str(product_id)
@@ -902,8 +905,8 @@ def saveProfile(request):
         up.postal_country = request.POST.get('country')
 
         # if pass and pass2 match, save them as the new password
-        pwd = request.POST.get('passwd')
-        if pwd is not '' and pwd is not None and pwd == request.POST.get('pass2'):
+        pwd = request.POST.get('passwd', None)
+        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')):
             u.set_password(pwd)
 
         # save the avatar picture, if available

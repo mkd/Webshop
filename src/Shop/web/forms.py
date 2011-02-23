@@ -1,6 +1,6 @@
 ### necessary Django modules ###
 from django import forms
-from django.forms import widgets
+from django.forms import widgets, ModelForm, ClearableFileInput
 from models import *
 
 
@@ -68,14 +68,22 @@ class ProfileForm(forms.Form):
 
 ##
 # Form to add a new product.
-class AddProductForm(forms.Form):
-    picture         = forms.FileField()
-    name            = forms.CharField( max_length=20 )
-    desc            = forms.CharField( max_length=500, widget=forms.Textarea )
-    price           = forms.IntegerField( min_value=1 )
-    units           = forms.IntegerField( min_value=0 )
-    #tags            = forms.CharField( max_length=64 )
-    category        = forms.ChoiceField( choices=all_categories() )
+class AddProductForm(ModelForm):
+    class Meta:
+        model = Product
+        widgets = {
+            'picture'     : forms.ClearableFileInput,
+            'description' : forms.Textarea,
+        }
+
+#class AddProductForm(forms.Form):
+#    picture         = forms.FileField()
+#    name            = forms.CharField( max_length=20 )
+#    desc            = forms.CharField( max_length=500, widget=forms.Textarea )
+#    price           = forms.IntegerField( min_value=1 )
+#    units           = forms.IntegerField( min_value=0 )
+#    #tags            = forms.CharField( max_length=64 )
+#    category        = forms.ChoiceField( choices=all_categories() )
 
 
 ##
