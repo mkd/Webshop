@@ -116,6 +116,8 @@ def myTransactions(request):
         
     else:
         return HttpResponseRedirect("/")
+        
+        
 
 ##
 # TODO: document me!
