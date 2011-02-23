@@ -35,10 +35,7 @@ urlpatterns = patterns('',
     (r'^myadmin_products$', 'web.views.myadmin_products'),
     (r'^myadmin_categories$', 'web.views.myadmin_categories'),
     (r'^myadmin_orders$', 'web.views.myadmin_orders'),
-
-    (r'^deleteOrders$', 'web.views.deleteOrders'),
     (r'^myadmin_addProduct$', 'web.views.myadmin_addProduct'),
-
     (r'^deleteProducts', 'web.views.deleteProducts'),  
     (r'^addProduct', 'web.views.addProduct'),
 
