@@ -53,6 +53,7 @@ def index(request):
 def cart(request):
     if request.user.is_authenticated():
         template = loader.get_template('cart.html')
+        message = request.GET.get('m', '')
         user = request.user
         userProducts = CartProduct.objects.filter(user=user)
         
@@ -63,8 +64,9 @@ def cart(request):
         no_items = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
             'products_in_cart' : no_items,
-            'cart'  : userProducts,
-            'total' : total,
+            'cart'   : userProducts,
+            'total'  : total,
+            'message': message,
         })
         
         context.update(csrf(request))
@@ -178,7 +180,7 @@ def checkout(request):
     if request.user.is_authenticated():
         template = loader.get_template('payment.html')
         products = CartProduct.objects.filter(user=request.user)
-    
+        message = request.GET.get('m', '')
         prices = []
         total = 0
         for product in products:
@@ -200,6 +202,7 @@ def checkout(request):
             'cost'    : prices,
             'cart'    : products,
             'payment' : payment,
+            'message' : message,
         })
     
         context.update(csrf(request))
@@ -210,25 +213,29 @@ def checkout(request):
        
 
 ##
-# TODO: document me! 
+# If the bank returns an OK response then we store the Payments
+# and all the products in the cart lic transactions.
 def paymentOk(request):
     if request.user.is_authenticated():
+        # Get the data from the GET request.
         pid = request.GET.get('pid')
         ref = request.GET.get('ref')
         checksum = request.GET.get('checksum')
         
+        # Do the checksum
         checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
         m = md5.new(checksumstr)
         myChecksum = m.hexdigest()
         
-        print myChecksum
-        print checksum
-        
+        # Check that the checksum is correct.
         if checksum == myChecksum:
-            user = request.user
+            # Get the Payment and adds the ref.
             payment = get_object_or_404(Payment, pid=pid)
             payment.ref = ref
             payment.save()
+            
+            # Get the products in the user's cart and add them to the transaction.
+            user = request.user
             products = CartProduct.objects.filter(user=user)
             
             for product in products:
@@ -246,24 +253,70 @@ def paymentOk(request):
                 transaction.save()
                 product.delete()
             
+            # Reset the cart product counter of the user
             profile = get_object_or_404(UserProfile, user=user) 
             profile.products_in_cart = 0
             profile.save()
             
             return HttpResponseRedirect("/myTransactions?m=Payment succesful!")
-            
+         
+        # If the checksum don't validate, the delete the payment.
         else:
             payment = get_object_or_404(Payment, pid=pid)
             payment.delete()
-            return HttpResponseRedirect("/checkout")
+            return HttpResponseRedirect("/checkout?m=The checksum does not validate!")
+    else:
+        return HttpResponseRedirect("/")
 
 ##
-# TODO: document me!    
+# Handle an canceled payment, triggered when the user cancel the payment in the bank.
 def paymentNo(request):
-    payment = get_object_or_404(Payment, pid=pid)
-    payment.delete()
-    return HttpResponseRedirect("/checkout")
+    if request.user.is_authenticated():
+        # Get the values sent by the bank and check that the checksum matches.
+        pid = request.GET.get('pid')
+        ref = request.GET.get('ref')
+        checksum = request.GET.get('checksum')
+        
+        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
+        m = md5.new(checksumstr)
+        myChecksum = m.hexdigest()
+        
+        # If the checksum matches then delete the payment and returns the user to 
+        #  the cart page showing a message.
+        if checksum == myChecksum:
+            payment = get_object_or_404(Payment, pid=pid)  
+            payment.delete()
+            return HttpResponseRedirect("/cart?m=You cancel the payment.")
+        
+        else:
+            return HttpResponseRedirect("/")
+    else:
+        return HttpResponseRedirect("/")
 
+##
+# Handle an error on payment. 
+def paymentError(request):
+    if request.user.is_authenticated():
+        # Get the values sent by the bank and check that the checksum matches.
+        pid = request.GET.get('pid')
+        ref = request.GET.get('ref')
+        checksum = request.GET.get('checksum')
+
+        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
+        m = md5.new(checksumstr)
+        myChecksum = m.hexdigest()
+        
+        # If the checksum matches then delete the payment and returns the user to 
+        #  the checkout page showing a message.
+        if checksum == myChecksum:
+            payment = get_object_or_404(Payment, pid=pid)
+            payment.delete()
+            return HttpResponseRedirect("/checkout?m=Some error occurs while trying to connect to the bank.")
+
+        else:
+            return HttpResponseRedirect("/")
+    else:
+        return HttpResponseRedirect("/")
 
 ##
 # Ask the user for the master password, in order to enter the administrative
