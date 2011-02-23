@@ -381,7 +381,7 @@ def myadmin_products(request):
 ##
 # Render a page to add a new product.
 def myadmin_addProduct(request):
-    form = AddProductForm()
+    form = ProductForm()
     t = loader.get_template('myadmin_add_product.html')
     context = RequestContext(request, {
         'form': form,
