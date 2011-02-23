@@ -8,30 +8,87 @@
 {% block side_bar %}
 	<div id="side_bar">
 		<ul id="side_bar">
-			<li><a href="/category/{{ category.name }}/">Your profile</a></li>
-			<li><a href="/category/{{ category.name }}/">Your cart</a></li>
-			<li><a href="/category/{{ category.name }}/">Your buy products</a></li>
+			<li><a href="/editProfile">Your profile</a></li>
+			<li><a href="/cart">Your cart</a></li>
+			<li><a href="/myTransactions">Your transactions</a></li>
 		</ul>	
 	</div>
 {% endblock %}
 
 {% block main_content %}
+
+	<script>
+	function deleteProduct(product, thisPrice){
+		var answer = confirm("Are you sure?")
+		if (answer){
+			$('#item-'+product).css("display","none");
+			total = $('#total').html();
+			thisPrice = $('#quantity-'+product).val() * thisPrice;
+			$('#total').html(total-thisPrice);
+			$('#quantity-'+product).val("0");
+			
+			$.post("cart/del", { product: product},
+			   function(data){			     
+					$('#products-in-cart').html(data);
+					$("#my-cart").hide();
+					$("#my-cart").fadeIn();;
+			   });
+						
+			$("#total").hide();
+			$("#total").fadeIn();
+		}	
+	}
+	
+	function editQuantity(product, thisPrice){
+		total = $('#total').html();
+		beforeQuantity = $('#before-quantity-'+product).val();
+		newQuantity = $('#quantity-'+product).val();
+		actualCost = thisPrice * beforeQuantity;
+		newCost = newQuantity * thisPrice;
+		total -= actualCost;
+		total += newCost;
+
+		$.post("cart/edit", { product: product, quantity:newQuantity},
+		   function(data){			     
+				$('#products-in-cart').html(data);
+				$("#my-cart").hide();
+				$("#my-cart").fadeIn();;
+		   });
+		
+		$('#total').html(total.toFixed(2));
+		$('#before-quantity-'+product).val(newQuantity);
+		$("#total").hide();
+		$("#total").fadeIn();
+	}
+	
+	</script>
+
+	{% if cart %}
+	<center><h2>My cart</h2></center>
 	<table cellspacing="0" callpadding="50" border="0" width="660">
-		<tr>
-			<td>pic</td>
-			<td>name</td>
-			<td>cuantity</td>
-			<td>price</td>
-			<td>delete</td>
-		</tr>
-		{% for product in cart %}
-		<tr>
-			<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
-			<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
-			<td class="quantity" width="100">{{ product.quantity }}</td>
-			<td class="value" width="75">{{ product.product.price }}</td>
-			<td class="delete" width="40"><img src="/static/images/delete-icon.png" /></td>
-		</tr>
-		{% endfor %}
+		<form action="/checkout" method="post" id="form-myCart">
+			{% csrf_token %}
+			{% for product in cart %}
+			<tr class="item" id="item-{{ product.id }}">
+				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
+				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
+				<td class="quantity" width="100"><input type="text" name="quantity-{{ product.id }}" id="quantity-{{ product.id }}" value="{{ product.quantity }}" size="8" onChange="editQuantity({{ product.id }}, {{ product.product.price }} )"/>
+					<input type="hidden" id="before-quantity-{{ product.id }}" value="{{ product.quantity }}" /></td>
+				<td class="value" width="75">{{ product.product.price }} &euro;</td>
+				<td class="delete" width="40"><img src="/static/images/delete-icon.png" onclick="deleteProduct({{ product.id }}, {{ product.product.price }})" /></td>
+			</tr>
+			{% endfor %}
+			
+			<tr>
+				<td colspan="5" class="total">Total: <span id="total">{{ total }}</span> &euro; 
+				<div id="checkout" onclick="$('#form-myCart').submit()">
+					 Checkout 
+				</div></td>
+			</tr>
+		</form>
 	</table>
+	{% else %}
+		<center><h2>Your cart is empty!</h2></center>
+	{% endif %}
+	
 {% endblock %}

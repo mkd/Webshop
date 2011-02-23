@@ -9,7 +9,7 @@ img.product-pic
 	-moz-border-radius: 1em;
 }
 
-tr:hover
+tr.item:hover
 {
 	background: #ded;
 }
@@ -19,4 +19,51 @@ td.name a
 	text-decoration: none;
 	font-size: 16px;
 	color: #666;
+}
+
+td.total
+{
+    text-align: right;
+	font-size: 18px;
+	font-weight: bold;
+	padding: 12px;
+	border-top: 1px solid #999;  
+}
+
+#checkout
+{
+    text-align: center;
+    font-size: 14px;
+    font-weight: 800;
+    display: inline;
+        
+	background: #d1d1d1; /* for non-css3 browsers */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#a1a1a1)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #ebebeb,  #a1a1a1); /* for firefox 3.6+ */
+ 
+	color: #444;
+	border-top: solid 1px #f8f8f8;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
+	
+	margin-left: 10px;
+	padding:  3px 10px;
+	-webkit-border-radius: 1.6em;
+	-moz-border-radius: 1.6em;
+}
+
+#checkout:hover
+{
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#a1a1a1', endColorstr='#ebebeb'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#a1a1a1), to(#ebebeb)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #a1a1a1,  #ebebeb); /* for firefox 3.6+ */
+	cursor: pointer;
+}
+
+.delete
+{
+    cursor: pointer;
 }

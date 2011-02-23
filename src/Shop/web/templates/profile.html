@@ -1,12 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %} Webshop -- My Profile {% endblock %}
+{% block title %} Webshop | My Profile {% endblock %}
 
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/editProfile">Your profile</a></li>
+			<li><a href="/cart">Your cart</a></li>
+			<li><a href="/myProducts">Your buy products</a></li>
+		</ul>	
+	</div>
+{% endblock %}
 
 {% block main_content %}
     {% block profile_form %}
         <h1>My Profile</h1>
-        <form id="profile_form" method="post" action="/save_profile">
+        {% if saved %}
+            <div class="success">Profile data saved successfully!</div>
+        {% endif %}
+        <form enctype="multipart/form-data" id="profile_form" method="post" action="/saveProfile">
         {% csrf_token %}
         <table>
         <tr>
@@ -24,15 +36,15 @@
 	        <label for="fname">First name:</label>
             </td>
             <td>
-            {{ form.fname }}
+            <input type="text" id="fname" name="fname" value="{{ fname }}" />
             </td>
         </tr>
         <tr>
             <td>
-	        <label for="sname">Surname:</label>
+	        <label for="fname">Last name:</label>
             </td>
             <td>
-            {{ form.sname }}
+            <input type="text" id="sname" name="sname" value="{{ sname }}" />
             </td>
         </tr>
         <tr>
@@ -41,6 +53,7 @@
             </td>
             <td>
             {{ user }}
+            <input type="hidden" name="user" value="{{ user }}" />
             </td>
         </tr>
         <tr>
@@ -64,7 +77,7 @@
 	        <label for="email">Email:</label>
             </td>
             <td>
-            {{ form.email }}
+            {{ email }}
             </td>
         </tr>
         <tr>
@@ -72,7 +85,7 @@
 	        <label for="address">Address:</label>
             </td>
             <td>
-            {{ form.postal_address }}
+            <input type="text" maxlength="32" id="address" name="address" value="{{ address }}" />
             </td>
         </tr>
         <tr>
@@ -80,15 +93,15 @@
 	        <label for="postal_code">Postal code:</label>
             </td>
             <td>
-            {{ form.postal_code }}
+            <input type="text" id="postal_code" name="postal_code" value="{{ postal_code }}" />
             </td>
         </tr>
         <tr>
             <td>
-	        <label for="postal_city">City:</label>
+	        <label for="city">City:</label>
             </td>
             <td>
-            {{ form.postal_city }}
+            <input type="text" id="city" name="city" value="{{ city }}" />
             </td>
         </tr>
         <tr>
@@ -96,12 +109,14 @@
 	        <label for="postal_country">Country:</label>
             </td>
             <td>
-            {{ form.postal_country }}
+            <input type="text" id="country" name="country" value="{{ country }}" />
             </td>
         </tr>
         <tr>
             <td colspan="2" align="right">
                 <input type="submit" name="submit" value="Save" />
+                |
+                <a href="/delete_account">Delete my account</a>
             </td>
         </tr>
         </table>

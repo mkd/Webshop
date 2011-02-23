@@ -227,6 +227,7 @@ a
  
 	display: none;
 	margin: 0;
+	margin-left: -120px;
 	padding: 0;
 	width: 185px;
 	position: absolute;
@@ -555,6 +556,14 @@ textarea
 .error
 {
     color:                  red;
+    display:                block;
+    font-weight:            bold;
+    margin:                 1em 0;
+}
+
+.success
+{
+    color:                  green;
     display:                block;
     font-weight:            bold;
     margin:                 1em 0;

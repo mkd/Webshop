@@ -11,14 +11,12 @@
   	</head> 
   	
   	<body>
-        <p>Session ID: '{{ request.user.is_authenticated }}'</p>
   		<div id="wraper">
 	  		{% block header %}
 	  		<div id="nav-menu">
 		  		<ul id="nav"> 
 					<li class="logo"><div id="logo"><img src="/static/images/logo.png" width="63" height="59"  onclick="window.location.href='/';" /></div></li>
 					<li class="search">
-
 						<form class="searchform"  action="/search" method="post">
 							{% csrf_token %}
 							<input class="searchfield" name="query" type="text" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
@@ -26,22 +24,55 @@
 						</form>
 					</li>
 					
-	                {% if request.user.is_authenticated %}
-					    <li><a href="/signout">Sign out</a></li>
-	                {% else %}
-					    <li><a href="/signin">Sign in</a></li> 
+	                {% if not request.user.is_authenticated %}
+					    <li><a href="/signin">Sign in</a>
+						    <ul> <center>
+                                <form method="post" action="/login">
+						        {% csrf_token %}
+						        <table>
+						        <tr>
+						            <td>
+							        <label for="user">User:</label>
+						            </td>
+						            <td>
+						            <input type="text" id="user" name="user" maxlength="16" />
+						            </td>
+						        </tr>
+						        <tr>
+						            <td>
+							        <label for="pass">Pass:</label>
+						            </td>
+						            <td>
+						            <input type="password" id="pass" name="pass" />
+						            </td>
+						        </tr>
+						        <tr>
+						            <td colspan="2" align="right">
+						                <input type="submit" name="submit" value="Sign in" />
+						            </td>
+						        </tr>
+						        </table>
+						        </form>
+								</center>
+                            </ul>					
+						</li> 
 	                {% endif %}
-	                    
-					<li id="nav-separator"></li>
 				
                     {% if request.user.is_authenticated %}
-                        <li><a href="#">{{ request.user.username }}</a> 
+                        <li><a href="/editProfile">{{ request.user.username }}</a> 
                             <ul> 
-                                <li><a href="#">My cart</a></li> 
-                                <li><a href="/profile">My profile</a></li> 
+                                <li><a href="/cart">My cart</a></li> 
+								<li><a href="/myTransactions">My products</a></li> 
+                                <li><a href="/editProfile">My profile</a></li> 
+								<li><a href="/signout">Sign out</a></li>
                             </ul> 
                         </li> 
-                        <li><a href="#"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> 2 items</a> </li>
+
+                        {% if request.user.is_staff %}
+                            <li><a href="/myadmin">Administration</a></li>
+                        {% endif %}
+
+                        <li id="my-cart"><a href="/cart"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> <span id="products-in-cart">{{ products_in_cart }}</span> items</a> </li>
                     {% else %}
 					    <li><a href="/signup">Sign up</a></li>
                     {% endif %}
@@ -53,7 +84,7 @@
 		  			<div id="side_bar">
 						<ul id="side_bar">
 						{% for category in categories %}
-							<li><a href="/category/{{ category.name }}/">{{ category.name }}</a></li>
+							<li><a href="/category/{{ category.id }}/">{{ category.name }}</a></li>
 						{% endfor %}
 						</ul>	
 		  			</div>

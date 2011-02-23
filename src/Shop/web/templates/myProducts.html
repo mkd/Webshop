@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %} My cart {% endblock %}
+{% block extra_head %}
+	<link rel=stylesheet href="/static/css/cart.css" type="text/css" />
+{% endblock %}
+
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/editProfile">Your profile</a></li>
+			<li><a href="/cart">Your cart</a></li>
+			<li><a href="/myTransactions">Your transactions</a></li>
+		</ul>	
+	</div>
+{% endblock %}
+
+{% block main_content %}
+
+	<script>
+	
+	function colorHeart(number, id){
+		for(i=1; i<=number; i++){
+			$("#heart-"+i+"-"+id).attr("src", "/static/images/heart-pic.png");
+		}
+	}
+	
+	function clean(id){
+		actualRate = $("#prod-rate-"+id).val();
+		for(i=1; i<=5; i++){
+			$("#heart-"+i+"-"+id).attr("src", "/static/images/heart-pic-no.png");
+		}
+		colorHeart(actualRate, id);
+	}
+	
+	function rate(id, rating){
+		$.post("product/rate", { product:id, rate:rating},
+		   function(data){			     
+				$("#prod-rate-"+id).val(data);
+				$("#rating-hearts-"+id).hide();
+				$("#rating-hearts-"+id).fadeIn();;
+		   });
+	}
+	
+	</script>
+
+	{% if products %}
+	<center><h2>My order on {{ payment.payment_date }}</h2>
+		<h2>Status: {{ payment.status }}</h2>
+		
+		{% if payment.status != 'Delivered' %}
+			<p>NOTE: You can rate products when you receive products at home.</p>
+		{% else %}
+			<p>Now you can rate your products, tell us your experience.</p>
+		{% endif %}
+		
+	<table cellspacing="0" callpadding="50" border="0" width="550">
+
+			{% for product in products %}
+			<tr class="item" id="item-{{ product.id }}">
+				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
+				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
+				<td class="rate">
+					{% if payment.status == 'Delivered' %}
+						
+						<script>
+						
+						$(document).ready(function() {
+							colorHeart({{ product.rate }}, {{ product.id }});
+						});
+							
+						</script>
+					
+						<div id="rating-hearts-{{ product.id }}">
+						<input type="hidden" id="prod-rate-{{ product.id }}" value="{{ product.rate }}">
+						<img id="heart-1-{{ product.id }}" src="/static/images/heart-pic-no.png" onmouseover="colorHeart(1, {{ product.id }});" onmouseout="clean({{ product.id }})" onclick="rate({{ product.id }}, 1)" />
+						<img id="heart-2-{{ product.id }}" src="/static/images/heart-pic-no.png" onmouseover="colorHeart(2, {{ product.id }});" onmouseout="clean({{ product.id }})" onclick="rate({{ product.id }}, 2)"  />
+						<img id="heart-3-{{ product.id }}" src="/static/images/heart-pic-no.png" onmouseover="colorHeart(3, {{ product.id }});" onmouseout="clean({{ product.id }})" onclick="rate({{ product.id }}, 3)"  />
+						<img id="heart-4-{{ product.id }}" src="/static/images/heart-pic-no.png" onmouseover="colorHeart(4, {{ product.id }});" onmouseout="clean({{ product.id }})" onclick="rate({{ product.id }}, 4)"  />
+						<img id="heart-5-{{ product.id }}" src="/static/images/heart-pic-no.png" onmouseover="colorHeart(5, {{ product.id }});" onmouseout="clean({{ product.id }})" onclick="rate({{ product.id }}, 5)"  />
+						</div>
+					{% else %}
+						<img src="/static/images/heart-pic-no.png" />
+						<img src="/static/images/heart-pic-no.png" />
+						<img src="/static/images/heart-pic-no.png" />
+						<img src="/static/images/heart-pic-no.png" />
+						<img src="/static/images/heart-pic-no.png" />
+					{% endif %}
+				
+				</td>
+				<td class="value" >{{ product.quantity }} x {{ product.unit_price }} &euro; = {{ product.total }} &euro;</td>
+
+			</tr>
+			{% endfor %}
+			
+	</table>
+	</center>
+	
+	{% else %}
+		<center><h2>This order does not have products.</h2></center>
+	{% endif %}
+	
+{% endblock %}

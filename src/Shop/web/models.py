@@ -4,11 +4,11 @@ from django.utils.datetime_safe import datetime
 from django.template.defaultfilters import default
 from django.contrib.admin.models import User
 from django.db.models.signals import post_save
-import math
+import math, md5
 
 
 ##
-# Model: User
+# Model: UserProfile
 # 
 # Uses the built in django.contrib.auth to manage users and athentication.
 # Adds fields to manage the postal information of the user.
@@ -20,8 +20,8 @@ import math
 # postal_city      The city.
 # postal_country   The country.
 class UserProfile( models.Model ):
-    #user           = models.ForeignKey( User, unique=True )
-    user           = models.OneToOneField( User )
+    user           = models.ForeignKey( User, unique=True)
+    products_in_cart = models.IntegerField( default=0 )
     picture        = models.CharField(  max_length=256 )
     postal_address = models.CharField(  max_length=160 )
     postal_code    = models.CharField(  max_length=5 )
@@ -36,7 +36,6 @@ class UserProfile( models.Model ):
    
     def __unicode__(self):
         return self.user.name
-    user = property(get_user, set_user, None, None)
 
 ##
 # Activates the create_user_profile handler when a new user is saved.
@@ -62,7 +61,7 @@ class Category(models.Model):
     name        = models.CharField( max_length=32, blank = False )
     description = models.CharField( max_length=256, blank=True )
     icon        = models.CharField( max_length=256, default = 'images/categories/unknown.png' )
-    #parent_id   = models.ForeignKey(Category, default = -1) 
+    parent_id   = models.ForeignKey('self', related_name='parent', null=True, blank=True, default=-1)
     
     def __unicode__(self):
         return self.name
@@ -140,8 +139,9 @@ class Tag(models.Model):
 
 class Product(models.Model):
     tags            = models.ManyToManyField( Tag, blank=True)
-    category        = models.ManyToManyField(Category, blank=True)
+    category        = models.ForeignKey(Category)
     name            = models.CharField( max_length=32 )
+    short_name      = models.CharField( max_length=14, default = '' )
     description     = models.CharField( max_length=512, default = '' )   
     picture         = models.CharField( max_length=256, default = '/static/images/products/unknown.png' )
     price           = models.FloatField( default=1 )
@@ -149,8 +149,22 @@ class Product(models.Model):
     sold_count      = models.IntegerField( default=0 )
     comment_count   = models.IntegerField( default=0 )
     visit_count     = models.IntegerField( default=0 )
-    average_rating  = models.DecimalField( max_digits=3, decimal_places=2, default=0) 
+    average_rating  = models.DecimalField( max_digits=1, decimal_places=0, default=0) 
     votes           = models.IntegerField( default=0 )
+    points          = models.IntegerField( default=0 )
+    
+    def save(self, *args, **kwargs):
+        if self.votes > 0:
+            self.average_rating = self.points / self.votes
+            
+        if self.short_name[:10] != self.name[:10]:
+            if len(self.name) > 10:
+                self.short_name = self.name[:10] + '...'
+            else: 
+                self.short_name = self.name    
+                
+        super(Product, self).save(*args, **kwargs)
+        return self
       
     def __unicode__(self):
         return self.name
@@ -174,7 +188,29 @@ class CartProduct(models.Model):
     user        = models.ForeignKey(User)
     timestamp   = models.DateTimeField( default=datetime.now)
     quantity    = models.IntegerField( default=0 )
+    total       = 0
+    
+    def save(self, force_insert=False, force_update=False):
+        self.user.get_profile().products_in_cart += self.quantity
+        super(CartProduct, self).save()
+        return self
+        
+    def __unicode__(self):
+        return self.product + " by " + self.user
 
+
+class Payment(models.Model):
+    pid            = models.CharField( max_length=500 )
+    user           = models.ForeignKey(User)
+    checksum       = models.CharField( max_length=300 )
+    ref            = models.IntegerField( default=-1 )
+    amount         = models.IntegerField( default=0 )   
+    payment_date   = models.DateTimeField( default=datetime.now )
+    status         = models.CharField( max_length=100, default='Delivered' )
+    postal_address = models.CharField( max_length=160 )
+    postal_code    = models.CharField( max_length=5 )
+    postal_city    = models.CharField( max_length=20 )
+    postal_country = models.CharField( max_length=20 )
 
 ##
 # Model: Transaction
@@ -190,20 +226,21 @@ class CartProduct(models.Model):
 # postal_city      The city.
 # postal_country   The country.
 class Transaction( models.Model ):
-    product        = models.ForeignKey(Product)
     user           = models.ForeignKey(User)
-    payment_date   = models.DateTimeField( default=datetime.now )
+    product        = models.ForeignKey( Product )
+    payment        = models.ForeignKey( Payment )
     quantity       = models.IntegerField( default=1 )
-    unit_price     = models.FloatField( default=0) 
-    rate           = models.IntegerField()
-    postal_address = models.CharField( max_length=160 )
-    postal_code    = models.CharField( max_length=5 )
-    postal_city    = models.CharField( max_length=20 )
-    postal_country = models.CharField( max_length=20 )
+    unit_price     = models.FloatField( default=0)
+    total          = models.IntegerField( default=0 )
+    rate           = models.IntegerField( default=0 )
+    
+    def save(self, force_insert=False, force_update=False):
+        self.total = self.unit_price * self.quantity
+        super(Transaction, self).save()
+        return self
     
     def __unicode__(self):
         return "%s: %s (%d)" % (self.user.username, self.product.name, self.quantity)
-
 
 ##
 # Model: Comment
@@ -237,10 +274,12 @@ class Comment(models.Model):
         return self.user.username + " en " + self.product.name
     
     def save(self, force_insert=False, force_update=False):
-        # do custom stuff
         try:
-            transaction = Transaction.objects.get(user=self.user, product=self.product)
-            self.hasProduct = True
+            transaction = Transaction.objects.filter(product=self.product, user=self.user)
+            if transaction:
+                self.hasProduct = True
+            else:
+                self.hasProduct = False
             
         except Transaction.DoesNotExist: 
             self.hasProduct = False

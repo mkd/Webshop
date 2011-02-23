@@ -96,6 +96,16 @@ div.buyer blockquote
 	background-color: #808080;
 }
 
+cite.buyer 
+{
+	position: relative;
+	margin: 0px;
+	padding: 7px 0px 0px 15px;
+	top: 1px;
+	/*background: transparent url(/static/images/tip.gif) no-repeat 20px 0;*/
+	font-style: normal;
+}
+
 div.comment blockquote p 
 {
 	margin: 10px;

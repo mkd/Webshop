@@ -22,11 +22,20 @@ function showReplyBox(comment){
 	$('#comment_reply_box_'+comment).css("display","block");
 }
 
+function add(){
+	$.post('/cart/add', { product: '{{product.id}}' },
+	 function(data) {
+		$('#products-in-cart').html(data);
+		$("#my-cart").hide();
+		$("#my-cart").fadeIn();
+	});
+}
+
 </script>
 
 	<div id="product-content">
 		<div id="left-side">
-			<img src="{{product.picture}}" />
+			<img src="/static/images/products/{{ product.id }}" />
 		</div>
 		
 		<div id="right-side">
@@ -34,25 +43,28 @@ function showReplyBox(comment){
 				<h1>{{ product.name }}</h1>
 			</div>			
 			
-			<div id="p-price">
-				 {{ product.price }}&euro; | BUY 
+			<div id="p-price" onclick="add();">
+				 {{ product.price }}&euro; | Buy now!
 			</div>
 			
 			<div id="clear" style="margin-left: 5px;">
 				
 				<p>
-					<!-- This is awful, I know, but I can do in range(product.average_rating) -->		
+					<!-- This is awful, I know, but I can do in range(product.average_rating) -->	
+					{% if product.average_rating == 0 %}
+						<img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" />
+					{% endif %}	
 					{% if product.average_rating == 1 %}
-						<img src="/static/images/heart-pic.png" /> 
+						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" />
 					{% endif %}
 					{% if product.average_rating == 2%}
-						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> 
+						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> 
 					{% endif %}
 					{% if product.average_rating == 3%}
-						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> 
+						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic-no.png" /> <img src="/static/images/heart-pic-no.png" /> 
 					{% endif %}
 					{% if product.average_rating == 4%}
-						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> 
+						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic-no.png" /> 
 					{% endif %}
 					{% if product.average_rating == 5%}
 						<img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> <img src="/static/images/heart-pic.png" /> 
@@ -60,12 +72,12 @@ function showReplyBox(comment){
 					&nbsp;({{ product.votes }} user reviews)
 				</p>
 				<p>
-					{{ product.stock_count }} products avaiable | {{ product.visit_count }} visits
+					<i>{{ product.stock_count }} products avaiable | {{ product.visit_count }} visits</i>
 				</p>
 				<p>
 					{{ product.description }}
 				</p>
-				
+				<hr>
 				
 				<div id="comments">
 					{% for comment in comments %}
@@ -89,35 +101,37 @@ function showReplyBox(comment){
 							
 							<cite><strong>{{ comment.user.username }}</strong> on {{ comment.timestamp }}</cite>
 							<div class="rate" id="comment-rate-{{ comment.id }}">
-								<a onclick="showReplyBox('{{ comment.id }}');">Reply</a> | {{ comment.positives }} <img src="/static/images/up.png" onclick="rate({{ comment.id }},1);" />&nbsp;
+								{% if user %}<a onclick="showReplyBox('{{ comment.id }}');">Reply</a> | {% endif %} {{ comment.positives }} 
+								<img src="/static/images/up.png" onclick="rate({{ comment.id }},1);" />&nbsp;
 								<img src="/static/images/down.png" onclick="rate({{ comment.id }},0);" /> {{ comment.negatives }}
 							</div>
 							
-							<!--<div id="com_repy">reply</div>
-							<div id="com_rating">rate comment</div>-->
 						</div>
 						
+						{% if request.user.is_authenticated %}
 						<div class="write_reply" id="comment_reply_box_{{ comment.id }}">
 							<form action="/product/{{ product.id }}/comment/" method="post">
 								{% csrf_token %}
 								{{ form.as_p }}
-								<input type="hidden" name="user" value="1"/>
 								<input type="hidden" name="in_reply" value="{{ comment.id }}"/>
 							<input type="submit" value="Post" />
 							</form>
 						</div>
+						{% endif %}
 						
 					{% endfor %}
 				</div>
 				
+				{% if request.user.is_authenticated %}
 				<div id="write_comment">
 					<form action="/product/{{ product.id }}/comment/" method="post">
 						{% csrf_token %}
 						{{ form.as_p }}
-						<input type="hidden" name="user" value="1"/>
+						<input type="hidden" name="in_reply" value="0"/>
 					<input type="submit" value="Post" />
 					</form>
 				</div>
+				{% endif %}
 				
 				
 			</div>
