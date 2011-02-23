@@ -18,7 +18,7 @@ table#admin td
 	background: -webkit-gradient(linear, left top, left bottom, from(#fef), to(#cfcfcf)); /* for webkit browsers */
 	background: -moz-linear-gradient(top,  #fef,  #cfcfcf); /* for firefox 3.6+ */
 
-    /* border */
+    /* rounded border */
 	border:                 solid 1px #b4b4b4;
 	-webkit-border-radius:  10px;
 	-moz-border-radius:     10px;
@@ -54,16 +54,28 @@ table#admin a:hover
 
 #products
 {
+    border:                 2px solid black;
     border-collapse:        collapse;
+    color:                  #444;
+}
+
+#products a
+{
+    text-decoration:        none;
+}
+
+#products a:hover
+{
+    text-decoration:        none;
 }
 
 #products tr:nth-child(odd)   { background-color: #eee; }
 #products tr:nth-child(even)  { background-color: #fff; }
-#products tr:hover            { background-color: #dfd; }
+#products tr:hover            { background-color: #ffa; }
 
 #products th
 {
-    background-color:       #dde;
+    background-color:       #afc;
     border:                 2px solid black;
     padding:                0.2em;
     text-align:             center;
@@ -77,7 +89,7 @@ table#admin a:hover
 
 .button_text
 {
-    color:                  #888;
+    color:                  #444;
     display:                inline;
     font-style:             oblique;
     margin:                 2em;
@@ -91,4 +103,15 @@ table#admin a:hover
 .functions
 {
     margin-bottom:          1em;
+}
+
+#bt_delete_products
+{
+    cursor:                 pointer;
+}
+
+#lb_delete_products
+{
+    cursor:                 pointer;
+    text-decoration:        none;
 }

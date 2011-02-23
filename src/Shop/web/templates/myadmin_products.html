@@ -3,12 +3,13 @@
 {% block title %} Administrative Pages -- All Products {% endblock %}
 {% block extra_head %}
 	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
+    <script src="/static/js/admin.js"></script>
 {% endblock %}
 
 {% block main_content %}
     <h1>Administrate Products</h1>
     <div class="functions">
-        <form method="post" action="/deleteProducts">
+        <form id="admin_products" method="post" action="/deleteProducts">
         {% csrf_token %}
         <div class="button_text">
             <a href="/myadmin_addProduct"><img src="/static/images/new_product.png"
@@ -17,13 +18,13 @@
                style="font-style: oblique; text-decoration: none;">Add a new product</a>
         </div>
 
+        {% if not products_no_0 %}
         <div class="button_text">
-            <a href="/myadmin_deleteProducts"><img src="/static/images/delete.png"
-                                               width="32" align="middle" /></a>
-            <a href="/myadmin_deleteProducts"
-               style="font-style: oblique; text-decoration: none;">Delete
-               selected products</a>
+            <img id="bt_delete_products" src="/static/images/delete.png"
+                                               width="32" align="middle" />
+            <span id="lb_delete_products">Delete selected products</span>
         </div>
+        {% endif %}
 
         <div class="button_text">
             <a href="/myadmin"><img src="/static/images/return.png"
