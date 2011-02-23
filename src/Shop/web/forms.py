@@ -69,3 +69,10 @@ class ProductForm(ModelForm):
             'picture'     : forms.ClearableFileInput,
             'description' : forms.Textarea,
         }
+
+
+##
+# Order form, just used for editing an order status.
+class OrderForm(ModelForm):
+    class Meta:
+        model = Payment

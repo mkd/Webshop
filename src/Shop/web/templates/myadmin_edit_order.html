@@ -1,0 +1,90 @@
+<!--
+  - myadmin_edit_order.html
+  -
+  - This form is used to edit a order.
+-->
+{% extends "base.html" %}
+
+{% block title %} Webshop -- Edit Order {% endblock %}
+{% block extra_head %}
+	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
+{% endblock %}
+
+{% block main_content %}
+    {% block edit_order_form %}
+    <h1>Shipment order no. {{ order.id }}</h1>
+        <div class="button_text" style="float: right;">
+            <a href="/myadmin_orders"><img src="/static/images/return.png"
+                                    alt="Back to orders"
+                                    width="32" align="middle" /></a>
+            <a href="/myadmin_orders"
+               style="font-style: oblique; text-decoration: none;">Return to
+               orders</a>
+        </div>
+    {% if order_not_saved %}
+        <div class="error">Order status could not be modified!</div>
+    {% endif %}
+    {% if order_saved %}
+        <div class="success">Order status saved successfully!</div>
+    {% endif %}
+        <form id="edit_order_form" method="post"
+              action="/saveOrder/{{ order.id }}">
+        {% csrf_token %}
+        <table>
+        <tr>
+            <td>
+	        <label for="id">Order no.:</label>
+            </td>
+            <td>
+            {{ order.id }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="paymnet_date">Date:</label>
+            </td>
+            <td>
+            {{ order.payment_date }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="amount">Amount:</label>
+            </td>
+            <td>
+            {{ order.amount }}&nbsp;&euro;
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="user">User:</label>
+            </td>
+            <td>
+            {{ order.user }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="price">Country:</label>
+            </td>
+            <td>
+            {{ order.country }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="status">Status:</label>
+            </td>
+            <td>
+            {{ form.status }}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" id="submit" value="Save" />
+            </td>
+        </tr>
+        </table>
+        </form>
+    {% endblock %}
+{% endblock %}

@@ -115,3 +115,14 @@ table#admin a:hover
     cursor:                 pointer;
     text-decoration:        none;
 }
+
+#bt_cancel_orders
+{
+    cursor:                 pointer;
+}
+
+#lb_cancel_orders
+{
+    cursor:                 pointer;
+    text-decoration:        none;
+}

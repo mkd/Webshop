@@ -199,6 +199,13 @@ class CartProduct(models.Model):
         return self.product + " by " + self.user
 
 
+##
+# Model: Payment
+#
+# Implement the equivalent to order, containing an user, a total amount and a
+# status for the delivery.
+#
+# TODO: document me!
 class Payment(models.Model):
     pid            = models.CharField( max_length=500 )
     user           = models.ForeignKey(User)
@@ -211,6 +218,7 @@ class Payment(models.Model):
     postal_code    = models.CharField( max_length=5 )
     postal_city    = models.CharField( max_length=20 )
     postal_country = models.CharField( max_length=20 )
+
 
 ##
 # Model: Transaction

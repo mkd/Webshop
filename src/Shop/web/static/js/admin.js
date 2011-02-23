@@ -17,4 +17,16 @@ $(document).ready(function()
         if (confirm('Do you want to delete the selected products?'))
             $('#admin_products').submit()
     })
+
+    $('#bt_cancel_orders').click(function()
+    {
+        if (confirm('Do you want to cancel the selected orders?'))
+            $('#admin_orders').submit()
+    })
+
+    $('#lb_cancel_orders').click(function()
+    {
+        if (confirm('Do you want to cancel the selected orders?'))
+            $('#admin_orders').submit()
+    })
 })

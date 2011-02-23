@@ -145,8 +145,10 @@ def addToCart(request):
         
     else:
         return HttpResponse("No registered")
-        
 
+
+##
+# TODO: document me!
 def deleteFromCart(request):
     if request.method == 'POST':
         prod = get_object_or_404(CartProduct, id=request.POST['product'])
@@ -157,7 +159,10 @@ def deleteFromCart(request):
         return HttpResponse(profile.products_in_cart)
     else:
         return HttpResponseRedirect("/")
-        
+
+
+##
+# TODO: document me!        
 def editQuantityInCart(request):
     if request.method == 'POST':
         prod = get_object_or_404(CartProduct, id=request.POST['product'])
@@ -174,7 +179,10 @@ def editQuantityInCart(request):
         return HttpResponse(profile.products_in_cart)
     else:
         return HttpResponseRedirect("/")
-        
+
+
+##
+# TODO: document me!        
 def checkout(request):
     if request.user.is_authenticated():
         template = loader.get_template('payment.html')
@@ -560,14 +568,32 @@ def myadmin_categories(request):
     return HttpResponseRedirect('/admin/web/category/')
 
 
-##
 # Render the orders administration page.
+#
+# The orders admin page renders a table with all the orders, that can be
+# sorted by date, total sum, status, etcetera.
 def myadmin_orders(request):
-    orders = Transaction.objects.all()
+    # fetch the sorting criteria from GET
+    column = request.GET.get('column', 'payment_date')
+    order  = request.GET.get('order', 'a')
+    if order == 'a':
+        criteria = column
+    else:
+        criteria = '-' + column
+
+    # retrieve the orders from the database
+    orders = Payment.objects.all().order_by(criteria)
+    if len(orders) <= 0:
+        orders_no_0 = True
+    else:
+        orders_no_0 = False
     t = loader.get_template('myadmin_orders.html')
     context = RequestContext(request, {
-        'orders'    : orders,
-        'orders_no' : len(orders),
+        'orders'      : orders,
+        'orders_no'   : len(orders),
+        'orders_no_0' : orders_no_0,
+        'column'      : column,
+        'order'       : order,
     })
     return HttpResponse(t.render(context))
 
@@ -1001,19 +1027,72 @@ def deleteProducts(request):
 
 
 ##
-# Delete a set of orders.
+# Cancel a set of orders.
+#
+# Note: this view does not delete orders, just mark them as canceled.
 def cancelOrders(request):
+    # if the user is not staff, go back to home page
+    if not request.user.is_authenticated() or not request.user.is_staff:
+        return HttpResponseRedirect('/')
+
+    # cancel orders
     t = loader.get_template('myadmin_orders.html')
-
-    # delete categories and set their products orphaned 
     if request.method == 'POST':
-        order_list = request.POST.getlist('order_list')
-        for oid in order_list:
-            o = Transaction.objects.get(pk=oid)
-            o.delete()
+        orders = request.POST.getlist('order_list')
+        # if no products to delete, then go back to products admin
+        if len(orders) <= 0:
+            return HttpResponseRedirect('/myadmin_orders')
 
-    orders = Transaction.objects.all()
+        # if there are products to delete, go one by one
+        # note: the picture of the product must be also deleted
+        for o in orders:
+            od = Payment.objects.get(pk=o)
+            od.status = 'Canceled'
+
+    # return to the products page
+    orders = Payment.objects.all()
     context = RequestContext(request, {
         'orders':  orders,
     })
+    return HttpResponse(t.render(context))
+
+
+##
+# Render a page to edit an order status.
+def editOrder(request, order_id):
+    t = loader.get_template('myadmin_edit_order.html')
+    o = Payment.objects.get(id=order_id)
+    form = OrderForm(instance=o)
+
+    context = RequestContext(request, {
+        'form'       : form,
+        'order'      : o,
+        'order_id'   : order_id,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Save a modified product.
+def saveOrder(request, order_id):
+    t = loader.get_template('myadmin_edit_order.html')
+    if request.method == 'POST':
+        # save the status in the database
+        o = Payment.objects.get(id=order_id)
+        o.status = request.POST.get('status', 'Processing')
+        o.save()
+
+        # display editOrder again
+        form = OrderForm(instance=o)
+
+        # redirect the user to the home page (already logged-in)
+        context = RequestContext(request, {
+            'form'          : form,
+            'order'         : o,
+            'order_id'      : order_id,
+            'order_saved'   : True,
+        })
+
+    # render response
+    context.update(csrf(request))
     return HttpResponse(t.render(context))

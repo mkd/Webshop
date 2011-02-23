@@ -1,33 +1,156 @@
 {% extends "base.html" %}
 
-{% block title %} Administrative Pages -- Orders {% endblock %}
+{% block title %} Administrative Pages -- All Orders {% endblock %}
 {% block extra_head %}
 	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
+    <script src="/static/js/admin.js"></script>
 {% endblock %}
 
 {% block main_content %}
     <h1>Administrate Orders</h1>
     <div class="functions">
-        {% ifnotequal orders_no 0 %}
-            <strong>Functions:</strong>
-            <a href="/myadmin_delete_orders">Cancel selected orders</a>
-        {% endifnotequal %}
+        <form id="admin_orders" method="post" action="/cancelOrders">
+        {% csrf_token %}
+
+        {% if not orders_no_0 %}
+        <div class="button_text">
+            <img id="bt_cancel_orders" src="/static/images/delete.png"
+                                               width="32" align="middle" />
+            <span id="lb_cancel_orders">Cancel selected orders</span>
+        </div>
+        {% endif %}
+
+        <div class="button_text">
+            <a href="/myadmin"><img src="/static/images/return.png"
+                                    alt="Back to admin"
+                                    width="32" align="middle" /></a>
+            <a href="/myadmin"
+               style="font-style: oblique; text-decoration: none;">Return to
+               administrative functions</a>
+        </div>
     </div>
     {% ifequal orders_no 0 %}
         <div class="error">There are no orders in the system!</div>
     {% else %}
-        <ul id="admin">
+        <table id="products">
+            <tr>
+                <th>
+                    {% if column == 'pid' %}
+                        {% if order == 'a' %}
+                            <a href="/myadmin_orders?column=pid&order=d">ID</a>
+                            &darr;
+                        {% else %}
+                            <a href="/myadmin_orders?column=pid&order=a">ID</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a href="/myadmin_orders?column=pid&order=a">ID</a>
+                    {% endif %}
+                </th>
+                <th>
+                    {% if column == 'payment_date' %}
+                        {% if order == 'a' %}
+                            <a href="/myadmin_orders?column=payment_date&order=d">Date</a>
+                            &darr;
+                        {% else %}
+                            <a href="/myadmin_orders?column=payment_date&order=a">Date</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a href="/myadmin_orders?column=payment_date&order=a">Date</a>
+                    {% endif %}
+                </th>
+                <th>
+                    {% if column == 'amount' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_orders?column=amount&order=d">Total price</a>
+                            &darr;
+                        {% else %}
+                            <a
+                            href="/myadmin_orders?column=amount&order=a">Total price</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_orders?column=amount&order=a">Total price</a>
+                    {% endif %}
+                </th>
+                <th>
+                    {% if column == 'user' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_orders?column=user&order=d">User</a>
+                            &darr;
+                        {% else %}
+                            <a
+                            href="/myadmin_orders?column=user&order=a">User</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_orders?column=user&order=a">User</a>
+                    {% endif %}
+                </th>
+                <th>
+                    {% if column == 'country' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_orders?column=country&order=d">Country</a>
+                            &darr;
+                        {% else %}
+                            <a
+                            href="/myadmin_orders?column=country&order=a">Country</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_orders?column=user&countryr=a">Country</a>
+                    {% endif %}
+                </th>
+                <th>
+                    {% if column == 'status' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_orders?column=status&order=d">Status</a>
+                            &darr;
+                        {% else %}
+                            <a
+                            href="/myadmin_orders?column=status&order=a">Status</a>
+                            &uarr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_orders?column=status&order=a">Status</a>
+                    {% endif %}
+                </th>
+            </tr>
         {% for o in orders %}
-            <li>
-                <strong>Order #{{ o.id }}</strong>
-                <br />
-                <strong>Product:</strong> {{ o.product }}
-                <br />
-                <strong>User:</strong> {{ o.user }}
-                <br />
-                <strong>Date:</strong> {{ o.payment_date }}
-            </li>
+            <tr>
+                <td>
+			        <input type="checkbox" value="{{ o.id }}" name="order_list" />
+                    <a href="/editOrder/{{ o.id }}">{{ o.id }}</a>
+                </td>
+                <td style="text-align: center;">
+                    <a href="/editOrder/{{ o.id }}">{{ o.payment_date }}</a>
+                </td>
+                <td style="text-align: right;">
+                    <a href="/editOrder/{{ o.id }}">{{ o.amount }}&nbsp;&euro;</a>
+                </td>
+                <td>
+                    <a href="/editOrder/{{ o.id }}">{{ o.user.first_name }}
+                    {{o.user.last_name }}</a>
+                </td>
+                <td>
+                    <a href="/editOrder/{{ o.id }}">{{ o.country }}</a>
+                </td>
+                <td style="text-align: center;">
+                    <a href="/editOrder/{{ o.id }}">{{ o.status }}
+                    <img src="/static/images/edit.png" alt="Edit order"
+                    title="Click to edit order" /></a>
+                </td>
+            </tr>
         {% endfor %}
-        </ul>
+        </table>
     {% endifequal %}
 {% endblock %}
