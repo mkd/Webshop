@@ -13,6 +13,14 @@
 {% block main_content %}
     {% block new_product_form %}
     <h1>{{ product_name }}</h1>
+        <div class="button_text" style="float: right;">
+            <a href="/myadmin_products"><img src="/static/images/return.png"
+                                    alt="Back to products"
+                                    width="32" align="middle" /></a>
+            <a href="/myadmin_products"
+               style="font-style: oblique; text-decoration: none;">Return to
+               products</a>
+        </div>
     {% if product_not_saved %}
         <div class="error">Product could not be modified!</div>
     {% endif %}

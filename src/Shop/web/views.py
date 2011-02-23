@@ -448,9 +448,10 @@ def editProduct(request, product_id):
         pic = 'static/images/products/' + str(product_id)
 
     context = RequestContext(request, {
-        'icon' : pic,
-        'form' : form,
-        'product_id' : product_id,
+        'icon'         : pic,
+        'form'         : form,
+        'product_name' : p.name,
+        'product_id'   : product_id,
     })
     return HttpResponse(t.render(context))
 
