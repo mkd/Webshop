@@ -1,16 +1,17 @@
 /**
  * CSS Stylesheet for administrative pages.
  * 
- * Updated on 20.02.2011.
+ * Updated on 24.02.2011.
  *
  */
-ul#admin
+table#admin
 {
-    float: left;
-    text-align: left;
+    font-size:              large;
+    text-align:             center;
+    width:                  100%;
 }
 
-ul#admin li
+table#admin td
 {
     /* background */
 	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#feffef', endColorstr='#cfcfcf'); /* for IE */
@@ -24,25 +25,24 @@ ul#admin li
 	border-radius:          10px;
 
     list-style:             none;
-    margin:                 1em auto;
     padding:                1.2em;
-    width:                  16em;
 }
 
-ul#admin li:hover
+table#admin td:hover
 {
+    cursor:                 pointer;
     /* background */
 	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#bfbbfb', endColorstr='#cfcfcf'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#bfb), to(#cfcfcf)); /* for webkit browsers */
 	background: -moz-linear-gradient(top,  #bfb,  #cfcfcf); /* for firefox 3.6+ */
 }
 
-ul#admin li a
+table#admin a
 {
     text-decoration:        none;
 }
 
-ul#admin li a:hover
+table#admin a:hover
 {
     text-decoration:        underline;
 }
@@ -79,8 +79,13 @@ ul#admin li a:hover
 {
     color:                  #888;
     display:                inline;
-    margin:                 2em;
     font-style:             oblique;
+    margin:                 2em;
+}
+
+.button_text:hover
+{
+    text-decoration:        underline;
 }
 
 .functions

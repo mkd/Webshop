@@ -31,12 +31,6 @@ class SearchForm(forms.Form):
 
 
 ##
-# Form to ask the user for the website's master password.
-class AdminForm(forms.Form):
-    query = forms.CharField( widget=forms.PasswordInput ) 
-
-
-##
 # Form for user registration.
 class RegisterForm(forms.Form):
     picture         = forms.FileField( )
