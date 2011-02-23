@@ -396,7 +396,7 @@ def addProduct(request):
         # save all the data from the POST into the database
         p = Product.objects.create(
             name            = request.POST.get('name'),
-            description     = request.POST.get('desc', ''),
+            description     = request.POST.get('description', ''),
             category_id     = request.POST.get('category'),
             price           = request.POST.get('price', 0),
             stock_count     = request.POST.get('units', 0),
@@ -432,14 +432,7 @@ def addProduct(request):
 def editProduct(request, product_id):
     t = loader.get_template('myadmin_edit_product.html')
     p = Product.objects.get(id=product_id)
-    data = {
-        'name'        : p.name,
-        'desc'        : p.description,
-        'units'       : p.stock_count,
-        'price'       : p.price,
-    }
-    form = EditProductForm(data)
-#    forms.fields['category'].initial = 1
+    form = ProductForm(instance=p)
 
     # load unknown avatar if no profile picture
     pic = 'web/static/images/products/' + str(product_id)
@@ -464,7 +457,7 @@ def saveProduct(request, product_id):
         # save all the data from the POST into the database
         p = Product.objects.get(id=product_id)
         p.name          = request.POST.get('name')
-        p.description   = request.POST.get('desc')
+        p.description   = request.POST.get('description', '')
         p.category_id   = request.POST.get('category', 0)
         p.stock_count   = request.POST.get('units', 0)
         p.price         = request.POST.get('price', 0)
@@ -474,14 +467,7 @@ def saveProduct(request, product_id):
         handleUploadedPic('products', request.FILES.get('picture'), str(p.id))
 
         # display editProduct again
-        data = {
-            'name'        : p.name,
-            'desc'        : p.description,
-            'category'    : p.category_id,
-            'units'       : p.stock_count,
-            'price'       : p.price,
-        }
-        form = EditProductForm(data)
+        form = ProductForm(instance=p)
 
         # load unknown avatar if no profile picture
         pic = 'web/static/images/products/' + str(p.id)
@@ -491,7 +477,7 @@ def saveProduct(request, product_id):
             pic = 'static/images/products/' + str(p.id)
         
         # redirect the user to the home page (already logged-in)
-        form = EditProductForm(data)
+        form = ProductForm(instance=p)
         context = RequestContext(request, {
             'icon'          : pic,
             'form'          : form,
@@ -1008,7 +994,7 @@ def deleteProducts(request):
 
 ##
 # Delete a set of orders.
-def deleteOrders(request):
+def cancelOrders(request):
     t = loader.get_template('myadmin_orders.html')
 
     # delete categories and set their products orphaned 
@@ -1021,36 +1007,5 @@ def deleteOrders(request):
     orders = Transaction.objects.all()
     context = RequestContext(request, {
         'orders':  orders,
-    })
-    return HttpResponse(t.render(context))
-
-
-##
-# Render a page to edit a user.
-#
-# TODO: this is just a copy from editProduct.
-def editUser(request, user_id):
-    t = loader.get_template('myadmin_edit_user.html')
-    u = User.objects.get(id=user_id)
-    data = {
-        'name'        : u.name,
-        'desc'        : u.description,
-        'units'       : u.stock_count,
-        'price'       : u.price,
-    }
-    form = EditUserForm(data)
-    form.fields['category'].initial = p.category
-
-    # load unknown avatar if no profile picture
-    pic = 'web/static/images/products/' + str(product_id)
-    if not os.path.exists(pic):
-        pic = 'static/images/products/unknown.png'
-    else:
-        pic = 'static/images/products/' + str(product_id)
-
-    context = RequestContext(request, {
-        'icon' : pic,
-        'form' : form,
-        'product_id' : product_id,
     })
     return HttpResponse(t.render(context))
