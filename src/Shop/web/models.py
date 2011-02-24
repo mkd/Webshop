@@ -149,7 +149,7 @@ class Product(models.Model):
     sold_count      = models.IntegerField( default=0 )
     comment_count   = models.IntegerField( default=0 )
     visit_count     = models.IntegerField( default=0 )
-    average_rating  = models.IntegerField( ) 
+    average_rating  = models.IntegerField( default=0 ) 
     votes           = models.IntegerField( default=0 )
     points          = models.IntegerField( default=0 )
     
