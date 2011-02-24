@@ -13,14 +13,6 @@
 {% block main_content %}
     {% block edit_order_form %}
     <h1>Shipment order no. {{ order.id }}</h1>
-        <div class="button_text" style="float: right;">
-            <a href="/myadmin_orders"><img src="/static/images/return.png"
-                                    alt="Back to orders"
-                                    width="32" align="middle" /></a>
-            <a href="/myadmin_orders"
-               style="font-style: oblique; text-decoration: none;">Return to
-               orders</a>
-        </div>
     {% if order_not_saved %}
         <div class="error">Order status could not be modified!</div>
     {% endif %}
@@ -80,8 +72,10 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" align="right">
-                <input type="submit" id="submit" value="Save" />
+            <td colspan="2" class="buttons">
+                <input class="button" type="submit" id="submit" value="Save" />
+                <input class="return" type="button" id="return" value="Back to orders"
+                       onclick="window.location='/myadmin_orders'" />
             </td>
         </tr>
         </table>

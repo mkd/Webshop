@@ -21,7 +21,14 @@ def all_categories():
 ##
 # Form to leave a comment.
 class CommentForm(forms.Form): 
-    comment = forms.CharField(label=u'Your comment', max_length=300, widget=forms.Textarea) 
+    comment = forms.CharField(
+        label       = u'Leave a comment',
+        max_length  = 300,
+        widget      = forms.Textarea(attrs={
+            'rows': '2',
+            'cols': '64',
+            'style' : 'vertical-align: top',
+        })) 
     
 
 ##

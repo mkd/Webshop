@@ -7,15 +7,15 @@
 /*** GENERAL ***/
 body 
 {
-	font: normal .8em/1.5em Arial, Helvetica, sans-serif;
-	background: #ffe;
+	font:           normal .8em/1.5em Arial, Helvetica, sans-serif;
+	background:     #ffe;
 	margin: 10px auto;
-	color: #666;
+	color: #444;
 }
 
 a 
 {
-	color: #333;
+	color: #222;
 }
 
 #wraper
@@ -37,7 +37,7 @@ a
 {
 	float:left; 	
 	
-	background: #ddd; /* for non-css3 browsers */
+	background: #ddd;
 	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#cfcfcf)); /* for webkit browsers */
 	background: -moz-linear-gradient(top,  #fff,  #cfcfcf); /* for firefox 3.6+ */
@@ -651,4 +651,55 @@ img.pic
 div.display-options
 {
     text-align:right; 
+}
+
+.button
+{
+    cursor:         pointer;
+
+    /* button background */
+	background:     #54baee;
+    color:          white;
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#33729a), to(#6898b7)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #fff,  #cfcfcf); /* for firefox 3.6+ */
+
+    /* button border and layout */
+    font-size:              large;
+    font-weight:            bold;
+    padding:                4px;
+	border:                 1px ridge gray;
+    -webkit-border-radius:  0.3em;
+	-moz-border-radius:     0.3em;
+}
+
+
+.return
+{
+    cursor:         pointer;
+
+    /* button background */
+	background:     #54baee;
+    color:          #222;
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#f18300), to(#f9b26d)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #fff,  #cfcfcf); /* for firefox 3.6+ */
+
+    /* button border and layout */
+    font-weight:            bold;
+    padding:                4px;
+	border:                 1px ridge gray;
+    -webkit-border-radius:  0.3em;
+	-moz-border-radius:     0.3em;
+}
+
+.buttons
+{
+    padding-top:        1em;
+    text-align:         left;
+}
+
+.share
+{
+    font-style:         oblique;
 }

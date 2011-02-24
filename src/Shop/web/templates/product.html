@@ -83,15 +83,14 @@ function refresh(id){
 					{{ product.description }}
 				</p>
 				<p>
-					<table border="0">
-						<tr>
-						<td class="share">Share this product:</td> 
-						<td><a href="#"><img src="/static/images/Twitter-icon.png" border="0" onClick="window.open('http://twitter.com/share?text=I want a {{ product.name}}&url=http://www.webshop.com/product/{{product.id}}&via={{user.username}}','mywindow','width=560,height=290,location=no')"/></a>
-						<td><a href="#"><img src="/static/images/Facebook-icon.png" border="0" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.webshop.com/product/{{product.id}}','mywindow','width=715,height=360,location=no')"/></a></td>
-						</tr>
-					</table>
+				    <span class="share">
+                        <a href="#"><img src="/static/images/Twitter-icon.png" align="middle" border="0" onClick="window.open('http://twitter.com/share?text=I want a {{ product.name}}&url=http://www.webshop.com/product/{{product.id}}&via={{user.username}}','mywindow','width=560,height=290,location=no')"/></a>
+					    <a href="#"><img src="/static/images/Facebook-icon.png" align="middle" border="0" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.webshop.com/product/{{product.id}}','mywindow','width=715,height=360,location=no')"/></a>
+                        Share this product with your friends!
+					</span>
 				</p>
-				<hr>
+
+				<hr />
 				
 				<div id="comments">
 					{% for comment in comments %}
@@ -128,7 +127,7 @@ function refresh(id){
 								{% csrf_token %}
 								{{ form.as_p }}
 								<input type="hidden" name="in_reply" value="{{ comment.id }}"/>
-							<input type="submit" value="Post" />
+							<input class="button" type="submit" value="Send" />
 							</form>
 						</div>
 						{% endif %}
@@ -142,7 +141,7 @@ function refresh(id){
 						{% csrf_token %}
 						{{ form.as_p }}
 						<input type="hidden" name="in_reply" value="0"/>
-					<input type="submit" value="Post" />
+					<input class="button" type="submit" value="Send" />
 					</form>
 				</div>
 				{% endif %}

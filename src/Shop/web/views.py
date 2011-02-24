@@ -405,7 +405,7 @@ def addProduct(request):
             description     = request.POST.get('description', ''),
             category_id     = request.POST.get('category'),
             price           = request.POST.get('price', 0),
-            stock_count     = request.POST.get('units', 0),
+            stock_count     = request.POST.get('stock_count', 0),
             #tags           = request.POST['tags'],
         )
         p.save()
@@ -466,7 +466,7 @@ def saveProduct(request, product_id):
         p.name          = request.POST.get('name')
         p.description   = request.POST.get('description', '')
         p.category_id   = request.POST.get('category', 0)
-        p.stock_count   = request.POST.get('units', 0)
+        p.stock_count   = request.POST.get('stock_count', 0)
         p.price         = request.POST.get('price', 0)
         p.save()
 
@@ -1022,7 +1022,7 @@ def deleteProducts(request):
     # return to the products page
     products = Category.objects.all()
     context = RequestContext(request, {
-        'categories':  products,
+        'products':  products,
     })
     return HttpResponse(t.render(context))
 
@@ -1049,6 +1049,7 @@ def cancelOrders(request):
         for o in orders:
             od = Payment.objects.get(pk=o)
             od.status = 'Canceled'
+            od.save()
 
     # return to the products page
     orders = Payment.objects.all()
