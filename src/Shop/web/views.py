@@ -6,6 +6,7 @@ from django.template import Context, RequestContext, loader
 from django.core.context_processors import csrf
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
+from login import *
 from myadmin import *
 from utils import *
 
@@ -326,64 +327,6 @@ def paymentError(request):
             return HttpResponseRedirect("/")
     else:
         return HttpResponseRedirect("/")
-
-##
-# Display the administration pages to staff personnel.
-#
-# Note: if the user is not staff, ask her to sign in with a staff account.
-def myadmin(request):
-    t = loader.get_template('myadmin.html')
-
-    # if the user is not authenticated, ask to sign in
-    if not request.user.is_authenticated():
-        context = Context({
-            'not_signed_in' : True,
-        })
-        return HttpResponse(t.render(context))
-
-    # if the user is a staff member, ask her to sign in with a staf account
-    elif not request.user.is_staff:
-        context = RequestContext(request, {
-            'not_staff' : True,
-        })
-        return HttpResponse(t.render(context))
-
-    # if the user is authenticated and is a staff member, render the
-    # administration pages
-    else:
-        context = RequestContext(request, { })
-        return HttpResponse(t.render(context))
-
-
-##
-# Render the products administration page.
-#
-# The products admin page renders a table with all the products, that can be
-# sorted by name, price, popularity, etcetera.
-def myadmin_products(request):
-    # fetch the sorting criteria from GET
-    column = request.GET.get('column', 'name')
-    order  = request.GET.get('order', 'a')
-    if order == 'a':
-        criteria = column
-    else:
-        criteria = '-' + column
-
-    # retrieve the products from the database
-    products = Product.objects.all().order_by(criteria)
-    if len(products) <= 0:
-        products_no_0 = True
-    else:
-        products_no_0 = False
-    t = loader.get_template('myadmin_products.html')
-    context = RequestContext(request, {
-        'products'      : products,
-        'products_no'   : len(products),
-        'products_no_0' : products_no_0,
-        'column'        : column,
-        'order'         : order,
-    })
-    return HttpResponse(t.render(context))
 
 
 ##
