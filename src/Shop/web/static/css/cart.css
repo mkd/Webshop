@@ -9,6 +9,16 @@ img.product-pic
 	-moz-border-radius: 1em;
 }
 
+img.product-pic-check
+{
+	width: 30px;
+	height: 30px;
+	padding:2px;
+	border: solid #888 1px;
+    -webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
+
 tr.item:hover
 {
 	background: #ded;
@@ -21,12 +31,22 @@ td.name a
 	color: #666;
 }
 
+td.value
+{
+    text-align: right;
+}
+
+td.quantity
+{
+    text-align: left;
+}
+
 td.total
 {
     text-align: right;
 	font-size: 18px;
 	font-weight: bold;
-	padding: 12px;
+	padding-top: 12px;
 	border-top: 1px solid #999;  
 }
 
@@ -50,7 +70,7 @@ td.total
 	text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
 	
 	margin-left: 10px;
-	padding:  3px 10px;
+	padding:  7px 30px;
 	-webkit-border-radius: 1.6em;
 	-moz-border-radius: 1.6em;
 }

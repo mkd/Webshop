@@ -17,11 +17,28 @@
 
 {% block main_content %}
 
+<script>
+function sendPayment(){
+	$.post("checkout/set/postal", { 
+		pid: "{{ payment.pid }}", 
+		postal_address: $("#id_postal_address").val(),
+		postal_code: $("#id_postal_code").val(),
+		postal_city: $("#id_postal_city").val(),
+		postal_country: $("#id_postal_country").val()
+	   },
+	   function(data){
+			if(data == 'OK'){
+				$('#payment-form').submit()
+			}
+	   });
+}
+</script>
+
 	{% if cart %}
-	<center><h2>My cart</h2>
+	<center><h2>My order</h2>
 	
 		{% if message %}
-			<p>{{ message }}<p>
+			<p id="message">{{ message }}<p>
 		{% endif %}
 		
 	<table cellspacing="0" callpadding="50" border="0" width="500">
@@ -30,21 +47,40 @@
 			
 			{% for product in cart %}
 			<tr class="item" id="item-{{ product.id }}">
-				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
+				<td class="picture"><img src="{{ product.product.picture }}" class="product-pic-check"/></td>
 				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }} {{ product.id }}</a></td>
-				<td class="quantity" width="100"> {{ product.quantity }}</td>
+				<td class="quantity" width="100"> {{ product.quantity }} items x {{ product.product.price }}</td>
 				<td class="value" width="75">{{ product.total }} &euro;</td>
 			</tr>
 			{% endfor %}
 			
 			<tr>
-				<td colspan="4" class="total">Total: <span id="total">{{ payment.amount }}</span> &euro; <br/><br/>
-				<div id="checkout" onclick="$('#payment-form').submit()">
-					 Pay 
-				</div></td>
+				<td colspan="4" class="total">
+					Total: <span id="total">{{ payment.amount }}</span> &euro;
+				</td>
 			</tr>
 		</form>
 	</table>
+	
+	<p>
+		Your order will be sent to this location, but you can change it.
+	</p>
+	
+	<form method="post" id="postal_info">
+		<table border="0">
+		{% csrf_token %}
+		{{ postal_form.as_table }}
+		<tr>
+			<td colspan="2"><br/>
+				<center><div id="checkout" onclick="sendPayment()">
+					 Pay 
+				</div>
+				<br/><br/>
+				<center>
+			</td>
+		</table>
+	</form>
+	
 	</center>
 
 	<form action="http://webcourse.cs.hut.fi/payment/pay/" method="POST" id="payment-form">

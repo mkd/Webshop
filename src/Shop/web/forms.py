@@ -77,6 +77,14 @@ class ProfileForm(forms.Form):
 
 
 ##
+# Form for postal information of a payment.
+class PostalForm(ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('postal_address', 'postal_code', 'postal_city', 'postal_country')
+
+
+##
 # Product form, either to add a new product or save an existing product.
 class ProductForm(ModelForm):
     class Meta:
