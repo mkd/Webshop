@@ -9,7 +9,7 @@
 {% block main_content %}
     <h1>Administrate Orders</h1>
     <div class="functions">
-        <form id="admin_orders" method="post" action="/cancelOrders">
+    <form id="admin_orders" method="post" action="/cancelOrders">
         {% csrf_token %}
 
         {% if not orders_no_0 %}
@@ -153,4 +153,5 @@
         {% endfor %}
         </table>
     {% endifequal %}
+    </form>
 {% endblock %}

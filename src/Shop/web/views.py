@@ -1020,7 +1020,7 @@ def deleteProducts(request):
                 os.remove('web/static/images/products/' + str(p))
 
     # return to the products page
-    products = Category.objects.all()
+    products = Product.objects.all()
     context = RequestContext(request, {
         'products':  products,
     })

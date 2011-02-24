@@ -9,7 +9,7 @@
 {% block main_content %}
     <h1>Administrate Products</h1>
     <div class="functions">
-        <form id="admin_products" method="post" action="/deleteProducts">
+    <form id="admin_products" method="post" action="/deleteProducts">
         {% csrf_token %}
         <div class="button_text">
             <a href="/myadmin_addProduct"><img src="/static/images/new_product.png"
@@ -128,4 +128,5 @@
         {% endfor %}
         </table>
     {% endifequal %}
+    </form>
 {% endblock %}
