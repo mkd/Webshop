@@ -5,6 +5,17 @@
 	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
 {% endblock %}
 
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/myadmin_products">Administrate products</a></li>
+			<li><a href="/myadmin_orders">Administrate orders</a></li>
+			<li><a href="/admin/auth/user">Administrate users</a></li>
+			<li><a href="/admin/web/category">Administrate categories</a></li>
+		</ul>	
+	</div>
+{% endblock %}
+
 {% block main_content %}
     <h1>Administrative Functions</h1>
     {% if not_signed_in %}
