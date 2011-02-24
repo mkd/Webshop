@@ -525,10 +525,9 @@ def category(request, category_id):
 ##
 # Search for a product.
 def search(request):
-    if request.method == 'POST':
-        form = SearchForm(request.POST)
+    if request.method == 'GET':
+        form = SearchForm(request.GET)
        
-        # TODO: document me! 
         if form.is_valid():
             query = form.cleaned_data['query']
            
@@ -550,6 +549,7 @@ def search(request):
                     'categories'        : categories,
                     'products'          : products,
                     'products_in_cart'  : no_items,
+                    'query'             : request.GET.get('query'),
                 })
 
             # TODO: document me!
@@ -558,10 +558,17 @@ def search(request):
                     'message'     : message,
                     'categories'  : categories,
                     'products'    : products,
+                    'query'       : request.GET.get('query'),
                 })
             
+            
+            if request.GET.get('l') == 'icons':
+                context.update({'icons': 'OK'})
             context.update(csrf(request))
             return HttpResponse(template.render(context))
+            
+        else:
+           return HttpResponseRedirect('/') 
            
     else:
         return HttpResponseRedirect('/')

@@ -26,7 +26,7 @@
 		{% if icons == 'OK' %}
 		
 			<div class="display-options">
-				<a href="?l=no"><img src="/static/images/icons.png" /></a><br/><br/>
+				<a href="?l=no{% if query != '' %}&query={{ query }} {% endif %}"><img src="/static/images/icons.png" /></a><br/><br/>
 			</div>
 			
 			{% for product in products %}
@@ -63,7 +63,7 @@
 		{% else %}
 		
 		<div class="display-options">
-			<a href="?l=icons"><img src="/static/images/list.png" /></a><br/><br/>
+			<a href="?l=icons{% if query != '' %}&query={{ query }} {% endif %}"><img src="/static/images/list.png" /></a><br/><br/>
 		</div>
 		
 		<center>
