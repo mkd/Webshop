@@ -38,6 +38,15 @@ class SearchForm(forms.Form):
 
 
 ##
+# Passowrd recovery form.
+class PassForm(forms.Form):
+    email = forms.EmailField(
+        label       = u'Your email address:',
+        max_length  = 32,
+    ) 
+
+
+##
 # Form for user registration.
 class RegisterForm(forms.Form):
     picture         = forms.FileField( )
