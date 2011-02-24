@@ -185,7 +185,8 @@ def editQuantityInCart(request):
 
 
 ##
-# TODO: document me!        
+# Show the payment page of an order, the user see the list of products to buy
+#  and the postal address wher the products will be sent.      
 def checkout(request):
     if request.user.is_authenticated():
         template = loader.get_template('payment.html')
@@ -193,18 +194,24 @@ def checkout(request):
         message = request.GET.get('m', '')
         prices = []
         total = 0
+        
+        # Calculate the total amount of the order
         for product in products:
             thisProd = get_object_or_404(Product, id=product.product.id)
             product.total = product.quantity * thisProd.price
             total += product.total
-            
+        
+        # Generate the data to send to the bank and the Payment object.
         payment = Payment( user=request.user, amount=total)
         payment.pid = "%d-%s" % (request.user.id, datetime.datetime.now())
         checksumstr = "pid=%s&sid=%s&amount=%s&token=%s" % (payment.pid, SID, payment.amount, KEY)
         m = md5.new(checksumstr)
         payment.checksum = m.hexdigest()
         payment.save()
-    
+        
+        # Generate a form to edit the postal information.
+        profile = request.user.get_profile()
+        postal_form = PostalForm(instance=profile)
         no_items = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
             'products_in_cart' : no_items,
@@ -213,6 +220,8 @@ def checkout(request):
             'cart'    : products,
             'payment' : payment,
             'message' : message,
+            'postal_form' : postal_form,
+            'profile' : profile,
         })
     
         context.update(csrf(request))
@@ -221,6 +230,29 @@ def checkout(request):
     else:
         return HttpResponseRedirect("/")
        
+
+##
+# If the bank returns an OK response then we store the Payments
+# and all the products in the cart lic transactions.
+def updatePostalOrder(request):
+    if request.method == 'POST' and request.user.is_authenticated():
+        pid =  request.POST.get('pid')
+        postal_address = request.POST.get('postal_address','')
+        postal_code = request.POST.get('postal_code','')
+        postal_city = request.POST.get('postal_city','')
+        postal_country = request.POST.get('postal_country','')
+		
+        # Get the Payment and adds the postal info.
+        payment = get_object_or_404(Payment, pid=pid)
+        payment.postal_address = postal_address
+        payment.postal_code = postal_code
+        payment.postal_city = postal_city
+        payment.postal_country = postal_country
+        payment.save()
+
+        return HttpResponse("OK")
+    else:
+        return HttpResponse("NO")
 
 ##
 # If the bank returns an OK response then we store the Payments
@@ -238,7 +270,7 @@ def paymentOk(request):
         myChecksum = m.hexdigest()
         
         # Check that the checksum is correct.
-        if checksum == myChecksum:
+        if checksum == myChecksum and ref > 0:
             # Get the Payment and adds the ref.
             payment = get_object_or_404(Payment, pid=pid)
             payment.ref = ref
