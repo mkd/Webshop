@@ -5,16 +5,17 @@
  */
 $(document).ready(function()
 {
-  $('#id_picture').hide()
+    // hide and show image field when clicking on the icon
+    $('#id_picture').hide()
 
-  $('#picture_enabler').click(function()
-  {
-      $('#id_picture').toggle()
-  }
-  )
+    $('#picture_enabler').click(function()
+    {
+        $('#id_picture').toggle()
+    })
 
-  $("#submit").click(function()
-  {
+    // client-side validation for the profile form
+    $("#submit").click(function()
+    {
     $("#profile_form").validate({
         rules:
         {
@@ -38,48 +39,8 @@ $(document).ready(function()
         }
     });
 
-    $("#add_product_form").validate({
-        rules:
-        {
-            name:
-            {
-                maxlength: 32,
-                required:  true
-            },
-            
-            desc:
-            {
-                maxlength: 512,
-            },
 
-            price:
-            {
-                required:  true
-            },
-
-            units:
-            {
-                required:  true
-            },
-        }
-    });
-
-    $("#add_category_form").validate({
-        rules:
-        {
-            name:
-            {
-                maxlength: 32,
-                required:  true
-            },
-            
-            desc:
-            {
-                maxlength: 512,
-            },
-        }
-    });
-
+    // client-side validation for the registration form
     $("#register_form").validate({
         rules:
         {
@@ -123,5 +84,33 @@ $(document).ready(function()
             },
         }
     });
-  });
+
+
+    // client-side validation for the product form
+    $("#add_product_form").validate({
+        rules:
+        {
+            name:
+            {
+                maxlength: 32,
+                required:  true
+            },
+            
+            desc:
+            {
+                maxlength: 512,
+            },
+
+            price:
+            {
+                required:  true
+            },
+
+            units:
+            {
+                required:  true
+            },
+        }
+    });
+    });
 });
