@@ -131,3 +131,14 @@ table#admin a:hover
 {
     background:             #faa;
 }
+
+div.order-info
+{
+    float:left;
+}
+
+div.order-products
+{
+    float:left;
+    padding-left: 20px;
+}
