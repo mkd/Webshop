@@ -1,8 +1,6 @@
 ### admin.py
 ### (c) 2011 The Webshop Team
 
-
-
 ### necessary Django modules ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
@@ -16,7 +14,6 @@ import os.path
 from models import *
 from forms import *
 import datetime, hashlib, os
- 
 
 
 ##
@@ -307,13 +304,15 @@ def cancelOrders(request):
 # Render a page to edit an order status.
 def editOrder(request, order_id):
     t = loader.get_template('myadmin_edit_order.html')
-    o = Payment.objects.get(id=order_id)
-    form = OrderForm(instance=o)
+    payment = Payment.objects.get(id=order_id)
+    products = Transaction.objects.filter(payment=payment)
+    form = OrderForm(instance=payment)
 
     context = RequestContext(request, {
         'form'       : form,
-        'order'      : o,
+        'order'      : payment,
         'order_id'   : order_id,
+        'products'   : products,
     })
     return HttpResponse(t.render(context))
 

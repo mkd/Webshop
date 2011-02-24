@@ -32,6 +32,8 @@
     {% if order_saved %}
         <div class="success">Order status saved successfully!</div>
     {% endif %}
+
+	<div class="order-info">
         <form id="edit_order_form" method="post"
               action="/saveOrder/{{ order.id }}">
         {% csrf_token %}
@@ -62,6 +64,14 @@
         </tr>
         <tr>
             <td>
+	        <label for="ref">Payment Ref:</label>
+            </td>
+            <td>
+            {{ order.ref }}
+            </td>
+        </tr>
+        <tr>
+            <td>
 	        <label for="user">User:</label>
             </td>
             <td>
@@ -70,15 +80,14 @@
             </td>
         </tr>
         <tr>
-            <td>
-	        <label for="price">Country:</label>
+            <td valign="top">
+	        <label for="price">Send to:</label>
             </td>
             <td>
-            {% if order.postal_country %}
-                {{ order.postal_country }}
-            {% else %}
-                {{ order.user.postal_country }}
-            {% endif %}
+                {{ order.postal_address }}<br/>
+				{{ order.postal_code }}<br/>
+				{{ order.postal_city }}<br/>
+				{{ order.postal_country }}
             </td>
         </tr>
         <tr>
@@ -98,5 +107,10 @@
         </tr>
         </table>
         </form>
+	</div>
+	
+	<div class="order-products">
+		
+	</div>
     {% endblock %}
 {% endblock %}
