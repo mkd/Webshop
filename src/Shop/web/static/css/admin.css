@@ -126,3 +126,8 @@ table#admin a:hover
     cursor:                 pointer;
     text-decoration:        none;
 }
+
+.canceled td
+{
+    background:             #faa;
+}

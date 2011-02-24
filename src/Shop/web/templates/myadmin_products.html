@@ -9,6 +9,7 @@
 {% block main_content %}
     <h1>Administrate Products</h1>
     <div class="functions">
+    {% block admin_products_form %}
     <form id="admin_products" method="post" action="/deleteProducts">
         {% csrf_token %}
         <div class="button_text">
@@ -45,11 +46,11 @@
                         {% if order == 'a' %}
                             <a href="/myadmin_products?column=name&order=d">Product
                             name</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a href="/myadmin_products?column=name&order=a">Product
                             name</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a
@@ -63,12 +64,12 @@
                             <a
                             href="/myadmin_products?column=stock_count&order=d">Units
                             in stock</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a
                             href="/myadmin_products?column=stock_count&order=a">Units
                             in stock</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a
@@ -81,11 +82,11 @@
                         {% if order == 'a' %}
                             <a
                             href="/myadmin_products?column=visit_count&order=d">Popularity</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a
                             href="/myadmin_products?column=visit_count&order=a">Popularity</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a
@@ -97,11 +98,11 @@
                         {% if order == 'a' %}
                             <a
                             href="/myadmin_products?column=average_rating&order=d">Rating</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a
                             href="/myadmin_products?column=average_rating&order=a">Rating</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a
@@ -129,4 +130,5 @@
         </table>
     {% endifequal %}
     </form>
+    {% endblock %}
 {% endblock %}

@@ -39,10 +39,10 @@
                     {% if column == 'pid' %}
                         {% if order == 'a' %}
                             <a href="/myadmin_orders?column=pid&order=d">ID</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a href="/myadmin_orders?column=pid&order=a">ID</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a href="/myadmin_orders?column=pid&order=a">ID</a>
@@ -52,10 +52,10 @@
                     {% if column == 'payment_date' %}
                         {% if order == 'a' %}
                             <a href="/myadmin_orders?column=payment_date&order=d">Date</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a href="/myadmin_orders?column=payment_date&order=a">Date</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a href="/myadmin_orders?column=payment_date&order=a">Date</a>
@@ -66,11 +66,11 @@
                         {% if order == 'a' %}
                             <a
                             href="/myadmin_orders?column=amount&order=d">Total price</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a
                             href="/myadmin_orders?column=amount&order=a">Total price</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a
@@ -82,11 +82,11 @@
                         {% if order == 'a' %}
                             <a
                             href="/myadmin_orders?column=user&order=d">User</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a
                             href="/myadmin_orders?column=user&order=a">User</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a
@@ -98,11 +98,11 @@
                         {% if order == 'a' %}
                             <a
                             href="/myadmin_orders?column=country&order=d">Country</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a
                             href="/myadmin_orders?column=country&order=a">Country</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a
@@ -114,11 +114,11 @@
                         {% if order == 'a' %}
                             <a
                             href="/myadmin_orders?column=status&order=d">Status</a>
-                            &darr;
+                            &uarr;
                         {% else %}
                             <a
                             href="/myadmin_orders?column=status&order=a">Status</a>
-                            &uarr;
+                            &darr;
                         {% endif %}
                     {% else %}
                         <a
@@ -127,7 +127,10 @@
                 </th>
             </tr>
         {% for o in orders %}
-            <tr>
+            <tr
+            {% if o.status == 'Canceled' %}
+                class="canceled"
+            {% endif %}>
                 <td>
 			        <input type="checkbox" value="{{ o.id }}" name="order_list" />
                     <a href="/editOrder/{{ o.id }}">{{ o.id }}</a>
