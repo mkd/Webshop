@@ -136,9 +136,16 @@ function refresh(id){
 				</div>
 				
 				{% if request.user.is_authenticated %}
+				
+				postal_address = models.CharField(  max_length=160 )
+			    postal_code    = models.CharField(  max_length=5 )
+			    postal_city    = models.CharField(  max_length=20 )
+			    postal_country = models.CharField(  max_length=20 )
+				
 				<div id="write_comment">
 					<form action="/product/{{ product.id }}/comment/" method="post">
 						{% csrf_token %}
+
 						{{ form.as_p }}
 						<input type="hidden" name="in_reply" value="0"/>
 					<input class="button" type="submit" value="Send" />
