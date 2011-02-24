@@ -9,6 +9,7 @@
 {% block main_content %}
     <h1>Administrate Orders</h1>
     <div class="functions">
+    {% block admin_orders_form %}
     <form id="admin_orders" method="post" action="/cancelOrders">
         {% csrf_token %}
 
@@ -142,7 +143,13 @@
                     {{o.user.last_name }}</a>
                 </td>
                 <td>
-                    <a href="/editOrder/{{ o.id }}">{{ o.country }}</a>
+                    <a href="/editOrder/{{ o.id }}">
+                    {% if o.postal_country %}
+                        {{ o.postal_country }}
+                    {% else %}
+                        {{ o.user.postal_country }}
+                    {% endif %}
+                    </a>
                 </td>
                 <td style="text-align: center;">
                     <a href="/editOrder/{{ o.id }}">{{ o.status }}
@@ -154,4 +161,5 @@
         </table>
     {% endifequal %}
     </form>
+    {% endblock %}
 {% endblock %}

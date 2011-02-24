@@ -52,7 +52,8 @@
 	        <label for="user">User:</label>
             </td>
             <td>
-            {{ order.user }}
+            {{ order.user.first_name }} {{ order.user.last_name }} 
+            &lt;{{ order.user.email }}&gt;
             </td>
         </tr>
         <tr>
@@ -60,7 +61,11 @@
 	        <label for="price">Country:</label>
             </td>
             <td>
-            {{ order.country }}
+            {% if order.postal_country %}
+                {{ order.postal_country }}
+            {% else %}
+                {{ order.user.postal_country }}
+            {% endif %}
             </td>
         </tr>
         <tr>

@@ -18,6 +18,11 @@ a
 	color: #222;
 }
 
+img
+{
+    border:             0;
+}
+
 #wraper
 { 
 	text-align: left; 
@@ -658,11 +663,11 @@ div.display-options
     cursor:         pointer;
 
     /* button background */
-	background:     #54baee;
+	background:     #33729a;
     color:          white;
-	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#33729a', endColorstr='#6898b7'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#33729a), to(#6898b7)); /* for webkit browsers */
-	background: -moz-linear-gradient(top,  #fff,  #cfcfcf); /* for firefox 3.6+ */
+	background: -moz-linear-gradient(top,  #33729a,  #6898b7); /* for firefox 3.6+ */
 
     /* button border and layout */
     font-size:              large;
@@ -679,11 +684,11 @@ div.display-options
     cursor:         pointer;
 
     /* button background */
-	background:     #54baee;
+	background:     #f18300;
     color:          #222;
-	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#f18300', endColorstr='#f9b26d'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#f18300), to(#f9b26d)); /* for webkit browsers */
-	background: -moz-linear-gradient(top,  #fff,  #cfcfcf); /* for firefox 3.6+ */
+	background: -moz-linear-gradient(top,  #f18300,  #f9b26d); /* for firefox 3.6+ */
 
     /* button border and layout */
     font-weight:            bold;
