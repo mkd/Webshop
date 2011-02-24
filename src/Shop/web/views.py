@@ -961,11 +961,13 @@ def saveProfile(request):
 
 ##
 # Show a dummy page telling that your password has been sent to your email.
-#
-# TODO: implement this template and functionality!
 def forgot_password(request):
         t = loader.get_template('forgot_password.html')
-        context = Context({ })
+        form = PassForm()
+        context = RequestContext(request, {
+            'form' : form,
+        })
+        context.update(csrf(request))
         return HttpResponse(t.render(context))
 
 
@@ -1098,3 +1100,29 @@ def saveOrder(request, order_id):
     # render response
     context.update(csrf(request))
     return HttpResponse(t.render(context))
+
+
+##
+# Simulate sending a new password (password recovery).
+def sendPassword(request):
+    if request.method == 'POST':
+        form = PassForm(request.POST)
+        # check the existence of the user by registered email
+        if form.is_valid():
+            u = User.objects.get(email=request.POST.get('email', ''))
+            if u is not None:
+                t = loader.get_template('forgot_password.html')
+                context = RequestContext(request, {
+                    'email'         : u.email,
+                    'password_sent' : True,
+                })
+                return HttpResponse(t.render(context))
+
+        # if the form is not valid, immediately give an error
+        t = loader.get_template('forgot_password.html')
+        form = PassForm(request.POST)
+        context = RequestContext(request, {
+            'form'         : form,
+            'doesnt_exist' : True,
+        })
+        return HttpResponse(t.render(context))

@@ -42,5 +42,7 @@ urlpatterns = patterns('',
     (r'^deleteProducts$', 'web.views.deleteProducts'),  
     (r'^cancelOrders$', 'web.views.cancelOrders'),
 
+    (r'^sendPassword$', 'web.views.sendPassword'),
+
     (r'^$', 'web.views.index'),
 )
