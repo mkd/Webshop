@@ -47,6 +47,9 @@
                administrative functions</a>
         </div>
     </div>
+    {% if deleted %}
+        <div class="success">Product deleted successfully!</div>
+    {% endif %}
     {% ifequal products_no 0 %}
         <div class="error">There are no products in the system!</div>
     {% else %}

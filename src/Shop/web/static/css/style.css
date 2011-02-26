@@ -679,6 +679,12 @@ div.display-options
 }
 
 
+.button:hover
+{
+	background:     #6898b7;
+}
+
+
 .return
 {
     cursor:         pointer;
@@ -697,6 +703,39 @@ div.display-options
     -webkit-border-radius:  0.3em;
 	-moz-border-radius:     0.3em;
 }
+
+
+.return:hover
+{
+	background:     #f9b26d;
+}
+
+
+.delete
+{
+    cursor:         pointer;
+
+    /* button background */
+	background:     #ec3333;
+    color:          #222;
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#ec3333', endColorstr='#ec8080'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#ec3333), to(#ec8080)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #ec3333,  #ec8080); /* for firefox 3.6+ */
+
+    /* button border and layout */
+    font-weight:            bold;
+    padding:                4px;
+	border:                 1px ridge gray;
+    -webkit-border-radius:  0.3em;
+	-moz-border-radius:     0.3em;
+}
+
+
+.delete:hover
+{
+	background:     #ec8080;
+}
+
 
 .buttons
 {

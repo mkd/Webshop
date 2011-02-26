@@ -41,6 +41,10 @@
                administrative functions</a>
         </div>
     </div>
+    {% if canceled %}
+        <div class="success">Order #{{ order_id }} was successfully
+        canceled.</div>
+    {% endif %}
     {% ifequal orders_no 0 %}
         <div class="error">There are no orders in the system!</div>
     {% else %}
