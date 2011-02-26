@@ -31,6 +31,11 @@ function add(){
 	});
 }
 
+function refresh(id){
+	$("#"+id).hide();
+	$("#"+id).fadeIn();
+}
+
 </script>
 
 	<div id="product-content">
@@ -77,20 +82,28 @@ function add(){
 				<p>
 					{{ product.description }}
 				</p>
-				<hr>
+				<p>
+				    <span class="share">
+                        <a href="#"><img src="/static/images/Twitter-icon.png" align="middle" border="0" onClick="window.open('http://twitter.com/share?text=I want a {{ product.name}}&url=http://www.webshop.com/product/{{product.id}}&via={{user.username}}','mywindow','width=560,height=290,location=no')"/></a>
+					    <a href="#"><img src="/static/images/Facebook-icon.png" align="middle" border="0" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.webshop.com/product/{{product.id}}','mywindow','width=715,height=360,location=no')"/></a>
+                        Share this product with your friends!
+					</span>
+				</p>
+
+				<hr />
 				
 				<div id="comments">
 					{% for comment in comments %}
 						<a name="{{ comment.id }}"></a>
 						{% if comment.hasProduct %}
-							<div class="comment buyer" >
+							<div class="comment buyer" id="{{ comment.id }}">
 						{% else %}
-							<div class="comment">
+							<div class="comment" id="{{ comment.id }}">
 						{% endif %}
 						
 							{% if comment.parent_id %}
 								<blockquote>
-									<i>In reply to <a href="#{{ comment.parent_id.id }}">@{{ comment.parent_id.user }}</a></i><br/> 
+									<i>In reply to <a href="#{{ comment.parent_id.id }}" onclick="refresh({{ comment.parent_id.id }})">@{{ comment.parent_id.user }}</a></i><br/> 
 									{{ comment.comment }}
 								</blockquote>
 							{% else %}
@@ -114,7 +127,7 @@ function add(){
 								{% csrf_token %}
 								{{ form.as_p }}
 								<input type="hidden" name="in_reply" value="{{ comment.id }}"/>
-							<input type="submit" value="Post" />
+							<input class="button" type="submit" value="Send" />
 							</form>
 						</div>
 						{% endif %}
@@ -123,12 +136,19 @@ function add(){
 				</div>
 				
 				{% if request.user.is_authenticated %}
+				
+				postal_address = models.CharField(  max_length=160 )
+			    postal_code    = models.CharField(  max_length=5 )
+			    postal_city    = models.CharField(  max_length=20 )
+			    postal_country = models.CharField(  max_length=20 )
+				
 				<div id="write_comment">
 					<form action="/product/{{ product.id }}/comment/" method="post">
 						{% csrf_token %}
+
 						{{ form.as_p }}
 						<input type="hidden" name="in_reply" value="0"/>
-					<input type="submit" value="Post" />
+					<input class="button" type="submit" value="Send" />
 					</form>
 				</div>
 				{% endif %}

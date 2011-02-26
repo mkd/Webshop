@@ -7,15 +7,20 @@
 /*** GENERAL ***/
 body 
 {
-	font: normal .8em/1.5em Arial, Helvetica, sans-serif;
-	background: #ffe;
+	font:           normal .8em/1.5em Arial, Helvetica, sans-serif;
+	background:     #ffe;
 	margin: 10px auto;
-	color: #666;
+	color: #444;
 }
 
 a 
 {
-	color: #333;
+	color: #222;
+}
+
+img
+{
+    border:             0;
 }
 
 #wraper
@@ -37,7 +42,7 @@ a
 {
 	float:left; 	
 	
-	background: #ddd; /* for non-css3 browsers */
+	background: #ddd;
 	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cfcfcf'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#cfcfcf)); /* for webkit browsers */
 	background: -moz-linear-gradient(top,  #fff,  #cfcfcf); /* for firefox 3.6+ */
@@ -501,7 +506,7 @@ h1.product  a
 	color: #666;
 }
 
-p.title
+div.title
 {
     margin-top: 0px;
     font-weight: bold;
@@ -512,14 +517,14 @@ p.title
 	color: #666;
 }
 
-p.title  a
+div.title  a
 {
 	text-decoration: none;
 	text-transform:capitalize;
 	color: #666;
 }
 
-p.title a:hover
+div.title a:hover
 {
 	text-decoration: underline;
 	color: #444;
@@ -583,6 +588,12 @@ p.title a:hover
 	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
 }
 
+.price-list:hover
+{
+	cursor: pointer;
+	margin-bottom: -2px;
+}
+
 .middle
 {
 	display: table-cell; 
@@ -621,5 +632,79 @@ textarea
 td.product
 {
 	border-top: 1px solid #999;
-	padding-top: 24px;
+	padding-top: 10px;
+}
+
+img.product-pic
+{
+	width: 70px;
+	height: 70px;
+	padding:2px;
+	border: solid #888 1px;
+    -webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
+
+img.pic
+{
+    padding:2px;
+	border: solid #888 1px;
+    -webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
+
+div.display-options
+{
+    text-align:right; 
+}
+
+.button
+{
+    cursor:         pointer;
+
+    /* button background */
+	background:     #33729a;
+    color:          white;
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#33729a', endColorstr='#6898b7'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#33729a), to(#6898b7)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #33729a,  #6898b7); /* for firefox 3.6+ */
+
+    /* button border and layout */
+    font-size:              large;
+    font-weight:            bold;
+    padding:                4px;
+	border:                 1px ridge gray;
+    -webkit-border-radius:  0.3em;
+	-moz-border-radius:     0.3em;
+}
+
+
+.return
+{
+    cursor:         pointer;
+
+    /* button background */
+	background:     #f18300;
+    color:          #222;
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#f18300', endColorstr='#f9b26d'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#f18300), to(#f9b26d)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #f18300,  #f9b26d); /* for firefox 3.6+ */
+
+    /* button border and layout */
+    font-weight:            bold;
+    padding:                4px;
+	border:                 1px ridge gray;
+    -webkit-border-radius:  0.3em;
+	-moz-border-radius:     0.3em;
+}
+
+.buttons
+{
+    padding-top:        1em;
+    text-align:         left;
+}
+
+.share
+{
+    font-style:         oblique;
 }

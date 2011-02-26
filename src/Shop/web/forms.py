@@ -1,6 +1,6 @@
 ### necessary Django modules ###
 from django import forms
-from django.forms import widgets
+from django.forms import widgets, ModelForm, ClearableFileInput
 from models import *
 
 
@@ -21,7 +21,14 @@ def all_categories():
 ##
 # Form to leave a comment.
 class CommentForm(forms.Form): 
-    comment = forms.CharField(label=u'Your comment', max_length=300, widget=forms.Textarea) 
+    comment = forms.CharField(
+        label       = u'Leave a comment',
+        max_length  = 300,
+        widget      = forms.Textarea(attrs={
+            'rows': '2',
+            'cols': '64',
+            'style' : 'vertical-align: top',
+        })) 
     
 
 ##
@@ -31,9 +38,12 @@ class SearchForm(forms.Form):
 
 
 ##
-# Form to ask the user for the website's master password.
-class AdminForm(forms.Form):
-    query = forms.CharField( widget=forms.PasswordInput ) 
+# Passowrd recovery form.
+class PassForm(forms.Form):
+    email = forms.EmailField(
+        label       = u'Your email address:',
+        max_length  = 32,
+    ) 
 
 
 ##
@@ -67,24 +77,26 @@ class ProfileForm(forms.Form):
 
 
 ##
-# Form to add a new product.
-class AddProductForm(forms.Form):
-    picture         = forms.FileField()
-    name            = forms.CharField( max_length=20 )
-    desc            = forms.CharField( max_length=500, widget=forms.Textarea )
-    price           = forms.IntegerField( min_value=1 )
-    units           = forms.IntegerField( min_value=0 )
-    #tags            = forms.CharField( max_length=64 )
-    category        = forms.ChoiceField( choices=all_categories() )
+# Form for postal information of a payment.
+class PostalForm(ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('postal_address', 'postal_code', 'postal_city', 'postal_country')
 
 
 ##
-# Form to edit a product.
-class EditProductForm(forms.Form):
-    picture         = forms.FileField()
-    name            = forms.CharField( max_length=20 )
-    desc            = forms.CharField( max_length=500, widget=forms.Textarea )
-    price           = forms.IntegerField( min_value=1 )
-    units           = forms.IntegerField( min_value=0 )
-    #tags            = forms.CharField( max_length=64 )
-    category        = forms.ChoiceField( choices=all_categories() )
+# Product form, either to add a new product or save an existing product.
+class ProductForm(ModelForm):
+    class Meta:
+        model = Product
+        widgets = {
+            'picture'     : forms.ClearableFileInput,
+            'description' : forms.Textarea,
+        }
+
+
+##
+# Order form, just used for editing an order status.
+class OrderForm(ModelForm):
+    class Meta:
+        model = Payment

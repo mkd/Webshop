@@ -1,12 +1,13 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 
-INSERT INTO "auth_user" VALUES(1,'root','','','root@root.com','sha1$d670b$fe8b4129bc543c6c574f412343dd3c109a55ad99',1,1,1,'2011-02-19 16:04:34.605257','2011-02-19 11:05:18.395730');
-INSERT INTO "auth_user" VALUES(2,'claudio','Claudio','Camacho','claudiomkd@gmail.com','sha1$f0eff$11e47da9f6da5613036289565491cd38122acac5',1,1,0,'2011-02-20 04:28:34','2011-02-20 04:28:34');
-INSERT INTO "auth_user" VALUES(3,'javi','Javier','Berlana','jberlana@gmail.com','sha1$12ba9$4b735be8601e783bbd859b4d21c1905a29e87375',1,1,0,'2011-02-20 04:29:19','2011-02-20 04:29:19');
-INSERT INTO "auth_user" VALUES(4,'furkan','Tercan','Furkan','furkan.tercan@gmail.com','sha1$86596$ab2a69399bab3626edff20ff06638daa7279f648',1,1,0,'2011-02-20 04:29:44','2011-02-20 04:29:44');
+INSERT INTO "auth_user" VALUES(1,'root','','','root@root.com','sha1$d670b$fe8b4129bc543c6c574f412343dd3c109a55ad99',1,1,1,'2011-02-23 07:30:59.299047','2011-02-19 11:05:18.395730');
+INSERT INTO "auth_user" VALUES(2,'claudio','Claudio','Camacho','claudiomkd@gmail.com','sha1$9507b$0dd31987af8f9a6b96633c7005c7c683553d417f',1,1,1,'2011-02-23 07:28:24','2011-02-20 04:28:34');
+INSERT INTO "auth_user" VALUES(3,'javi','Javier','Berlana','jberlana@gmail.com','sha1$12ba9$4b735be8601e783bbd859b4d21c1905a29e87375',1,1,1,'2011-02-20 04:29:19','2011-02-20 04:29:19');
+INSERT INTO "auth_user" VALUES(4,'furkan','Tercan','Furkan','furkan.tercan@gmail.com','sha1$86596$ab2a69399bab3626edff20ff06638daa7279f648',1,1,1,'2011-02-20 04:29:44','2011-02-20 04:29:44');
 INSERT INTO "auth_user" VALUES(5,'test1','Test User 1','','test@mail.fi','sha1$c792e$3b3d97b8087965751a78885fa8b18ce41921cb2f',0,1,0,'2011-02-20 04:30:06','2011-02-20 04:30:06');
 INSERT INTO "auth_user" VALUES(6,'test2','Test User 2','','test2@mail.ru','sha1$0f138$4190dde6ca78694fe2c58e16beeeb22f4c7ff5b6',0,1,0,'2011-02-20 04:30:38','2011-02-20 04:30:38');
+INSERT INTO "auth_user" VALUES(7,'pepe','Pepe','Garrote','pepe@pepe.es','sha1$6494a$cf6ee445f4f77645def6886a86ae4f3b983e7a50',0,1,0,'2011-02-23 07:31:57','2011-02-23 07:31:57');
 
 INSERT INTO "web_UserProfile" VALUES(1,1,0,'','','','','');
 INSERT INTO "web_UserProfile" VALUES(2,2,0,'','','','','');
@@ -14,6 +15,7 @@ INSERT INTO "web_UserProfile" VALUES(3,3,0,'','','','','');
 INSERT INTO "web_UserProfile" VALUES(4,4,0,'','','','','');
 INSERT INTO "web_UserProfile" VALUES(5,5,0,'','','','','');
 INSERT INTO "web_UserProfile" VALUES(6,6,0,'','','','','');
+INSERT INTO "web_UserProfile" VALUES(7,7,0,'','','','','');
 
 INSERT INTO "web_category" VALUES(1,'Shoes','','images/categories/shoes.png', -1);
 INSERT INTO "web_category" VALUES(2,'Guitars','','images/categories/guitars.png', -1);
@@ -28,5 +30,14 @@ INSERT INTO "web_product" VALUES(4,3,'Samsung Galaxy S','Samsung Ga...','Most so
 INSERT INTO "web_product" VALUES(5,3,'Samsung Galaxy S II','Samsung Ga...','Second version of the most sold Samsung Galaxy S, with Android Gingerbread 2.3.3','/static/images/products/5',599.0,5,0,0,0,5,1,5);
 INSERT INTO "web_product" VALUES(6,2,'Fender Telecaster Classic','Fender Tel...','Classic Telecaster from Fender (MEX)','/static/images/products/6',1340.0,16,0,0,0,4,2,8);
 INSERT INTO "web_product" VALUES(7,2,'Gibson SG','Gibson SG','Gibson SG, plain model with 6 strings','/static/images/products/7',899.0,4,0,0,0,1,1,1);
+
+INSERT INTO "web_payment" VALUES(1,'3-2011-02-23 14:38:02.000483',2,'291ae7914eaeface7cae13821ef9941f',-1,1198,'2011-02-23 14:38:02.000420','Processing','','','','');
+INSERT INTO "web_payment" VALUES(2,'3-2011-02-23 14:40:46.516072',3,'72c4d8ab77caf6594760d0de6a1191da',147,1198,'2011-02-23 14:40:46.516007','Delivered','','','','');
+
+INSERT INTO "web_transaction" VALUES(1,2,5,1,2,599,1198,0);
+INSERT INTO "web_transaction" VALUES(2,2,2,1,2,2400,4800,0);
+INSERT INTO "web_transaction" VALUES(3,3,4,2,1,599,599,0);
+INSERT INTO "web_transaction" VALUES(4,3,5,2,1,599,599,5);
+
 
 COMMIT;

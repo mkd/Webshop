@@ -6,6 +6,21 @@
 {% extends "base.html" %}
 
 {% block title %} Webshop -- Edit Product {% endblock %}
+{% block extra_head %}
+	<meta http-equiv="cache-control" content="no-cache" />
+	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
+{% endblock %}
+
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/myadmin_products">Administrate products</a></li>
+			<li><a href="/myadmin_orders">Administrate orders</a></li>
+			<li><a href="/admin/auth/user">Administrate users</a></li>
+			<li><a href="/admin/web/category">Administrate categories</a></li>
+		</ul>	
+	</div>
+{% endblock %}
 
 {% block main_content %}
     {% block new_product_form %}
@@ -15,6 +30,9 @@
     {% endif %}
     {% if product_saved %}
         <div class="success">Product data saved successfully!</div>
+    {% endif %}
+    {% if product_added %}
+        <div class="success">Product added successfully!</div>
     {% endif %}
         <form enctype="multipart/form-data" id="add_product_form" method="post"
               action="/saveProduct/{{ product_id }}">
@@ -43,7 +61,7 @@
 	        <label for="desc">Description:</label>
             </td>
             <td>
-            {{ form.desc }}
+            {{ form.description }}
             </td>
         </tr>
         <tr>
@@ -59,7 +77,7 @@
 	        <label for="units">Units:</label>
             </td>
             <td>
-            {{ form.units }}
+            {{ form.stock_count }}
             </td>
         </tr>
         <tr>
@@ -81,9 +99,10 @@
         </tr>
         -->
         <tr>
-            <td colspan="2" align="right">
-                <input type="submit" id="submit" value="Save" />
-                <input type="reset" value="Clear" />
+            <td colspan="2" class="buttons">
+                <input class="button" type="submit" id="submit" value="Save" />
+                <input class="return" type="button" value="Back to products" 
+                       onclick="window.location='/myadmin_products'" />
             </td>
         </tr>
         </table>

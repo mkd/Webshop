@@ -1,35 +1,72 @@
-<!--
-   - myadmin.html
-   - 
-   - Ask for the master password to enter myadmin_page, where is possible to
-   - administrate users, staff, products, categories, orders and more.
- --!>
 {% extends "base.html" %}
 
-{% block title %} Webshop -- Administrative Pages {% endblock %}
+{% block title %} Administrative Functions {% endblock %}
+{% block extra_head %}
+	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
+{% endblock %}
+
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/myadmin_products">Administrate products</a></li>
+			<li><a href="/myadmin_orders">Administrate orders</a></li>
+			<li><a href="/admin/auth/user">Administrate users</a></li>
+			<li><a href="/admin/web/category">Administrate categories</a></li>
+		</ul>	
+	</div>
+{% endblock %}
 
 {% block main_content %}
-    {% block login_form %}
-        <h1>Enter master password</h1>
-        {% if login_failed %}
-            <div class="error">Master password incorrect!</div>
+    <h1>Administrative Functions</h1>
+    {% if not_signed_in %}
+        <div class="error">The administration pages are only for registered
+        staff members of Webshop.</div>
+
+        <p><a href="/signin">Sign in now!</a></p>
+    {% else %}
+        {% if not_staff %}
+            <div class="error">The administration pages are only for
+            staff members of Webshop.</div>
+        {% else %}
+            <p>Welcome to the administrative pages. You can add new products,
+            edit existing units in the stock, check the most popular items,
+            administrate categories and users, and manage users' purchases
+            through orders.</p>
+
+            <table id="admin">
+                <tr>
+                    <td onclick="window.location='/myadmin_products'">
+                        <a href="/myadmin_products"><img
+                           src="/static/images/products.png"
+                           alt="admin_products" /></a>
+                        <br />
+                        <a href="/myadmin_products">Administrate products</a>
+                    </td>
+                    <td onclick="window.location='/myadmin_orders'">
+                        <a href="/myadmin_orders"><img
+                           src="/static/images/orders.png"
+                           alt="admin_orders" /></a>
+                        <br />
+                        <a href="/myadmin_orders">Administrate orders</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td onclick="window.location='/myadmin_users'">
+                        <a href="/admin/auth/user"><img
+                           src="/static/images/users.png"
+                           alt="admin_users" /></a>
+                        <br />
+                        <a href="/admin/auth/user">Administrate users</a>
+                    </td>
+                    <td onclick="window.location='/myadmin_category'">
+                        <a href="/admin/web/category"><img
+                           src="/static/images/categories.png"
+                           alt="admin_categories" /></a>
+                        <br />
+                        <a href="/admin/web/category">Administrate categories</a>
+                    </td>
+                </tr>
+            </table>
         {% endif %}
-        <form method="post" action="/myadmin_page">
-        {% csrf_token %}
-        <tr>
-            <td>
-	        <label for="pass">Master password:</label>
-            </td>
-            <td>
-            <input type="password" id="pass" name="pass" />
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="right">
-                <input type="submit" name="submit" value="Access" />
-            </td>
-        </tr>
-        </table>
-        </form>
-    {% endblock %}
+    {% endif %}
 {% endblock %}

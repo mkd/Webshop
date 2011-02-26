@@ -15,46 +15,45 @@
 	  		{% block header %}
 	  		<div id="nav-menu">
 		  		<ul id="nav"> 
-					<li class="logo"><div id="logo"><img src="/static/images/logo.png" width="63" height="59"  onclick="window.location.href='/';" border="0"/></div></li>
+					<li class="logo"><div id="logo"><img src="/static/images/logo.png" alt="logo" width="63" height="59"  onclick="window.location.href='/';" border="0"/></div></li>
 					<li class="search">
-						<form class="searchform"  action="/search" method="post">
+						<form class="searchform"  action="/search" method="get">
 							{% csrf_token %}
-							<input class="searchfield" name="query" type="text" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
+							<input class="searchfield" name="query" type="text" title="searchbox" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" /> 
 							<input class="searchbutton" type="submit" value="Go" /> 
 						</form>
 					</li>
 					
 	                {% if not request.user.is_authenticated %}
-					    <li><a href="/signin">Sign in</a>
-						    <ul> <center>
-                                <form method="post" action="/login">
-						        {% csrf_token %}
-						        <table>
-						        <tr>
-						            <td>
-							        <label for="user">User:</label>
-						            </td>
-						            <td>
-						            <input type="text" id="user" name="user" maxlength="16" />
-						            </td>
-						        </tr>
-						        <tr>
-						            <td>
-							        <label for="pass">Pass:</label>
-						            </td>
-						            <td>
-						            <input type="password" id="pass" name="pass" />
-						            </td>
-						        </tr>
-						        <tr>
-						            <td colspan="2" align="right">
-						                <input type="submit" name="submit" value="Sign in" />
-						            </td>
-						        </tr>
-						        </table>
-						        </form>
-								</center>
-                            </ul>					
+					    <li>
+                        <a href="#">Sign in</a>
+                                <!-- pop-up sign-in form -->
+                                <ul>
+                                    <form id="builtin_login" method="post" action="/login">
+                                    {% csrf_token %}
+                                    <table>
+                                    <tr>
+                                        <td>
+                                        <label for="user">Username:</label>
+                                        <br />
+                                        <input type="text" id="user" name="user" maxlength="16" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                        <label for="pass">Password:</label>
+                                        <br />
+                                        <input type="password" id="pass" name="pass" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="right">
+                                            <input class="button" type="submit" name="submit" value="Sign in" />
+                                        </td>
+                                    </tr>
+                                    </table>
+                                    </form>
+                                </ul>
 						</li> 
 	                {% endif %}
 				
@@ -72,8 +71,8 @@
                             <li><a href="/myadmin">Administration</a></li>
                         {% endif %}
 
-						{% if products_in_cart != '' %}
-                        <li id="my-cart"><a href="/cart"><img  id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> <span id="products-in-cart">{{ products_in_cart }}</span> items</a> </li>
+						{% if products_in_cart > -1 %}
+                        <li id="my-cart"><a href="/cart"><img alt="my-cart" id="cart" src="/static/images/cart-icon.png" width="28" height="28" /> <span id="products-in-cart">{{ products_in_cart }}</span> items</a> </li>
 						{% endif %}
                     {% else %}
 					    <li><a href="/signup">Sign up</a></li>
@@ -99,7 +98,14 @@
 	  		<div id="footer">
 		  		{% block footer %}
 		        	&copy;2011 The Webshop Team, Finland | <a
-                    href="/myadmin">Administrative page</a>
+                    href="/myadmin">Administrative page</a><br/>
+					<p>This web is rendered as intended in
+								<img id="_chrome" class="browser" src="http://nvie.com/img/chrome0.png" alt="Google Chrome" title="Google Chrome" width="18" height="18">,
+								<img id="_safari" class="browser" src="http://nvie.com/img/safari0.png" alt="Safari" title="Safari" width="18" height="18">,
+								<img id="_firefox" class="browser" src="http://nvie.com/img/firefox0.png" alt="Firefox" title="Firefox" width="18" height="18">, and
+								<img id="_opera" class="browser" src="http://nvie.com/img/opera0.png" alt="Opera" title="Opera" width="18" height="18">, but not necessarily in
+								<img id="_ie" class="misfit" src="http://nvie.com/img/ie0.png" alt="Internet Exporer" title="...and I couldn't care less about it." width="18" height="18">.
+					</p>
 		        {% endblock %}
 	  		</div>
   		</div>

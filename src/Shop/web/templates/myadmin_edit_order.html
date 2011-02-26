@@ -1,0 +1,139 @@
+<!--
+  - myadmin_edit_order.html
+  -
+  - This form is used to edit a order.
+-->
+{% extends "base.html" %}
+
+{% block title %} Webshop -- Edit Order {% endblock %}
+{% block extra_head %}
+	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
+{% endblock %}
+
+
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/myadmin_products">Administrate products</a></li>
+			<li><a href="/myadmin_orders">Administrate orders</a></li>
+			<li><a href="/admin/auth/user">Administrate users</a></li>
+			<li><a href="/admin/web/category">Administrate categories</a></li>
+		</ul>	
+	</div>
+{% endblock %}
+
+
+{% block main_content %}
+    {% block edit_order_form %}
+    <h1>Shipment order no. {{ order.id }}</h1>
+    {% if order_not_saved %}
+        <div class="error">Order status could not be modified!</div>
+    {% endif %}
+    {% if order_saved %}
+        <div class="success">Order status saved successfully!</div>
+    {% endif %}
+
+	<div class="order-info">
+        <form id="edit_order_form" method="post"
+              action="/saveOrder/{{ order.id }}">
+        {% csrf_token %}
+        <table>
+        <tr>
+            <td>
+	        <label for="id"><strong>Order no.:</strong></label>
+            </td>
+            <td>
+            {{ order.id }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="paymnet_date"><strong>Date:</strong></label>
+            </td>
+            <td>
+            {{ order.payment_date }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="amount"><strong>Amount:</strong></label>
+            </td>
+            <td>
+            {{ order.amount }}&nbsp;&euro;
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="ref"><strong>Payment Ref:</strong></label>
+            </td>
+            <td>
+            {{ order.ref }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="user"><strong>User:</strong></label>
+            </td>
+            <td>
+            {{ order.user.first_name }} {{ order.user.last_name }} 
+            &lt;{{ order.user.email }}&gt;
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+	        <label for="price"><strong>Send to:</strong></label>
+            </td>
+            <td>
+                {{ order.postal_address }}<br/>
+				{{ order.postal_code }}<br/>
+				{{ order.postal_city }}<br/>
+				{{ order.postal_country }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+	        <label for="status"><strong>Status:</strong></label>
+            </td>
+            <td>
+            {{ form.status }}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="buttons">
+                <input class="button" type="submit" id="submit" value="Save" />
+                <input class="return" type="button" id="return" value="Back to orders"
+                       onclick="window.location='/myadmin_orders'" />
+            </td>
+        </tr>
+        </table>
+        </form>
+	</div>
+	
+	<div class="order-products">
+		<table calss="order-products" cellpadding="4">
+			<tr>
+				<td><strong>Product</strong></td>
+				<td><strong>Q/S</strong></td>
+				<td><strong>Unit price</strong></td>
+				<td><strong>User rating</strong></td>
+			</tr>
+        {% for p in products %}
+            <tr>
+                <td>
+                    <a href="/product/{{ p.product.id }}">{{ p.product.short_name }}</a>
+                </td>
+                <td style="text-align: right;">
+                    {{ p.quantity }} / {{ p.product.stock_count }}
+                </td>
+                <td style="text-align: right;">
+                    {{ p.unit_price }} &euro;
+                </td>
+                <td style="text-align: right;">
+                    {{ p.rate }}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+	</div>
+    {% endblock %}
+{% endblock %}

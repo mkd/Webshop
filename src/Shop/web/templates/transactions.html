@@ -5,9 +5,9 @@
 {% block side_bar %}
 	<div id="side_bar">
 		<ul id="side_bar">
-			<li><a href="/editProfile">Your profile</a></li>
-			<li><a href="/cart">Your cart</a></li>
-			<li><a href="/myTransactions">Your transactions</a></li>
+			<li><a href="/editProfile">My profile</a></li>
+			<li><a href="/cart">My cart</a></li>
+			<li><a href="/myTransactions">My shopping history</a></li>
 		</ul>	
 	</div>
 {% endblock %}
@@ -17,15 +17,30 @@
 	{% if payments %}
 	<center><h2>My transactions</h2></center>
 	
-	<div id='message'>{{ message }}</div>	
+	<div id='message'>{{ message }}<br/></div>	
 		
 	<center>	
 	<table cellspacing="0" callpadding="50" border="0" width="500">
+			<tr>
+				<td></td>
+				<td><strong>Date</strong></td>
+				<td><strong>Amount</strong></td>
+				<td><strong>Ref.</strong></td>
+				<td><strong>Status</strong></td>
+				
+			</tr>
 			{% for payment in payments %}
 			<tr class="transaction" id="">
-				<td id="date"><a href='/myProducts/{{ payment.id }}'>{{ payment.payment_date }}</a></td>
-				<td id="cost">Transaction amount: {{ payment.amount }} &euro;</td>
-				<td id="status">Status: {{ payment.status }}</td>
+				<td class="icon">
+					{% if payment.ref > -1 %}
+						<img class="pic" src="/static/images/{{ payment.status }}.jpg" alt="{{ payment.status }}"/></td>
+					{% else %}
+						<img class="pic" src="/static/images/Cancelled.jpg" alt="Cancelled"/></td>
+					{% endif %}
+				<td class="date"><a href='/myProducts/{{ payment.id }}'>{{ payment.payment_date }}</a></td>
+				<td class="cost">{{ payment.amount }} &euro;</td>
+				<td class="ref">{{ payment.ref }}</td>
+				<td class="status">{{ payment.status }}</td>
 			</tr>
 			{% endfor %}
 	</table>

@@ -1,34 +1,145 @@
 {% extends "base.html" %}
 
-{% block title %} Administrative Pages -- Products {% endblock %}
+{% block title %} Administrative Pages -- All Products {% endblock %}
 {% block extra_head %}
 	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
+    <script src="/static/js/admin.js"></script>
+{% endblock %}
+
+{% block side_bar %}
+	<div id="side_bar">
+		<ul id="side_bar">
+			<li><a href="/myadmin_products">Administrate products</a></li>
+			<li><a href="/myadmin_orders">Administrate orders</a></li>
+			<li><a href="/admin/auth/user">Administrate users</a></li>
+			<li><a href="/admin/web/category">Administrate categories</a></li>
+		</ul>	
+	</div>
 {% endblock %}
 
 {% block main_content %}
     <h1>Administrate Products</h1>
-    {% if product_added %}
-        <p>Product added successfully!</p>
-    {% endif %}
     <div class="functions">
-        <form method="post" action="/deleteProducts">
+    {% block admin_products_form %}
+    <form id="admin_products" method="post" action="/deleteProducts">
         {% csrf_token %}
-        <a href="/myadmin_addProduct">Add product</a>
-        {% ifnotequal products_no 0 %}
-            |
-            <input type="submit" value="Delete selected products" />
-        {% endifnotequal %}
+        <div class="button_text">
+            <a href="/myadmin_addProduct"><img src="/static/images/new_product.png"
+                                               width="32" align="middle" /></a>
+            <a href="/myadmin_addProduct"
+               style="font-style: oblique; text-decoration: none;">Add a new product</a>
+        </div>
+
+        {% if not products_no_0 %}
+        <div class="button_text">
+            <img id="bt_delete_products" src="/static/images/delete.png"
+                                               width="32" align="middle" />
+            <span id="lb_delete_products">Delete selected products</span>
+        </div>
+        {% endif %}
+
+        <div class="button_text">
+            <a href="/myadmin"><img src="/static/images/return.png"
+                                    alt="Back to admin"
+                                    width="32" align="middle" /></a>
+            <a href="/myadmin"
+               style="font-style: oblique; text-decoration: none;">Return to
+               administrative functions</a>
+        </div>
     </div>
     {% ifequal products_no 0 %}
         <div class="error">There are no products in the system!</div>
     {% else %}
-        <ul id="admin">
+        <table id="products">
+            <tr>
+                <th>
+                    {% if column == 'name' %}
+                        {% if order == 'a' %}
+                            <a href="/myadmin_products?column=name&order=d">Product
+                            name</a>
+                            &uarr;
+                        {% else %}
+                            <a href="/myadmin_products?column=name&order=a">Product
+                            name</a>
+                            &darr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=name&order=a">Product
+                        name</a>
+                    {% endif %}
+                </th>
+                <th>
+                    {% if column == 'stock_count' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_products?column=stock_count&order=d">Units
+                            in stock</a>
+                            &uarr;
+                        {% else %}
+                            <a
+                            href="/myadmin_products?column=stock_count&order=a">Units
+                            in stock</a>
+                            &darr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=stock_count&order=a">Units
+                        in stock</a>
+                    {% endif %}
+                </th>
+                <th>
+                    {% if column == 'visit_count' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_products?column=visit_count&order=d">Popularity</a>
+                            &uarr;
+                        {% else %}
+                            <a
+                            href="/myadmin_products?column=visit_count&order=a">Popularity</a>
+                            &darr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=visit_count&order=a">Popularity</a>
+                    {% endif %}
+                </th>
+                <th>
+                    {% if column == 'average_rating' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_products?column=average_rating&order=d">Rating</a>
+                            &uarr;
+                        {% else %}
+                            <a
+                            href="/myadmin_products?column=average_rating&order=a">Rating</a>
+                            &darr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=average_rating&order=a">Rating</a>
+                    {% endif %}
+                </th>
+            </tr>
         {% for p in products %}
-            <li>
-			    <input type="checkbox" value="{{ p.id }}" name="product_list" />
-                <a href="/editProduct/{{ p.id }}">{{ p.name }}</a>
-            </li>
+            <tr>
+                <td>
+			        <input type="checkbox" value="{{ p.id }}" name="product_list" />
+                    <a href="/editProduct/{{ p.id }}">{{ p.name }}</a>
+                </td>
+                <td style="text-align: right;">
+                    {{ p.stock_count }}
+                </td>
+                <td style="text-align: right;">
+                    {{ p.visit_count }}
+                </td>
+                <td style="text-align: right;">
+                    {{ p.average_rating }}
+                </td>
+            </tr>
         {% endfor %}
-        </ul>
+        </table>
     {% endifequal %}
+    </form>
+    {% endblock %}
 {% endblock %}

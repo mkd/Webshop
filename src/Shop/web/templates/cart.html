@@ -8,9 +8,9 @@
 {% block side_bar %}
 	<div id="side_bar">
 		<ul id="side_bar">
-			<li><a href="/editProfile">Your profile</a></li>
-			<li><a href="/cart">Your cart</a></li>
-			<li><a href="/myTransactions">Your transactions</a></li>
+			<li><a href="/editProfile">My profile</a></li>
+			<li><a href="/cart">My cart</a></li>
+			<li><a href="/myTransactions">My transactions</a></li>
 		</ul>	
 	</div>
 {% endblock %}
@@ -65,6 +65,11 @@
 
 	{% if cart %}
 	<center><h2>My cart</h2></center>
+	
+	{% if message %}
+		<p>{{ message }}<p>
+	{% endif %}
+	
 	<table cellspacing="0" callpadding="50" border="0" width="660">
 		<form action="/checkout" method="post" id="form-myCart">
 			{% csrf_token %}
