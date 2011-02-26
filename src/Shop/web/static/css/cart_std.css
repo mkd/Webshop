@@ -1,0 +1,78 @@
+/**
+ * CSS Stylesheet for cart views.
+ *
+ * W3C-compliant version.
+ *
+ */
+img.product-pic
+{
+	width: 50px;
+	height: 50px;
+	padding:2px;
+	border: solid #888 1px;
+}
+
+img.product-pic-check
+{
+	width: 30px;
+	height: 30px;
+	padding:2px;
+	border: solid #888 1px;
+}
+
+tr.item:hover
+{
+	background: #ded;
+}
+
+td.name a
+{
+	text-decoration: none;
+	font-size: 16px;
+	color: #666;
+}
+
+td.value
+{
+    text-align: right;
+}
+
+td.quantity
+{
+    text-align: left;
+}
+
+td.total
+{
+    text-align: right;
+	font-size: 18px;
+	font-weight: bold;
+	padding-top: 12px;
+	border-top: 1px solid #999;  
+}
+
+#checkout
+{
+    text-align: center;
+    font-size: 14px;
+    font-weight: 800;
+    display: inline;
+        
+	background: #d1d1d1; /* for non-css3 browsers */
+ 
+	color: #444;
+	border-top: solid 1px #f8f8f8;
+	
+	margin-left: 10px;
+	padding:  7px 30px;
+}
+
+#checkout:hover
+{
+	cursor: pointer;
+}
+
+.delete
+{
+    cursor: pointer;
+}
