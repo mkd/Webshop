@@ -70,7 +70,8 @@
 
     <!-- show payment status if the user has bought something -->
 	{% if products %}
-	<center><h2>My order on {{ payment.payment_date }}</h2>
+        <div class="centered">
+	    <h2>My order on {{ payment.payment_date }}</h2>
 		<h2>Status: {{ payment.status }}</h2>
 		
 		{% if payment.status != 'Delivered' %}
@@ -120,7 +121,7 @@
 			{% endfor %}
 			
 	</table>
-	</center>
+	</div>
 	
 	{% else %}
 		<div class="error">This order does not have any product!</div>

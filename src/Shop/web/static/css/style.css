@@ -751,3 +751,8 @@ div.display-options
 {
     font-style:         oblique;
 }
+
+.centered
+{
+    margin:             0 auto;
+}

@@ -39,22 +39,22 @@
 					<p>
 					<!-- This is awful, I know, but I can do in range(product.average_rating) -->	
 					{% if product.average_rating == 0 %}
-						<center><img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}	
 					{% if product.average_rating == 1 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}
 					{% if product.average_rating == 2 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}
 					{% if product.average_rating == 3 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /></center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}
 					{% if product.average_rating == 4 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}
 					{% if product.average_rating == 5 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" />
 					{% endif %}
 					</p>
 				</div>
@@ -66,7 +66,7 @@
 			<a href="?l=icons{% if query != '' %}&query={{ query }} {% endif %}"><img src="/static/images/list.png" /></a><br/><br/>
 		</div>
 		
-		<center>
+		<div class="centered">
 		<table border="0" cellpadding="2" cellspacing="0" width="100%">
 		{% for product in products %}
 			<tr>
@@ -110,7 +110,7 @@
 			</tr>
 		{% endfor %}
 		</table>
-		</center>
+		</div>
 		{% endif %}
 	</div>
 {% endblock %}
