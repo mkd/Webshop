@@ -291,17 +291,17 @@ def cancelOrders(request):
     if is_staff(request) and request.method == 'POST':
         # cancel orders
         t = loader.get_template('myadmin_orders.html')
-            orders = request.POST.getlist('order_list')
-            # if no products to delete, then go back to products admin
-            if len(orders) <= 0:
-                return HttpResponseRedirect('/myadmin_orders')
+        orders = request.POST.getlist('order_list')
+        # if no products to delete, then go back to products admin
+        if len(orders) <= 0:
+            return HttpResponseRedirect('/myadmin_orders')
 
-            # if there are products to delete, go one by one
-            # note: the picture of the product must be also deleted
-            for o in orders:
-                od = Payment.objects.get(pk=o)
-                od.status = 'Canceled'
-                od.save()
+        # if there are products to delete, go one by one
+        # note: the picture of the product must be also deleted
+        for o in orders:
+            od = Payment.objects.get(pk=o)
+            od.status = 'Canceled'
+            od.save()
 
         # return to the products page
         orders = Payment.objects.all()

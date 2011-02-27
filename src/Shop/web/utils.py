@@ -25,9 +25,9 @@ def is_auth(request, r = '/'):
 #
 # @param r URL to which redirect in case of not being staff.
 def is_staff(request, r = '/'):
-    if is_auth(request) if request.user.is_staff:
+    if is_auth(request) and request.user.is_staff:
         return True
-    else
+    else:
         return HttpResponseRedirect(r)
 
 
