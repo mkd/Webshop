@@ -37,40 +37,27 @@ def signup(request):
 
 ##
 # Render a simple login form (sign in)
+# If receie data from POST validate the data an login the user.
+# If not orif the user is invalid the render the form again.
 def signin(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect('/')
+        
     t = loader.get_template('signin.html')
     categories = Category.objects.all()
+    login_form = LoginForm()
     context = RequestContext(request, { 
         'categories' : categories,
+        'login_form': login_form
     })
     return HttpResponse(t.render(context))
-
-
-##
-# Perform the actual login.
-#
-# This function checks the user and password against the users in the database
-# and tries to log in. If successful, the user is redirected to the home page,
-# otherwise an error is displayed.
-def tryLogin(request):
-    # authenticate the user
-    username = request.POST.get('user')
-    password = request.POST.get('pass')
-    user = authenticate(username=username, password=password)
-
-    # on sign-in go to front-page, otherwise go back to sign-in form
-    if user is not None:
-        login(request, user)
-        return HttpResponseRedirect('/')
-    else:
-        t = loader.get_template('signin.html')
-        categories = Category.objects.all()
-        context = RequestContext(request, {
-            'login_failed' : True,
-            'categories'   : categories,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
 
 
 ##
