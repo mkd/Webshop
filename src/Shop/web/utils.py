@@ -13,10 +13,8 @@ from django.contrib.auth.models import User
 # Check if the user is logged  in, or redirect to another page otherwise.
 #
 # @param r URL to which redirect in case of not being staff.
-def is_auth(request, r = '/'):
-    if request.user.is_authenticated():
-        return True
-    else:
+def only_signed(request, r = '/'):
+    if not request.user.is_authenticated():
         return HttpResponseRedirect(r)
 
 
@@ -24,10 +22,9 @@ def is_auth(request, r = '/'):
 # Check if the user is staff, or redirect to another page otherwise.
 #
 # @param r URL to which redirect in case of not being staff.
-def is_staff(request, r = '/'):
-    if is_auth(request) and request.user.is_staff:
-        return True
-    else:
+def only_staff(request, r = '/'):
+    only_signed(request)
+    if not request.user.is_staff:
         return HttpResponseRedirect(r)
 
 
