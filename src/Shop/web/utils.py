@@ -2,8 +2,6 @@
 ### Misc utilities to be used in Webshop.
 ### (c) 2011 The Webshop Team
 
-
-
 ### necessary libraries ###
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
@@ -13,7 +11,7 @@ from django.contrib.auth.models import User
 # Check if the user is logged  in, or redirect to another page otherwise.
 #
 # @param r URL to which redirect in case of not being staff.
-def only_signed(request, r = '/'):
+def is_auth(request, r = '/'):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(r)
 
@@ -22,7 +20,7 @@ def only_signed(request, r = '/'):
 # Check if the user is staff, or redirect to another page otherwise.
 #
 # @param r URL to which redirect in case of not being staff.
-def only_staff(request, r = '/'):
+def is_staff(request, r = '/'):
     only_signed(request)
     if not request.user.is_staff:
         return HttpResponseRedirect(r)

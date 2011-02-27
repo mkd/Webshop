@@ -2,8 +2,6 @@
 ### This module contains user registration and session functionalities.
 ### (c) 2011 The Webshop Team
 
-
-
 ### necessary libraries ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
@@ -18,8 +16,6 @@ import os.path
 from models import *
 from forms import *
 import datetime, hashlib, os
-
-
 
 ##
 # Render a simple registration form (sign up)
