@@ -38,24 +38,21 @@
     <form id="admin_products" method="post" action="/deleteProducts">
         {% csrf_token %}
         <div class="button_text">
-            <a href="/myadmin_addProduct"><img src="/static/images/new_product.png"
-                                               align="middle" /></a>
+            <a href="/myadmin_addProduct"><img src="/static/images/new_product.png" /></a>
             <a href="/myadmin_addProduct"
                style="font-style: oblique; text-decoration: none;">Add a new product</a>
         </div>
 
         {% if not products_no_0 %}
         <div class="button_text">
-            <img id="bt_delete_products" src="/static/images/delete.png"
-                                         align="middle" />
+            <img id="bt_delete_products" src="/static/images/delete.png" />
             <span id="lb_delete_products">Delete selected products</span>
         </div>
         {% endif %}
 
         <div class="button_text">
             <a href="/myadmin"><img src="/static/images/return.png"
-                                    alt="Back to admin"
-                                    align="middle" /></a>
+                                    alt="Back to admin" /></a>
             <a href="/myadmin"
                style="font-style: oblique; text-decoration: none;">Return to
                administrative functions</a>
