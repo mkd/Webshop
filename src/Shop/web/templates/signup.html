@@ -16,13 +16,25 @@
 {% block main_content %}
     {% block registration_form %}
         <h1>Register now</h1>
-        <form enctype="multipart/form-data" id="register_form" method="post" action="/register">
+        <form enctype="multipart/form-data" id="register_form" method="post" action=".">
         {% csrf_token %}
-        {% if user_exists %}
-            <div class="error">Username or email already exist in the
-            system! Please pick a different username and make sure your email
-            address is correct.</div>
-        {% endif %}
+
+		{% if name_error %}
+			<div class="error"> {{ name_error }} </div>
+		{% endif %}
+		
+		{% if mail_error %}
+			<div class="error"> {{ mail_error }} </div>
+		{% endif %}
+		
+		{% if check_email %}
+			<div class="error"> {{ check_email }} </div>
+		{% endif %}
+		
+		{% if message_error %}
+			<div class="error"> {{ message_error }} </div>
+		{% endif %}
+
         <table>
         <tr>
             <td colspan="2">
