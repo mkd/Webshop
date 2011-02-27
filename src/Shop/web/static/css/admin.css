@@ -102,7 +102,13 @@ table#admin a:hover
 
 .functions
 {
-    margin-bottom:          1em;
+    margin:                 0 auto 1em auto;
+    width:                  100;
+}
+
+.functions td
+{
+    padding:                0 1em;
 }
 
 #bt_delete_products
