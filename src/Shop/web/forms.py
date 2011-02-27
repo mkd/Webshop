@@ -4,23 +4,11 @@
 
 
 
-### necessary Django modules ###
+### necessary libraries ###
 from django import forms
 from django.forms import widgets, ModelForm, ClearableFileInput
 from models import *
 
-
-
-### custom functionality ###
-##
-# Retrieve a list of categories and create a list ready to be used as a dropdown
-# list.
-def all_categories():
-    cats = Category.objects.all()
-    categories = [('', '')]
-    for c in cats:
-        categories.append((c.id, c.name))
-    return categories
 
 
 ### custom forms ###
