@@ -21,20 +21,51 @@ $(document).ready(function()
         {
             fname:
             {
-                maxlength: 16,
+                maxlength: 30,
                 required:  true
             },
             
             sname:
             {
-                maxlength: 16,
+                maxlength: 30,
                 required:  true
             },
-
-            email:
+            
+            address:
             {
-                maxlength: 32,
+                maxlength: 160,
                 required:  true
+            },
+            
+            postal_code:
+            {
+                maxlength: 5,
+                required:  true
+            },
+            
+            city:
+            {
+                maxlength: 20,
+                required:  true
+            },
+            
+            country:
+            {
+                maxlength: 20,
+                required:  true
+            },
+            
+            passwd:
+            {
+                maxlength: 128,
+//                required:  true
+            },
+            
+            pass2:
+            {
+                maxlength: 128,
+                equalTo: "#passwd"
+//                required:  true
             },
         }
     });
@@ -103,12 +134,34 @@ $(document).ready(function()
 
             price:
             {
-                required:  true
+                required:	true,
+                number: 	true,
+                min: 		0
             },
 
-            units:
+            stock_count:
             {
+                required:	true,
+                number: 	true,
+                min: 		0
+            },
+        }
+    });
+    
+ // client-side validation for the signin form
+    $("#signin_form").validate({
+        rules:
+        {
+        	username:
+            {
+                maxlength: 32,
                 required:  true
+            },
+            
+            password:
+            {
+                maxlength: 	128,
+                required:	true
             },
         }
     });

@@ -82,6 +82,14 @@
 		$("#total").fadeIn();
 	}
 	
+	 /*!
+     * Validate the quantity in the cart.
+     */	
+		$(document).ready(function(){
+    		$("#form-myCart").validate();
+  		});
+     
+	
 	</script>
 
     <!-- cart and messages access -->
@@ -107,6 +115,9 @@
 				<td class="quantity" width="100">
                     <input type="text" name="quantity-{{ product.id }}"
                            id="quantity-{{ product.id }}"
+                           class="required"
+                           number="true"
+                           min="1"
                            value="{{ product.quantity }}" size="8"
                            onChange="editQuantity({{ product.id }}, {{ product.product.price }} )" />
 					<input type="hidden"
