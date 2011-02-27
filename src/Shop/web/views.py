@@ -1,4 +1,10 @@
-### necessary Django modules ###
+### views.py
+### This module contains the main views for rendering Webshop.
+### (c) 2011 The Webshop team
+
+
+
+### necessary libraries ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import *
@@ -9,7 +15,13 @@ from django.contrib.auth.models import User
 from login import *
 from myadmin import *
 from utils import *
+from models import *
+from forms import *
+import datetime, hashlib, os
 
+
+
+### project path settings ###
 import os.path
 PROJECT_DIR = os.path.dirname(__file__)
 SID = 'keyforme'
@@ -17,19 +29,12 @@ KEY = '8c0593199894c8135c13bf15a31240ad'
 
 
 
-### necessary models (other than Django's) ###
-from models import *
-from forms import *
-import datetime, hashlib, os
- 
-
-### plain web pages ###
 ##
 # Render the home page. 
 def index(request):
     t = loader.get_template('index.html')
     
-    # Load the categories and the products ordered by rating.
+    # load the categories and the products ordered by rating
     categories = Category.objects.all()
     best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
     
@@ -38,12 +43,12 @@ def index(request):
         'products'    : best_products,
     })
     
-    # If the user is authenticated then send info about the card in the request.
+    # if the user is authenticated, then send info about the card in the request
     if request.user.is_authenticated():
         no_items = request.user.get_profile().products_in_cart
         context.update({'products_in_cart': no_items})
     
-    # If receives the option to show as icons the send this option to the template.    
+    # if show-as-icons option, then send this option to the template
     if request.GET.get('l') == 'icons':
         context.update({'icons': 'OK'})
         
@@ -53,101 +58,93 @@ def index(request):
     
 
 ##
-# Render the user cart page.    
+# Render the user cart page.
 def cart(request):
-    if request.user.is_authenticated():
-        template = loader.get_template('cart.html')
-        message = request.GET.get('m', '')
-        user = request.user
-        userProducts = CartProduct.objects.filter(user=user)
-        
-        total = 0
-        for product in userProducts:
-            total += product.quantity * product.product.price
-            
-        no_items = request.user.get_profile().products_in_cart
-        context = RequestContext(request, {
-            'products_in_cart' : no_items,
-            'cart'   : userProducts,
-            'total'  : total,
-            'message': message,
-        })
-        
-        context.update(csrf(request))
-        return HttpResponse(template.render(context))
+    only_auth(request)
+
+    # TODO: document me!
+    template = loader.get_template('cart.html')
+    message = request.GET.get('m', '')
+    user = request.user
+    userProducts = CartProduct.objects.filter(user=user)
     
-    else:
-        return HttpResponseRedirect("/")
+    total = 0
+    for product in userProducts:
+        total += product.quantity * product.product.price
+        
+    no_items = request.user.get_profile().products_in_cart
+    context = RequestContext(request, {
+        'products_in_cart' : no_items,
+        'cart'   : userProducts,
+        'total'  : total,
+        'message': message,
+    })
+    
+    context.update(csrf(request))
+    return HttpResponse(template.render(context))
 
 
 ##
 # TODO: document me!        
 def myProducts(request, payment_id):
-    if request.user.is_authenticated():
-        template = loader.get_template('myProducts.html')
-        payment = get_object_or_404(Payment, id=payment_id) 
-        
-        if payment.user != request.user:
-            return HttpResponseRedirect("/")
-        
-        products = Transaction.objects.filter(payment=payment)          
-        no_items = request.user.get_profile().products_in_cart
-        context = RequestContext(request, {
-            'products_in_cart' : no_items,
-            'payment'  : payment,
-            'products'  : products,
-            'message'   : request.GET.get('m',''),
-        })
-        return HttpResponse(template.render(context))
-        
-    else:
+    only_auth(request)
+
+    template = loader.get_template('myProducts.html')
+    payment = get_object_or_404(Payment, id=payment_id) 
+    
+    if payment.user != request.user:
         return HttpResponseRedirect("/")
+    
+    products = Transaction.objects.filter(payment=payment)          
+    no_items = request.user.get_profile().products_in_cart
+    context = RequestContext(request, {
+        'products_in_cart' : no_items,
+        'payment'  : payment,
+        'products'  : products,
+        'message'   : request.GET.get('m',''),
+    })
+    return HttpResponse(template.render(context))
    
 
 ##
 # TODO: document me! 
 def myTransactions(request):
-    if request.user.is_authenticated():
-        template = loader.get_template('transactions.html')
-        payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
-        no_items = request.user.get_profile().products_in_cart
-        context = RequestContext(request, {
-            'products_in_cart' : no_items,
-            'payments'  : payments,
-            'message'   : request.GET.get('m',''),
-        })
-        return HttpResponse(template.render(context))
-        
-    else:
-        return HttpResponseRedirect("/")
-        
+    only_auth(request)
+
+    template = loader.get_template('transactions.html')
+    payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
+    no_items = request.user.get_profile().products_in_cart
+    context = RequestContext(request, {
+        'products_in_cart' : no_items,
+        'payments'  : payments,
+        'message'   : request.GET.get('m',''),
+    })
+    return HttpResponse(template.render(context))
         
 
 ##
 # TODO: document me!
 def addToCart(request):
-    if request.user.is_authenticated():
-        profile = get_object_or_404(UserProfile, user=request.user) 
-        profile.products_in_cart += 1
-        profile.save()
-        product = get_object_or_404(Product, id=request.POST['product'])
+    only_auth(request)
 
-        try: 
-            new_prod = CartProduct.objects.get(product=product, user=request.user)
-            new_prod.quantity += 1
-        
-        except CartProduct.DoesNotExist: 
-            new_prod = CartProduct(product = product, 
-                              user = request.user,
-                              timestamp = datetime.datetime.now(),
-                              quantity = 1)
-        
-        new_prod.save()
-        product.save()
-        return HttpResponse("%s" % profile.products_in_cart)
-        
-    else:
-        return HttpResponse("No registered")
+    profile = get_object_or_404(UserProfile, user=request.user) 
+    profile.products_in_cart += 1
+    profile.save()
+    product = get_object_or_404(Product, id=request.POST['product'])
+
+    try: 
+        new_prod = CartProduct.objects.get(product=product, user=request.user)
+        new_prod.quantity += 1
+    
+    except CartProduct.DoesNotExist: 
+        new_prod = CartProduct(product = product, 
+                          user = request.user,
+                          timestamp = datetime.datetime.now(),
+                          quantity = 1)
+    
+    new_prod.save()
+    product.save()
+    return HttpResponse("%s" % profile.products_in_cart)
 
 
 ##
@@ -188,48 +185,46 @@ def editQuantityInCart(request):
 # Show the payment page of an order, the user see the list of products to buy
 #  and the postal address wher the products will be sent.      
 def checkout(request):
-    if request.user.is_authenticated():
-        template = loader.get_template('payment.html')
-        products = CartProduct.objects.filter(user=request.user)
-        message = request.GET.get('m', '')
-        prices = []
-        total = 0
-        
-        # Calculate the total amount of the order
-        for product in products:
-            thisProd = get_object_or_404(Product, id=product.product.id)
-            product.total = product.quantity * thisProd.price
-            total += product.total
-        
-        # Generate the data to send to the bank and the Payment object.
-        payment = Payment( user=request.user, amount=total)
-        payment.pid = "%d-%s" % (request.user.id, datetime.datetime.now())
-        checksumstr = "pid=%s&sid=%s&amount=%s&token=%s" % (payment.pid, SID, payment.amount, KEY)
-        m = md5.new(checksumstr)
-        payment.checksum = m.hexdigest()
-        payment.save()
-        
-        # Generate a form to edit the postal information.
-        profile = request.user.get_profile()
-        postal_form = PostalForm(instance=profile)
-        no_items = request.user.get_profile().products_in_cart
-        context = RequestContext(request, {
-            'products_in_cart' : no_items,
-            'sid'     : SID,
-            'cost'    : prices,
-            'cart'    : products,
-            'payment' : payment,
-            'message' : message,
-            'postal_form' : postal_form,
-            'profile' : profile,
-        })
+    only_auth()
+
+    template = loader.get_template('payment.html')
+    products = CartProduct.objects.filter(user=request.user)
+    message = request.GET.get('m', '')
+    prices = []
+    total = 0
     
-        context.update(csrf(request))
-        return HttpResponse(template.render(context))
+    # calculate the total amount of the order
+    for product in products:
+        thisProd = get_object_or_404(Product, id=product.product.id)
+        product.total = product.quantity * thisProd.price
+        total += product.total
     
-    else:
-        return HttpResponseRedirect("/")
-       
+    # generate the data to send to the bank and the Payment object
+    payment = Payment( user=request.user, amount=total)
+    payment.pid = "%d-%s" % (request.user.id, datetime.datetime.now())
+    checksumstr = "pid=%s&sid=%s&amount=%s&token=%s" % (payment.pid, SID, payment.amount, KEY)
+    m = md5.new(checksumstr)
+    payment.checksum = m.hexdigest()
+    payment.save()
+    
+    # generate a form to edit the postal information
+    profile = request.user.get_profile()
+    postal_form = PostalForm(instance=profile)
+    no_items = request.user.get_profile().products_in_cart
+    context = RequestContext(request, {
+        'products_in_cart' : no_items,
+        'sid'     : SID,
+        'cost'    : prices,
+        'cart'    : products,
+        'payment' : payment,
+        'message' : message,
+        'postal_form' : postal_form,
+        'profile' : profile,
+    })
+
+    context.update(csrf(request))
+    return HttpResponse(template.render(context))
+  
 
 ##
 # If the bank returns an OK response then we store the Payments
@@ -241,7 +236,7 @@ def updatePostalOrder(request):
         postal_code = request.POST.get('postal_code','')
         postal_city = request.POST.get('postal_city','')
         postal_country = request.POST.get('postal_country','')
-		
+        
         # Get the Payment and adds the postal info.
         payment = get_object_or_404(Payment, pid=pid)
         payment.postal_address = postal_address
@@ -249,114 +244,112 @@ def updatePostalOrder(request):
         payment.postal_city = postal_city
         payment.postal_country = postal_country
         payment.save()
-
         return HttpResponse("OK")
+
     else:
         return HttpResponse("NO")
+
 
 ##
 # If the bank returns an OK response then we store the Payments
 # and all the products in the cart lic transactions.
 def paymentOk(request):
-    if request.user.is_authenticated():
-        # Get the data from the GET request.
-        pid = request.GET.get('pid')
-        ref = request.GET.get('ref')
-        checksum = request.GET.get('checksum')
+    only_auth(request)
+
+    # obtain the data from the GET request
+    pid = request.GET.get('pid')
+    ref = request.GET.get('ref')
+    checksum = request.GET.get('checksum')
+    
+    # do the checksum
+    checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
+    m = md5.new(checksumstr)
+    myChecksum = m.hexdigest()
+    
+    # check that the checksum is correct
+    if checksum == myChecksum and ref > 0:
+        # Get the Payment and adds the ref.
+        payment = get_object_or_404(Payment, pid=pid)
+        payment.ref = ref
+        payment.save()
         
-        # Do the checksum
-        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
-        m = md5.new(checksumstr)
-        myChecksum = m.hexdigest()
+        # get the products in the user's cart and add them to the transaction
+        user = request.user
+        products = CartProduct.objects.filter(user=user)
         
-        # Check that the checksum is correct.
-        if checksum == myChecksum and ref > 0:
-            # Get the Payment and adds the ref.
-            payment = get_object_or_404(Payment, pid=pid)
-            payment.ref = ref
-            payment.save()
+        for product in products:
+            transaction = Transaction( 
+                product = product.product,
+                user = user,
+                payment = payment,
+                quantity = product.quantity,
+                unit_price = product.product.price)
             
-            # Get the products in the user's cart and add them to the transaction.
-            user = request.user
-            products = CartProduct.objects.filter(user=user)
-            
-            for product in products:
-                transaction = Transaction( 
-                    product = product.product,
-                    user = user,
-                    payment = payment,
-                    quantity = product.quantity,
-                    unit_price = product.product.price)
-                
-                theProduct = product.product
-                theProduct.stock_count -= product.quantity
-                theProduct.sold_count += product.quantity
-                theProduct.save()
-                transaction.save()
-                product.delete()
-            
-            # Reset the cart product counter of the user
-            profile = get_object_or_404(UserProfile, user=user) 
-            profile.products_in_cart = 0
-            profile.save()
-            
-            return HttpResponseRedirect("/myTransactions?m=Payment succesful!")
-         
-        # If the checksum don't validate, the delete the payment.
-        else:
-            payment = get_object_or_404(Payment, pid=pid)
-            payment.delete()
-            return HttpResponseRedirect("/checkout?m=The checksum does not validate!")
+            theProduct = product.product
+            theProduct.stock_count -= product.quantity
+            theProduct.sold_count += product.quantity
+            theProduct.save()
+            transaction.save()
+            product.delete()
+        
+        # reset the cart product counter of the user
+        profile = get_object_or_404(UserProfile, user=user) 
+        profile.products_in_cart = 0
+        profile.save()
+        
+        return HttpResponseRedirect("/myTransactions?m=Payment succesful!")
+     
+    # if the checksum doesn't validate, then delete the payment
     else:
-        return HttpResponseRedirect("/")
+        payment = get_object_or_404(Payment, pid=pid)
+        payment.delete()
+        return HttpResponseRedirect("/checkout?m=The checksum does not validate!")
+
 
 ##
 # Handle an canceled payment, triggered when the user cancel the payment in the bank.
 def paymentNo(request):
-    if request.user.is_authenticated():
-        # Get the values sent by the bank and check that the checksum matches.
-        pid = request.GET.get('pid')
-        ref = request.GET.get('ref')
-        checksum = request.GET.get('checksum')
-        
-        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
-        m = md5.new(checksumstr)
-        myChecksum = m.hexdigest()
-        
-        # If the checksum matches then delete the payment and returns the user to 
-        #  the cart page showing a message.
-        if checksum == myChecksum:
-            payment = get_object_or_404(Payment, pid=pid)  
-            payment.delete()
-            return HttpResponseRedirect("/cart?m=You cancel the payment.")
-        
-        else:
-            return HttpResponseRedirect("/")
+    only_auth(request)
+
+    # get the values sent by the bank and check that the checksum matches
+    pid = request.GET.get('pid')
+    ref = request.GET.get('ref')
+    checksum = request.GET.get('checksum')
+    
+    checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
+    m = md5.new(checksumstr)
+    myChecksum = m.hexdigest()
+    
+    # if the checksum matches then delete the payment and returns the user to 
+    # the cart page showing a message
+    if checksum == myChecksum:
+        payment = get_object_or_404(Payment, pid=pid)  
+        payment.delete()
+        return HttpResponseRedirect("/cart?m=You cancel the payment.")
     else:
         return HttpResponseRedirect("/")
+
 
 ##
 # Handle an error on payment. 
 def paymentError(request):
-    if request.user.is_authenticated():
-        # Get the values sent by the bank and check that the checksum matches.
-        pid = request.GET.get('pid')
-        ref = request.GET.get('ref')
-        checksum = request.GET.get('checksum')
+    only_auth(request)
 
-        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
-        m = md5.new(checksumstr)
-        myChecksum = m.hexdigest()
-        
-        # If the checksum matches then delete the payment and returns the user to 
-        #  the checkout page showing a message.
-        if checksum == myChecksum:
-            payment = get_object_or_404(Payment, pid=pid)
-            payment.delete()
-            return HttpResponseRedirect("/checkout?m=Some error occurs while trying to connect to the bank.")
+    # get the values sent by the bank and check that the checksum matches
+    pid = request.GET.get('pid')
+    ref = request.GET.get('ref')
+    checksum = request.GET.get('checksum')
 
-        else:
-            return HttpResponseRedirect("/")
+    checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
+    m = md5.new(checksumstr)
+    myChecksum = m.hexdigest()
+    
+    # if the checksum matches then delete the payment and returns the user to 
+    # the checkout page showing a message
+    if checksum == myChecksum:
+        payment = get_object_or_404(Payment, pid=pid)
+        payment.delete()
+        return HttpResponseRedirect("/checkout?m=Some error occurs while trying to connect to the bank.")
     else:
         return HttpResponseRedirect("/")
 
@@ -494,14 +487,14 @@ def rateComment(request, comment_id, option):
 ##
 # Render a page with all the products of a specific category. 
 def category(request, category_id):
-    # Loads the Category and the products in the category ordered by rate
+    # load the category and the products in the category ordered by rate
     template = loader.get_template('list.html')
     thisCategory = get_object_or_404(Category, id=category_id)  
     categories = Category.objects.all()
     best_products = Product.objects.filter(category=thisCategory.id).filter(stock_count__gt=0).order_by('-average_rating')[:10]
     message = "Products on " + thisCategory.name
    
-   # Generate a base context
+   # generate a base context
     context = RequestContext(request, {
         'message'           : message,
         'this'              : thisCategory,
@@ -509,12 +502,12 @@ def category(request, category_id):
         'products'          : best_products,
     })
    
-    # If the user is logged send about the products in the cart to the context 
+    # if the user is logged, send the products in the cart to the context 
     if request.user.is_authenticated():
         no_items = request.user.get_profile().products_in_cart
         context.update({'products_in_cart'  : no_items})
 
-    # If receives the option to show as icons the send this option to the template.    
+    # if receives the option to show as icons the send this option to the template
     if request.GET.get('l') == 'icons':
         context.update({'icons': 'OK'})
     

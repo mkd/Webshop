@@ -1,7 +1,10 @@
-### admin.py
+### myadmin.py
+### This module contains the administrative functions of Webshop.
 ### (c) 2011 The Webshop Team
 
-### necessary Django modules ###
+
+
+### necessary libraries ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import *
@@ -16,32 +19,18 @@ from forms import *
 import datetime, hashlib, os
 
 
+
 ##
 # Display the administration pages to staff personnel.
 #
 # Note: if the user is not staff, ask her to sign in with a staff account.
 def myadmin(request):
+    only_staff(request)
+
     t = loader.get_template('myadmin.html')
 
-    # if the user is not authenticated, ask to sign in
-    if not request.user.is_authenticated():
-        context = Context({
-            'not_signed_in' : True,
-        })
-        return HttpResponse(t.render(context))
-
-    # if the user is a staff member, ask her to sign in with a staf account
-    elif not request.user.is_staff:
-        context = RequestContext(request, {
-            'not_staff' : True,
-        })
-        return HttpResponse(t.render(context))
-
-    # if the user is authenticated and is a staff member, render the
-    # administration pages
-    else:
-        context = RequestContext(request, { })
-        return HttpResponse(t.render(context))
+    context = RequestContext(request, { })
+    return HttpResponse(t.render(context))
 
 
 ##
@@ -50,6 +39,8 @@ def myadmin(request):
 # The products admin page renders a table with all the products, that can be
 # sorted by name, price, popularity, etcetera.
 def myadmin_products(request):
+    only_staff(request)
+
     # fetch the sorting criteria from GET
     column = request.GET.get('column', 'name')
     order  = request.GET.get('order', 'a')
@@ -78,6 +69,8 @@ def myadmin_products(request):
 ##
 # Render a page to add a new product.
 def myadmin_addProduct(request):
+    only_staff(request)
+
     form = ProductForm()
     t = loader.get_template('myadmin_add_product.html')
     context = RequestContext(request, {
@@ -86,9 +79,12 @@ def myadmin_addProduct(request):
     context.update(csrf(request))
     return HttpResponse(t.render(context))
 
+
 ##
 # Add a product to the database.
 def addProduct(request):
+    only_staff(request)
+
     if request.method == 'POST':
         # save all the data from the POST into the database
         p = Product.objects.create(
@@ -127,6 +123,8 @@ def addProduct(request):
 ##
 # Render a page to edit a product.
 def editProduct(request, product_id):
+    only_staff(request)
+
     t = loader.get_template('myadmin_edit_product.html')
     p = Product.objects.get(id=product_id)
     form = ProductForm(instance=p)
@@ -150,6 +148,8 @@ def editProduct(request, product_id):
 ##
 # Save a modified product.
 def saveProduct(request, product_id):
+    only_staff(request)
+
     t = loader.get_template('myadmin_edit_product.html')
     if request.method == 'POST':
         # save all the data from the POST into the database
@@ -191,8 +191,8 @@ def saveProduct(request, product_id):
     
 ##
 # Render the categories administration page.
-# TODO: this is just a copy paste from products
 def myadmin_categories(request):
+    only_staff(request)
     return HttpResponseRedirect('/admin/web/category/')
 
 
@@ -201,6 +201,8 @@ def myadmin_categories(request):
 # The orders admin page renders a table with all the orders, that can be
 # sorted by date, total sum, status, etcetera.
 def myadmin_orders(request):
+    only_staff(request)
+
     # fetch the sorting criteria from GET
     column = request.GET.get('column', 'payment_date')
     order  = request.GET.get('order', 'a')
@@ -229,6 +231,7 @@ def myadmin_orders(request):
 ##
 # Render the users administration page.
 def myadmin_users(request):
+    only_staff(request)
     return HttpResponseRedirect('/admin/auth/user')
 
 
@@ -348,6 +351,8 @@ def cancelOrder(request, order_id):
 ##
 # Render a page to edit an order status.
 def editOrder(request, order_id):
+    only_staff(request)
+
     t = loader.get_template('myadmin_edit_order.html')
     payment = Payment.objects.get(id=order_id)
     products = Transaction.objects.filter(payment=payment)
@@ -365,6 +370,8 @@ def editOrder(request, order_id):
 ##
 # Save a modified product.
 def saveOrder(request, order_id):
+    only_staff(request)
+
     t = loader.get_template('myadmin_edit_order.html')
     if request.method == 'POST':
         # save the status in the database

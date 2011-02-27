@@ -1,5 +1,14 @@
+### urls.py
+### Regular expressions to guide the user through the Webshop navigation.
+### (c) 2011 The Webshop Team
+
+
+### necessary libraries ###
 from django.conf.urls.defaults import *
 
+
+
+### URL patterns definitions ###
 urlpatterns = patterns('',
     (r'^product/(?P<product_id>\d+)/$', 'web.views.product'),
     (r'^product/(?P<product_id>\d+)/comment/$', 'web.views.comment'),

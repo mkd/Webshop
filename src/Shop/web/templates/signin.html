@@ -1,7 +1,25 @@
+<!--
+   - signin.html
+   -
+   - Template with the form to signin a user.
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from base.html -->
 {% extends "base.html" %}
 
+
+
+<!-- title and extra headers -->
 {% block title %} Webshop -- Sign in {% endblock %}
 
+
+
+
+<!-- main content -->
 {% block main_content %}
     {% block login_form %}
         <h1>Sign in</h1>
@@ -46,6 +64,8 @@
         </table>
         </form>
     {% endblock %}
+
+    <!-- link to a password recovery page -->
     <p>
         <a href="/forgot_password">Forgot your password?</a>
     </p>

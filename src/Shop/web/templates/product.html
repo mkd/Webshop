@@ -1,43 +1,76 @@
+<!--
+   - product.html
+   -
+   - Template used for displaying a product view.
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from base.html -->
 {% extends "base.html" %}
 
+
+
+<!-- title and extra headers -->
 {% block title %} Product | {{ product.name }} {% endblock %}
 {% block extra_head %}
 	<link rel=stylesheet href="/static/css/product.css" type="text/css" />
 {% endblock %}
 
+
+
 {% block side_bar %}{% endblock %}
 
+
+
+<!-- main functionality -->
 {% block main_content %}
+    <!-- Javascript functionality -->
+    <script>
 
-<script>
+    /*!
+     * Rate a comment.
+     */
+    function rate(comment, option){
+        $.get('/comment/'+comment+'/'+option, function(data) {
+            $('#comment-rate-'+comment).html(data);
+        });
+    }
 
-function rate(comment, option){
-	$.get('/comment/'+comment+'/'+option, function(data) {
-		$('#comment-rate-'+comment).html(data);
-	});
-}
+    /*!
+     * Show the reply box for a comment.
+     */
+    function showReplyBox(comment){
+        $('.write_reply').css("display","none");
+        $('#comment_reply_box_'+comment).css("display","block");
+    }
 
-function showReplyBox(comment){
-	$('.write_reply').css("display","none");
-	$('#comment_reply_box_'+comment).css("display","block");
-}
+    /*!
+     * Add a product to the cart.
+     */
+    function add(){
+        $.post('/cart/add', { product: '{{product.id}}' },
+         function(data) {
+            $('#products-in-cart').html(data);
+            $("#my-cart").hide();
+            $("#my-cart").fadeIn();
+        });
+    }
 
-function add(){
-	$.post('/cart/add', { product: '{{product.id}}' },
-	 function(data) {
-		$('#products-in-cart').html(data);
-		$("#my-cart").hide();
-		$("#my-cart").fadeIn();
-	});
-}
+    /*!
+     * Refresh an item on the screen.
+     */
+    function refresh(id){
+        $("#"+id).hide();
+        $("#"+id).fadeIn();
+    }
 
-function refresh(id){
-	$("#"+id).hide();
-	$("#"+id).fadeIn();
-}
+    </script>
 
-</script>
-
+    <!-- display the product content and all its associated information
+         (comments, ratings, etc) -->
 	<div id="product-content">
 		<div id="left-side">
 			<img src="/static/images/products/{{ product.id }}" />
@@ -91,7 +124,8 @@ function refresh(id){
 				</p>
 
 				<hr />
-				
+	
+                <!-- display product's comments -->			
 				<div id="comments">
 					{% for comment in comments %}
 						<a name="{{ comment.id }}"></a>
@@ -103,7 +137,7 @@ function refresh(id){
 						
 							{% if comment.parent_id %}
 								<blockquote>
-									<i>In reply to <a href="#{{ comment.parent_id.id }}" onclick="refresh({{ comment.parent_id.id }})">@{{ comment.parent_id.user }}</a></i><br/> 
+									<em>In reply to <a href="#{{ comment.parent_id.id }}" onclick="refresh({{ comment.parent_id.id }})">@{{ comment.parent_id.user }}</a></em><br/> 
 									{{ comment.comment }}
 								</blockquote>
 							{% else %}
@@ -141,7 +175,8 @@ function refresh(id){
 			    postal_code    = models.CharField(  max_length=5 )
 			    postal_city    = models.CharField(  max_length=20 )
 			    postal_country = models.CharField(  max_length=20 )
-				
+			
+                <!-- functionality to write (add) a commnet -->	
 				<div id="write_comment">
 					<form action="/product/{{ product.id }}/comment/" method="post">
 						{% csrf_token %}
@@ -152,12 +187,8 @@ function refresh(id){
 					</form>
 				</div>
 				{% endif %}
-				
-				
 			</div>
 		</div>
-		
-		
 	</div>
 
 {% endblock %}

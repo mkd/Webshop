@@ -1,27 +1,44 @@
+<!--
+   - profile.html
+   -
+   - Display a user's profile and let him/her modify it.
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from base.html -->
 {% extends "base.html" %}
 
-{% block title %} Webshop | My Profile {% endblock %}
 
+
+<!-- title and extra headers -->
+{% block title %} Webshop | My Profile {% endblock %}
 {% block extra_head %}
+    <!-- immediately refresh user's avatar on reload -->
 	<meta http-equiv="cache-control" content="no-cache" />
 {% endblock %}
 
+
+
+<!-- buyer sidebar -->
 {% block side_bar %}
-	<div id="side_bar">
-		<ul id="side_bar">
-			<li><a href="/editProfile">My profile</a></li>
-			<li><a href="/cart">My cart</a></li>
-			<li><a href="/myProducts">My shopping history</a></li>
-		</ul>	
-	</div>
+    {% include "buyer_sidebar.html" %}
 {% endblock %}
 
+
+
+<!-- main content -->
 {% block main_content %}
     {% block profile_form %}
         <h1>My Profile</h1>
+
+        <!-- notify the user about the success of saving or not -->
         {% if saved %}
             <div class="success">Profile data saved successfully!</div>
         {% endif %}
+
         <form enctype="multipart/form-data" id="profile_form" method="post" action="/saveProfile">
         {% csrf_token %}
         <table>

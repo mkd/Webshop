@@ -1,5 +1,19 @@
+<!--
+   - register.html
+   -
+   - Display a user registration form.
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from base.html -->
 {% extends "base.html" %}
 
+
+
+<!-- title and extra headers -->
 {% block title %} Product {% endblock %}
 
 {% block side_bar %}{% endblock %}
@@ -17,6 +31,9 @@
     average_rating  = models.DecimalField( max_digits=3, decimal_places=2, default=0) 
     votes           = models.IntegerField( default=0 )
 
+
+
+<!-- main content -->
 {% block main_content %}
 	<p>{{ product.name }}</p>
 	<p>{{ product.picture }}</p>

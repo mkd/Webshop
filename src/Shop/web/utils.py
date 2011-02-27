@@ -1,6 +1,7 @@
 ### utils.py
-###
-### Misc utilities.
+### Misc utilities to be used in Webshop.
+### (c) 2011 The Webshop Team
+
 
 
 ### necessary libraries ###
@@ -12,7 +13,7 @@ from django.contrib.auth.models import User
 # Check if the user is logged  in, or redirect to another page otherwise.
 #
 # @param r URL to which redirect in case of not being staff.
-def only_signed(request, r = '/'):
+def only_auth(request, r = '/'):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(r)
 
@@ -22,7 +23,7 @@ def only_signed(request, r = '/'):
 #
 # @param r URL to which redirect in case of not being staff.
 def only_staff(request, r = '/'):
-    only_signed(request)
+    only_auth(request)
     if not request.user.is_staff:
         return HttpResponseRedirect(r)
 

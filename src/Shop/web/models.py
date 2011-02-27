@@ -1,10 +1,18 @@
-## necessary libraries
+### models.py
+### This module contains the database definitions for each component that is
+### used in the Webshop project.
+### (c) 2011 The Webshop Team
+
+
+
+### necessary libraries ###
 from django.db import models
 from django.utils.datetime_safe import datetime
 from django.template.defaultfilters import default
 from django.contrib.admin.models import User
 from django.db.models.signals import post_save
 import math, md5
+
 
 
 ##
@@ -66,31 +74,6 @@ class Category(models.Model):
     def __unicode__(self):
         return self.name
     
-    # accessors
-    def getName(self):
-        return self.name
-
-    def setName(self, n):
-        self.name = n
-
-    def getDesc(self):
-        return self.description
-
-    def setDesc(self, d):
-        self.description = d
-
-    def getIconPath(self):
-        return self.icon
-
-    def setIconPath(self, ip):
-        self.icon = ip
-
-    def getParent(self):
-        return self.parent_id
-
-    def setParent(self, pid):
-        self.parent_id = pid
-
 
 ##
 # Model: Tag
@@ -110,14 +93,7 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.name
     
-    # accessors
-    def getName(self):
-        return self.name
-
-    def setName(self, n):
-        self.name = n
-        
-        
+ 
 ##
 # Model: Product
 #
@@ -204,8 +180,6 @@ class CartProduct(models.Model):
 #
 # Implement the equivalent to order, containing an user, a total amount and a
 # status for the delivery.
-#
-# TODO: document me!
 class Payment(models.Model):
     pid            = models.CharField( max_length=500 )
     user           = models.ForeignKey(User)
@@ -249,6 +223,7 @@ class Transaction( models.Model ):
     
     def __unicode__(self):
         return "%s: %s (%d)" % (self.user.username, self.product.name, self.quantity)
+
 
 ##
 # Model: Comment
@@ -294,56 +269,8 @@ class Comment(models.Model):
             
         super(Comment, self).save()
         return self
+
     
-    # accessors
-    def getProduct(self):
-        return self.product_id
-
-    def setProduct(self, p):
-        self.product_id = p
-
-    def getUser(self):
-        return self.user_id
-
-    def setUser(self, u):
-        self.user_id = u
-
-    def getDate(self):
-        return self.timestamp
-
-    def setDate(self, d):
-        self.timestamp = d
-
-    def getParent(self):
-        return self.parent_id
-
-    def setParent(self, pid):
-        self.parent_id = pid
-
-    def getPos(self):
-        return self.positives
-
-    def setPos(self, p):
-        self.positives = p
-
-    def incPos(self):
-        self.positives += 1
-
-    def decPos(self):
-        self.positives -= 1
-
-    def getNeg(self):
-        return self.negatives
-
-    def setNeg(self, n):
-        self.negatives = n
-
-    def incNeg(self):
-        self.negatives += 1
-
-    def decNeg(self):
-        self.negatives -= 1      
-        
 ##
 # Model: ItemStats
 #
@@ -383,4 +310,3 @@ class ShopStats():
     number_sold_products = models.IntegerField( default=0 )
     number_new_comments  = models.IntegerField( default=0 )
     number_new_products  = models.IntegerField( default=0 ) 
-
