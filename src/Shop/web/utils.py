@@ -2,8 +2,6 @@
 ### Misc utilities to be used in Webshop.
 ### (c) 2011 The Webshop Team
 
-
-
 ### necessary libraries ###
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
