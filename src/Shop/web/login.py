@@ -2,8 +2,6 @@
 ### This module contains user registration and session functionalities.
 ### (c) 2011 The Webshop Team
 
-
-
 ### necessary libraries ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
@@ -18,8 +16,6 @@ import os.path
 from models import *
 from forms import *
 import datetime, hashlib, os
-
-
 
 ##
 # Render a simple registration form (sign up)
@@ -54,7 +50,7 @@ def signup(request):
                 mail_error = "The mails does not match."
             check_email = None
         
-        if request.POST.get('passwd') != request.POST.get('pass2'):    
+        if request.POST.get('passwd') != request.POST.get('passwd2'):    
             errors = True
             message_error = "The password does not match."
 
@@ -71,7 +67,7 @@ def signup(request):
                 'email'          : request.POST.get('email'),
                 'email2'         : request.POST.get('email2'),
                 'passwd'         : request.POST.get('passwd'),
-                'pass2'          : request.POST.get('pass2'),
+                'pass2'          : request.POST.get('passwd2'),
                 'user_exists'    : True,
                 'form'           : form,
                 'login_form'     : login_form,
