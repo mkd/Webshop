@@ -115,18 +115,28 @@ $(document).ready(function()
     
     
     // client-side validation for the signin form
-    $("#signin_form").validate({
+    $("#postal_info").validate({
         rules:
         {
-        	user:
+        	postal_address:
             {
                 required:  true
             }
     
-			pass:
+    		postal_code:
 			{
 				required:  true
 			}    
+    
+    postal_city:
+    {
+        required:  true
+    }
+
+    postal_country:
+	{
+		required:  true
+	}    
         }
     });
     });

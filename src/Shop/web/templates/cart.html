@@ -78,7 +78,7 @@
 				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
 				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
 				<td class="quantity" width="100"><input type="text" name="quantity-{{ product.id }}" id="quantity-{{ product.id }}" value="{{ product.quantity }}" size="8" onChange="editQuantity({{ product.id }}, {{ product.product.price }} )"/>
-					<input type="hidden" id="before-quantity-{{ product.id }}" value="{{ product.quantity }}" /></td>
+					<input type="hidden" name="quantity" id="before-quantity-{{ product.id }}" value="{{ product.quantity }}" /></td>
 				<td class="value" width="75">{{ product.product.price }} &euro;</td>
 				<td class="delete" width="40"><img src="/static/images/delete-icon.png" onclick="deleteProduct({{ product.id }}, {{ product.product.price }})" /></td>
 			</tr>
