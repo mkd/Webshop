@@ -12,14 +12,7 @@
 
 
 {% block side_bar %}
-	<div id="side_bar">
-		<ul id="side_bar">
-			<li><a href="/myadmin_products">Administrate products</a></li>
-			<li><a href="/myadmin_orders">Administrate orders</a></li>
-			<li><a href="/admin/auth/user">Administrate users</a></li>
-			<li><a href="/admin/web/category">Administrate categories</a></li>
-		</ul>	
-	</div>
+    {% include "sidebar.html" %}
 {% endblock %}
 
 
@@ -101,6 +94,8 @@
         <tr>
             <td colspan="2" class="buttons">
                 <input class="button" type="submit" id="submit" value="Save" />
+                <input class="delete" type="button" value="Cancel this order" 
+                       onclick="if (confirm('Do you want to cancel this order?')) window.location='/cancelOrder/{{ order_id }}'" />
                 <input class="return" type="button" id="return" value="Back to orders"
                        onclick="window.location='/myadmin_orders'" />
             </td>

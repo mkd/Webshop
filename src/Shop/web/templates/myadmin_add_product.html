@@ -8,14 +8,7 @@
 {% block title %} Webshop -- New Product {% endblock %}
 
 {% block side_bar %}
-	<div id="side_bar">
-		<ul id="side_bar">
-			<li><a href="/myadmin_products">Administrate products</a></li>
-			<li><a href="/myadmin_orders">Administrate orders</a></li>
-			<li><a href="/admin/auth/user">Administrate users</a></li>
-			<li><a href="/admin/web/category">Administrate categories</a></li>
-		</ul>	
-	</div>
+    {% include "sidebar.html" %}
 {% endblock %}
 
 {% block main_content %}

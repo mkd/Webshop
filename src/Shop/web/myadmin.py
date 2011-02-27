@@ -233,12 +233,36 @@ def myadmin_users(request):
 
 
 ##
+# Delete one product.
+def deleteProduct(request, product_id):
+    only_staff(request)
+
+    # delete product
+    # note: comments are not necessarily deleted, because the user might want to
+    # check a comment he or she wrote in the past (even if the product does not
+    # exist anymore)
+    t = loader.get_template('myadmin_products.html')
+
+    product = Product.objects.get(pk=product_id)
+    product.delete()
+
+    # also delete the picture of the product
+    if os.path.exists('web/static/images/products/' + str(product_id)):
+        os.remove('web/static/images/products/' + str(product_id))
+
+    # return to the products page
+    products = Product.objects.all()
+    context = RequestContext(request, {
+        'products':  products,
+        'deleted' :  True,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
 # Delete a set of products.
 def deleteProducts(request):
-    #only_staff(request)
-    # if the user is not staff, go back to home page
-    if not request.user.is_authenticated() or not request.user.is_staff:
-        return HttpResponseRedirect('/')
+    only_staff(request)
 
     # delete products
     # note: comments are not necessarily deleted, because the user might want to
@@ -273,9 +297,7 @@ def deleteProducts(request):
 #
 # Note: this view does not delete orders, just mark them as canceled.
 def cancelOrders(request):
-    # if the user is not staff, go back to home page
-    if not request.user.is_authenticated() or not request.user.is_staff:
-        return HttpResponseRedirect('/')
+    only_staff(request)
 
     # cancel orders
     t = loader.get_template('myadmin_orders.html')
@@ -296,6 +318,29 @@ def cancelOrders(request):
     orders = Payment.objects.all()
     context = RequestContext(request, {
         'orders':  orders,
+    })
+    return HttpResponse(t.render(context))
+
+
+##
+# Cancel a given order.
+#
+# Note: this view does not delete orders, just mark them as canceled.
+def cancelOrder(request, order_id):
+    only_staff(request)
+
+    # cancel orders
+    t = loader.get_template('myadmin_orders.html')
+    o = Payment.objects.get(pk=order_id)
+    o.status = 'Canceled'
+    o.save()
+
+    # return to the products page
+    orders = Payment.objects.all()
+    context = RequestContext(request, {
+        'orders'   : orders,
+        'order_id' : order_id,
+        'canceled' : True,
     })
     return HttpResponse(t.render(context))
 

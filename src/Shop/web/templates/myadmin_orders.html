@@ -7,14 +7,7 @@
 {% endblock %}
 
 {% block side_bar %}
-	<div id="side_bar">
-		<ul id="side_bar">
-			<li><a href="/myadmin_products">Administrate products</a></li>
-			<li><a href="/myadmin_orders">Administrate orders</a></li>
-			<li><a href="/admin/auth/user">Administrate users</a></li>
-			<li><a href="/admin/web/category">Administrate categories</a></li>
-		</ul>	
-	</div>
+    {% include "sidebar.html" %}
 {% endblock %}
 
 {% block main_content %}
@@ -41,6 +34,10 @@
                administrative functions</a>
         </div>
     </div>
+    {% if canceled %}
+        <div class="success">Order #{{ order_id }} was successfully
+        canceled.</div>
+    {% endif %}
     {% ifequal orders_no 0 %}
         <div class="error">There are no orders in the system!</div>
     {% else %}

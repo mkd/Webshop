@@ -1,6 +1,7 @@
 /*
  * CSS Stylesheet for categories.
  *
+ * W3C-compliant version.
  */
 #category-content
 {
@@ -17,13 +18,6 @@
 {
 	width: 260px;
 	border: solid #888 1px;
-	-webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
-	-moz-box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
-	box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
-	text-shadow: 0 1px 5px rgba(255, 255, 255, .8);
-	
-    -webkit-border-radius: 1em;
-	-moz-border-radius: 1em;
 }
 
 #right-side
@@ -48,9 +42,6 @@
 {
     margin:             0 auto;
     text-align:         center;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
 }
 
 #categories
@@ -79,8 +70,6 @@
     float: left;
     text-align: left;
     display: inline;
-    -webkit-border-radius: 1em;
-	-moz-border-radius: 1em;
 }
 
 #category:hover
@@ -93,8 +82,7 @@ h1.category
 {
 	text-transform:capitalize;
 	margin-top: -22px;
-	font: normal Helvetica, sans-serif;
-	text-shadow: Silver 2px 2px 2px;
+	font-family: normal Helvetica, sans-serif;
 	font-size: 16px;
 	color: #666;
 }
