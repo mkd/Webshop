@@ -127,7 +127,7 @@ def register(request):
             up.save()
 
             # save also avatar picture, if available
-            handleUploadedPic('users', request.FILES.get('picture'), u.id)
+            handleUploadedPic('users', request.FILES.get('picture'), str(u.id))
 
             # redirect the user to the login page with a welcome
             context = RequestContext(request, {
