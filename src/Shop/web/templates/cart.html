@@ -100,7 +100,7 @@
 	{% endif %}
 
     <!-- table containing the current cart situation -->	
-	<table cellspacing="0" cellpadding="50" width="660">
+	<table>
 		<form action="/checkout" method="post" id="form-myCart">
 			{% csrf_token %}
 			{% for product in cart %}

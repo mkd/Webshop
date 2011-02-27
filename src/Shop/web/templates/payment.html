@@ -45,7 +45,7 @@ function sendPayment(){
         <h2>My order</h2>
 		<p id="message">{{ message }}<p>
 		
-	<table cellspacing="0" callpadding="50" width="500">
+	<table>
 		<form action="/checkout" method="post" id="form-myCart">
 			{% csrf_token %}
 			
