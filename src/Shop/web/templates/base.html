@@ -60,6 +60,7 @@
                         <a href="/signin/">Sign in</a>
                         <!-- pop-up sign-in form -->
                         <ul>
+                            <li>
                             <form id="builtin_login" method="post" action="/signin/">
 
                             {% csrf_token %}
@@ -79,12 +80,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" align="right">
+                                <td class="buttons">
                                     <input class="button" type="submit" name="submit" value="Sign in" />
                                 </td>
                             </tr>
                             </table>
                         </form>
+                        </li>
                         </ul>
                     </li> 
                     {% endif %}
