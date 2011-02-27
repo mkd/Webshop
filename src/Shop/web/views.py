@@ -81,6 +81,8 @@ def cart(request):
         context.update(csrf(request))
         return HttpResponse(template.render(context))
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Shows the products that the user pay in a transaction.      
@@ -103,6 +105,8 @@ def myProducts(request, payment_id):
             'message'   : request.GET.get('m',''),
         })
         return HttpResponse(template.render(context))
+
+    return HttpResponseRedirect('/')
    
 
 ##
@@ -118,6 +122,8 @@ def myTransactions(request):
             'message'   : request.GET.get('m',''),
         })
         return HttpResponse(template.render(context))
+
+    return HttpResponseRedirect('/')
         
 
 ##
@@ -147,6 +153,8 @@ def addToCart(request):
         product.save()
         return HttpResponse("%s" % profile.products_in_cart)
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Delete a product from the user's cart.
@@ -158,6 +166,8 @@ def deleteFromCart(request):
         profile.save()
         prod.delete()
         return HttpResponse(profile.products_in_cart)
+
+    return HttpResponseRedirect('/')
 
 
 ##
@@ -176,6 +186,8 @@ def editQuantityInCart(request):
         profile.save()
         prod.save()
         return HttpResponse(profile.products_in_cart)
+
+    return HttpResponseRedirect('/')
 
 
 ##
@@ -220,6 +232,8 @@ def checkout(request):
 
         context.update(csrf(request))
         return HttpResponse(template.render(context))
+
+    return HttpResponseRedirect('/')
   
 
 ##
@@ -300,6 +314,8 @@ def paymentOk(request):
             payment.delete()
             return HttpResponseRedirect("/checkout?m=The checksum does not validate!")
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Handle an canceled payment, triggered when the user cancel the payment in the bank.
@@ -323,6 +339,8 @@ def paymentNo(request):
         else:
             return HttpResponseRedirect("/")
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Handle an error on payment. 
@@ -345,6 +363,8 @@ def paymentError(request):
             return HttpResponseRedirect("/checkout?m=Some error occurs while trying to connect to the bank.")
         else:
             return HttpResponseRedirect("/")
+
+    return HttpResponseRedirect('/')
 
 
 ##
@@ -411,6 +431,8 @@ def rateProduct(request):
     else:
         return HttpResponseRedirect("/checkout")
 
+    return HttpResponseRedirect('/')
+
 
 ### comments functionality ###
 ##
@@ -472,6 +494,8 @@ def rateComment(request, comment_id, option):
 
         # Sent by AJAX the new number of votes
         return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\" /> %s" % (comment.id, comment.positives, comment.negatives))
+
+    return HttpResponseRedirect('/')
 
 
 

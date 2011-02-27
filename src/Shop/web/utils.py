@@ -12,8 +12,10 @@ from django.contrib.auth.models import User
 #
 # @param r URL to which redirect in case of not being staff.
 def is_auth(request, r = '/'):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(r)
+    if request.user.is_authenticated():
+        return True
+    else:
+        return False
 
 
 ##
@@ -21,9 +23,10 @@ def is_auth(request, r = '/'):
 #
 # @param r URL to which redirect in case of not being staff.
 def is_staff(request, r = '/'):
-    only_signed(request)
-    if not request.user.is_staff:
-        return HttpResponseRedirect(r)
+    if is_auth(request) and request.user.is_staff:
+        return True
+    else:
+        return False
 
 
 # Handle an uploaded file.
