@@ -38,7 +38,7 @@
         <table>
         <tr>
             <td colspan="2">
-                <img src="/static/images/users/new_user.png" align="middle"
+                <img src="/static/images/users/new_user.png"
                      height="64" id="picture_enabler"
                      style="cursor: pointer;" title="Add your own picture" />
                 <em>Click on the image to add your own picture</em>
@@ -48,7 +48,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="fname">First name:</label>
+	        <label for="id_fname">First name:</label>
             </td>
             <td>
             {{ form.fname }}
@@ -56,7 +56,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="sname">Surname:</label>
+	        <label for="id_sname">Surname:</label>
             </td>
             <td>
             {{ form.sname }}
@@ -64,7 +64,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="user">Username:</label>
+	        <label for="id_user">Username:</label>
             </td>
             <td>
             {{ form.user }}
@@ -72,7 +72,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="pass">Password:</label>
+	        <label for="id_passwd">Password:</label>
             </td>
             <td>
             {{ form.passwd }}
@@ -80,7 +80,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="pass2">Repeat password:</label>
+	        <label for="id_pass2">Repeat password:</label>
             </td>
             <td>
             {{ form.pass2 }}
@@ -88,7 +88,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="email">Email:</label>
+	        <label for="id_email">Email:</label>
             </td>
             <td>
             {{ form.email }}
@@ -96,7 +96,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="email2">Repeat email:</label>
+	        <label for="id_email2">Repeat email:</label>
             </td>
             <td>
             {{ form.email2 }}
@@ -110,7 +110,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" align="right">
+            <td colspan="2" class="buttons">
                 <input type="submit" id="submit" value="Register" />
                 <input type="reset" value="Clear" />
             </td>

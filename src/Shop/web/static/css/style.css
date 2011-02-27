@@ -74,8 +74,6 @@ img
 
 #side_bar li 
 {
-	float: right;
-	position: relative;
 	list-style: none;
 }
 
@@ -104,14 +102,7 @@ img
 	text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
 }
 
-#side_bar ul li 
-{
-	float: none;
-	margin: 0;
-	padding: 0;
-}
-
-#side_bar ul li:first-child > a 
+#side_bar li:first-child > a 
 {
 	-webkit-border-top-left-radius: 9px;
 	-moz-border-radius-topleft: 9px;
@@ -119,7 +110,7 @@ img
 	-moz-border-radius-topright: 9px;
 }
 
-#side_bar ul li:last-child > a 
+#side_bar li:last-child > a 
 {
 	-webkit-border-bottom-left-radius: 9px;
 	-moz-border-radius-bottomleft: 9px;
@@ -759,4 +750,9 @@ div.display-options
 .share
 {
     font-style:         oblique;
+}
+
+.centered
+{
+    margin:             0 auto;
 }

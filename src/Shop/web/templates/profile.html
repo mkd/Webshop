@@ -54,7 +54,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="fname">First name:</label>
+	        <label for="fname">*First name:</label>
             </td>
             <td>
             <input type="text" id="fname" name="fname" value="{{ fname }}" />
@@ -62,7 +62,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="fname">Last name:</label>
+	        <label for="fname">*Last name:</label>
             </td>
             <td>
             <input type="text" id="sname" name="sname" value="{{ sname }}" />
@@ -79,7 +79,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="pass">Password:</label>
+	        <label for="password">*Password:</label>
             </td>
             <td>
             <input type="password" name="password" id="id_passwd" value="******" />
@@ -87,10 +87,10 @@
         </tr>
         <tr>
             <td>
-	        <label for="pass2">Repeat password:</label>
+	        <label for="password_again">*Repeat password:</label>
             </td>
             <td>
-            <input type="password" name="pass2" id="id_pass2" value="******" />
+            <input type="password" name="password_again" id="id_pass2" value="******" />
             </td>
         </tr>
         <tr>
@@ -103,7 +103,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="address">Address:</label>
+	        <label for="address">*Address:</label>
             </td>
             <td>
             <input type="text" maxlength="32" id="address" name="address" value="{{ address }}" />
@@ -111,7 +111,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="postal_code">Postal code:</label>
+	        <label for="postal_code">*Postal code:</label>
             </td>
             <td>
             <input type="text" id="postal_code" name="postal_code" value="{{ postal_code }}" />
@@ -119,7 +119,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="city">City:</label>
+	        <label for="city">*City:</label>
             </td>
             <td>
             <input type="text" id="city" name="city" value="{{ city }}" />
@@ -127,7 +127,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="postal_country">Country:</label>
+	        <label for="postal_country">*Country:</label>
             </td>
             <td>
             <input type="text" id="country" name="country" value="{{ country }}" />
@@ -135,7 +135,9 @@
         </tr>
         <tr>
             <td colspan="2" class="buttons">
-                <input class="button" type="submit" id="submit" name="submit" value="Save" />
+                <input class="button" type="submit" id=submit name="submit" value="Save" />
+                <input class="return" type="button" value="Delete my account"
+                       onclick="window.location='/deleteAccount'" />
             </td>
         </tr>
         </table>

@@ -41,8 +41,7 @@
                 <ul id="nav"> 
                     <li class="logo">
                         <div id="logo">
-                            <img src="/static/images/logo.png" alt="logo" width="63" height="59"
-                                 onclick="window.location.href='/';" />
+                            <img src="/static/images/logo.png" alt="logo" onclick="window.location.href='/';" />
                         </div>
                     </li>
                     <li class="search">
@@ -60,31 +59,32 @@
                         <a href="/signin/">Sign in</a>
                         <!-- pop-up sign-in form -->
                         <ul>
+                            <li>
                             <form id="builtin_login" method="post" action="/signin/">
-
                             {% csrf_token %}
                             <table>
                             <tr>
                                 <td>
-                                <label for="user">Username:</label>
+                                <label for="id_username">Username:</label>
                                 <br />
 								{{ login_form.username }}
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                <label for="pass">Password:</label>
+                                <label for="id_password">Password:</label>
                                 <br />
 								{{ login_form.password }}
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" align="right">
+                                <td class="buttons">
                                     <input class="button" type="submit" name="submit" value="Sign in" />
                                 </td>
                             </tr>
                             </table>
                         </form>
+                        </li>
                         </ul>
                     </li> 
                     {% endif %}
@@ -106,8 +106,7 @@
                         {% if products_in_cart > -1 %}
                         <li id="my-cart">
                             <a href="/cart"><img id="cart"
-                               src="/static/images/cart-icon.png" width="28"
-                               height="28" alt="My Cart" /><span id="products-in-cart">{{ products_in_cart }}</span> items</a>
+                               src="/static/images/cart-icon.png" alt="My Cart" /><span id="products-in-cart">{{ products_in_cart }}</span> items</a>
                         </li>
                         {% endif %}
                     {% else %}
@@ -132,31 +131,27 @@
                     <p>This web is rendered as intended in
                         <img id="_chrome" class="browser"
                              src="http://nvie.com/img/chrome0.png"
-                             alt="Google Chrome" title="Google Chrome"
-                             width="18" height="18" />,
+                             alt="Google Chrome" title="Google Chrome" />,
 
                         <img id="_safari" class="browser"
                              src="http://nvie.com/img/safari0.png"
-                             alt="Safari" title="Safari" width="18"
-                             height="18" />,
+                             alt="Safari" title="Safari" />,
 
                         <img id="_firefox" class="browser"
                              src="http://nvie.com/img/firefox0.png"
-                             alt="Firefox" title="Firefox" width="18"
-                             height="18" />,
+                             alt="Firefox" title="Firefox" />,
                              
                              and
 
                         <img id="_opera" class="browser"
                              src="http://nvie.com/img/opera0.png" alt="Opera"
-                             title="Opera" width="18" height="18" />,
+                             title="Opera" />,
                              
                              but not necessarily in
 
                         <img id="_ie" class="misfit"
                              src="http://nvie.com/img/ie0.png"
-                             alt="Internet Exporer" title="Internet Explorer"
-                             width="18" height="18" />.
+                             alt="Internet Exporer" title="Internet Explorer" />.
                     </p>
                 {% endblock %}
             </div>

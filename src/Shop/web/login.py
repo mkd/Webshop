@@ -168,69 +168,6 @@ def signout(request):
         logout(request)
         return HttpResponseRedirect('/')  
 
-
-# ##
-# # Add a new user.
-# def register(request):
-#     t = loader.get_template('signin.html')
-#     if request.method == 'POST':
-#         form = RegisterForm(request.POST, request.FILES)
-# 
-#         # check if the user already exists in the database
-#         try:
-#             check_username = User.objects.get(username=request.POST.get('user'))
-#         except:
-#             check_username = None
-#         try:
-#             check_email = User.objects.get(email=request.POST.get('email'))
-#         except:
-#             check_email = None
-# 
-#         # if the username or email already exist, go back to the sign-up
-#         # form and remember the entered data
-#         if check_username is not None or check_email is not None:
-#             t = loader.get_template('signup.html')
-#             login_form = LoginForm()
-#             context = RequestContext(request, {
-#                 'username'       : request.POST.get('user'),
-#                 'fname'          : request.POST.get('fname'),
-#                 'sname'          : request.POST.get('sname'),
-#                 'email'          : request.POST.get('email'),
-#                 'email2'         : request.POST.get('email2'),
-#                 'passwd'         : request.POST.get('passwd'),
-#                 'pass2'          : request.POST.get('pass2'),
-#                 'user_exists'    : True,
-#                 'form'           : form,
-#                 'login_form'     : login_form,
-#             })
-#             context.update(csrf(request))
-#             return HttpResponse(t.render(context))
-# 
-#         # save all the data from the POST into the database
-#         u  = User.objects.create_user(
-#             request.POST.get('user'),
-#             request.POST.get('email'),
-#             request.POST.get('passwd')
-#         )
-#         up = UserProfile.objects.create(user_id=u.id)
-#         u.is_staff   = False
-#         u.first_name = request.POST.get('fname')
-#         u.last_name  = request.POST.get('sname')
-#         u.save()
-#         up.save()
-# 
-#         # save also avatar picture, if available
-#         handleUploadedPic('users', request.FILES.get('picture'), u.id)
-# 
-#         # redirect the user to the login page with a welcome
-#         context = RequestContext(request, {
-#             'user'       : request.POST.get('user'),
-#             'registered' : True,
-#         })
-#         context.update(csrf(request))
-#         return HttpResponse(t.render(context))
-
-
 ##
 # Render the user profile page.
 def editProfile(request):
