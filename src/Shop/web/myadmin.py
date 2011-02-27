@@ -25,12 +25,10 @@ import datetime, hashlib, os
 #
 # Note: if the user is not staff, ask her to sign in with a staff account.
 def myadmin(request):
-    only_staff(request)
-
-    t = loader.get_template('myadmin.html')
-
-    context = RequestContext(request, { })
-    return HttpResponse(t.render(context))
+    if is_staff(request):
+        t = loader.get_template('myadmin.html')
+        context = RequestContext(request, { })
+        return HttpResponse(t.render(context))
 
 
 ##
@@ -39,53 +37,49 @@ def myadmin(request):
 # The products admin page renders a table with all the products, that can be
 # sorted by name, price, popularity, etcetera.
 def myadmin_products(request):
-    only_staff(request)
+    if is_staff(request):
+        # fetch the sorting criteria from GET
+        column = request.GET.get('column', 'name')
+        order  = request.GET.get('order', 'a')
+        if order == 'a':
+            criteria = column
+        else:
+            criteria = '-' + column
 
-    # fetch the sorting criteria from GET
-    column = request.GET.get('column', 'name')
-    order  = request.GET.get('order', 'a')
-    if order == 'a':
-        criteria = column
-    else:
-        criteria = '-' + column
-
-    # retrieve the products from the database
-    products = Product.objects.all().order_by(criteria)
-    if len(products) <= 0:
-        products_no_0 = True
-    else:
-        products_no_0 = False
-    t = loader.get_template('myadmin_products.html')
-    context = RequestContext(request, {
-        'products'      : products,
-        'products_no'   : len(products),
-        'products_no_0' : products_no_0,
-        'column'        : column,
-        'order'         : order,
-    })
-    return HttpResponse(t.render(context))
+        # retrieve the products from the database
+        products = Product.objects.all().order_by(criteria)
+        if len(products) <= 0:
+            products_no_0 = True
+        else:
+            products_no_0 = False
+        t = loader.get_template('myadmin_products.html')
+        context = RequestContext(request, {
+            'products'      : products,
+            'products_no'   : len(products),
+            'products_no_0' : products_no_0,
+            'column'        : column,
+            'order'         : order,
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
 # Render a page to add a new product.
 def myadmin_addProduct(request):
-    only_staff(request)
-
-    form = ProductForm()
-    t = loader.get_template('myadmin_add_product.html')
-    context = RequestContext(request, {
-        'form': form,
-    })
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+    if is_staff(request):
+        form = ProductForm()
+        t = loader.get_template('myadmin_add_product.html')
+        context = RequestContext(request, {
+            'form': form,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
 
 
 ##
 # Add a product to the database.
 def addProduct(request):
-    only_staff(request)
-
-    if request.method == 'POST':
+    if is_staff(request) and request.method == 'POST':
         # save all the data from the POST into the database
         p = Product.objects.create(
             name            = request.POST.get('name'),
@@ -123,35 +117,33 @@ def addProduct(request):
 ##
 # Render a page to edit a product.
 def editProduct(request, product_id):
-    only_staff(request)
+    if is_staff(request):
+        t = loader.get_template('myadmin_edit_product.html')
+        p = Product.objects.get(id=product_id)
+        form = ProductForm(instance=p)
 
-    t = loader.get_template('myadmin_edit_product.html')
-    p = Product.objects.get(id=product_id)
-    form = ProductForm(instance=p)
+        # load the picture for the product
+        pic = 'web/static/images/products/' + str(product_id)
+        if not os.path.exists(pic):
+            pic = 'static/images/products/unknown.png'
+        else:
+            pic = 'static/images/products/' + str(product_id)
 
-    # load the picture for the product
-    pic = 'web/static/images/products/' + str(product_id)
-    if not os.path.exists(pic):
-        pic = 'static/images/products/unknown.png'
-    else:
-        pic = 'static/images/products/' + str(product_id)
-
-    context = RequestContext(request, {
-        'icon'         : pic,
-        'form'         : form,
-        'product_name' : p.name,
-        'product_id'   : product_id,
-    })
-    return HttpResponse(t.render(context))
+        context = RequestContext(request, {
+            'icon'         : pic,
+            'form'         : form,
+            'product_name' : p.name,
+            'product_id'   : product_id,
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
 # Save a modified product.
 def saveProduct(request, product_id):
-    only_staff(request)
+    if is_staff(request) and request.method == 'POST':
+        t = loader.get_template('myadmin_edit_product.html')
 
-    t = loader.get_template('myadmin_edit_product.html')
-    if request.method == 'POST':
         # save all the data from the POST into the database
         p = Product.objects.get(id=product_id)
         p.name          = request.POST.get('name')
@@ -192,8 +184,8 @@ def saveProduct(request, product_id):
 ##
 # Render the categories administration page.
 def myadmin_categories(request):
-    only_staff(request)
-    return HttpResponseRedirect('/admin/web/category/')
+    if is_staff(request):
+        return HttpResponseRedirect('/admin/web/category/')
 
 
 # Render the orders administration page.
@@ -201,78 +193,74 @@ def myadmin_categories(request):
 # The orders admin page renders a table with all the orders, that can be
 # sorted by date, total sum, status, etcetera.
 def myadmin_orders(request):
-    only_staff(request)
+    if is_staff(request):
+        # fetch the sorting criteria from GET
+        column = request.GET.get('column', 'payment_date')
+        order  = request.GET.get('order', 'a')
+        if order == 'a':
+            criteria = column
+        else:
+            criteria = '-' + column
 
-    # fetch the sorting criteria from GET
-    column = request.GET.get('column', 'payment_date')
-    order  = request.GET.get('order', 'a')
-    if order == 'a':
-        criteria = column
-    else:
-        criteria = '-' + column
-
-    # retrieve the orders from the database
-    orders = Payment.objects.all().order_by(criteria)
-    if len(orders) <= 0:
-        orders_no_0 = True
-    else:
-        orders_no_0 = False
-    t = loader.get_template('myadmin_orders.html')
-    context = RequestContext(request, {
-        'orders'      : orders,
-        'orders_no'   : len(orders),
-        'orders_no_0' : orders_no_0,
-        'column'      : column,
-        'order'       : order,
-    })
-    return HttpResponse(t.render(context))
+        # retrieve the orders from the database
+        orders = Payment.objects.all().order_by(criteria)
+        if len(orders) <= 0:
+            orders_no_0 = True
+        else:
+            orders_no_0 = False
+        t = loader.get_template('myadmin_orders.html')
+        context = RequestContext(request, {
+            'orders'      : orders,
+            'orders_no'   : len(orders),
+            'orders_no_0' : orders_no_0,
+            'column'      : column,
+            'order'       : order,
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
 # Render the users administration page.
 def myadmin_users(request):
-    only_staff(request)
-    return HttpResponseRedirect('/admin/auth/user')
+    if is_staff(request):
+        return HttpResponseRedirect('/admin/auth/user')
 
 
 ##
 # Delete one product.
 def deleteProduct(request, product_id):
-    only_staff(request)
+    if is_staff(request):
+        # delete product
+        # note: comments are not necessarily deleted, because the user might want to
+        # check a comment he or she wrote in the past (even if the product does not
+        # exist anymore)
+        t = loader.get_template('myadmin_products.html')
 
-    # delete product
-    # note: comments are not necessarily deleted, because the user might want to
-    # check a comment he or she wrote in the past (even if the product does not
-    # exist anymore)
-    t = loader.get_template('myadmin_products.html')
+        product = Product.objects.get(pk=product_id)
+        product.delete()
 
-    product = Product.objects.get(pk=product_id)
-    product.delete()
+        # also delete the picture of the product
+        if os.path.exists('web/static/images/products/' + str(product_id)):
+            os.remove('web/static/images/products/' + str(product_id))
 
-    # also delete the picture of the product
-    if os.path.exists('web/static/images/products/' + str(product_id)):
-        os.remove('web/static/images/products/' + str(product_id))
-
-    # return to the products page
-    products = Product.objects.all()
-    context = RequestContext(request, {
-        'products':  products,
-        'deleted' :  True,
-    })
-    return HttpResponse(t.render(context))
+        # return to the products page
+        products = Product.objects.all()
+        context = RequestContext(request, {
+            'products':  products,
+            'deleted' :  True,
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
 # Delete a set of products.
 def deleteProducts(request):
-    only_staff(request)
-
-    # delete products
-    # note: comments are not necessarily deleted, because the user might want to
-    # check a comment he or she wrote in the past (even if the product does not
-    # exist anymore)
-    t = loader.get_template('myadmin_products.html')
-    if request.method == 'POST':
+    if is_staff(request) and request.method == 'POST':
+        # delete products
+        # note: comments are not necessarily deleted, because the user might want to
+        # check a comment he or she wrote in the past (even if the product does not
+        # exist anymore)
+        t = loader.get_template('myadmin_products.html')
         products = request.POST.getlist('product_list')
         # if no products to delete, then go back to products admin
         if len(products) <= 0:
@@ -287,12 +275,12 @@ def deleteProducts(request):
             if os.path.exists('web/static/images/products/' + str(p)):
                 os.remove('web/static/images/products/' + str(p))
 
-    # return to the products page
-    products = Product.objects.all()
-    context = RequestContext(request, {
-        'products':  products,
-    })
-    return HttpResponse(t.render(context))
+        # return to the products page
+        products = Product.objects.all()
+        context = RequestContext(request, {
+            'products':  products,
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
@@ -300,29 +288,27 @@ def deleteProducts(request):
 #
 # Note: this view does not delete orders, just mark them as canceled.
 def cancelOrders(request):
-    only_staff(request)
+    if is_staff(request) and request.method == 'POST':
+        # cancel orders
+        t = loader.get_template('myadmin_orders.html')
+            orders = request.POST.getlist('order_list')
+            # if no products to delete, then go back to products admin
+            if len(orders) <= 0:
+                return HttpResponseRedirect('/myadmin_orders')
 
-    # cancel orders
-    t = loader.get_template('myadmin_orders.html')
-    if request.method == 'POST':
-        orders = request.POST.getlist('order_list')
-        # if no products to delete, then go back to products admin
-        if len(orders) <= 0:
-            return HttpResponseRedirect('/myadmin_orders')
+            # if there are products to delete, go one by one
+            # note: the picture of the product must be also deleted
+            for o in orders:
+                od = Payment.objects.get(pk=o)
+                od.status = 'Canceled'
+                od.save()
 
-        # if there are products to delete, go one by one
-        # note: the picture of the product must be also deleted
-        for o in orders:
-            od = Payment.objects.get(pk=o)
-            od.status = 'Canceled'
-            od.save()
-
-    # return to the products page
-    orders = Payment.objects.all()
-    context = RequestContext(request, {
-        'orders':  orders,
-    })
-    return HttpResponse(t.render(context))
+        # return to the products page
+        orders = Payment.objects.all()
+        context = RequestContext(request, {
+            'orders':  orders,
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
@@ -330,50 +316,47 @@ def cancelOrders(request):
 #
 # Note: this view does not delete orders, just mark them as canceled.
 def cancelOrder(request, order_id):
-    only_staff(request)
+    if is_staff(request):
+        # cancel orders
+        t = loader.get_template('myadmin_orders.html')
+        o = Payment.objects.get(pk=order_id)
+        o.status = 'Canceled'
+        o.save()
 
-    # cancel orders
-    t = loader.get_template('myadmin_orders.html')
-    o = Payment.objects.get(pk=order_id)
-    o.status = 'Canceled'
-    o.save()
-
-    # return to the products page
-    orders = Payment.objects.all()
-    context = RequestContext(request, {
-        'orders'   : orders,
-        'order_id' : order_id,
-        'canceled' : True,
-    })
-    return HttpResponse(t.render(context))
+        # return to the products page
+        orders = Payment.objects.all()
+        context = RequestContext(request, {
+            'orders'   : orders,
+            'order_id' : order_id,
+            'canceled' : True,
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
 # Render a page to edit an order status.
 def editOrder(request, order_id):
-    only_staff(request)
+    if is_staff(request):
+        t = loader.get_template('myadmin_edit_order.html')
+        payment = Payment.objects.get(id=order_id)
+        products = Transaction.objects.filter(payment=payment)
+        form = OrderForm(instance=payment)
 
-    t = loader.get_template('myadmin_edit_order.html')
-    payment = Payment.objects.get(id=order_id)
-    products = Transaction.objects.filter(payment=payment)
-    form = OrderForm(instance=payment)
-
-    context = RequestContext(request, {
-        'form'       : form,
-        'order'      : payment,
-        'order_id'   : order_id,
-        'products'   : products,
-    })
-    return HttpResponse(t.render(context))
+        context = RequestContext(request, {
+            'form'       : form,
+            'order'      : payment,
+            'order_id'   : order_id,
+            'products'   : products,
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
 # Save a modified product.
 def saveOrder(request, order_id):
-    only_staff(request)
+    if is_staff(request) and request.method == 'POST':
+        t = loader.get_template('myadmin_edit_order.html')
 
-    t = loader.get_template('myadmin_edit_order.html')
-    if request.method == 'POST':
         # save the status in the database
         o = Payment.objects.get(id=order_id)
         o.status = request.POST.get('status', 'Processing')
@@ -390,6 +373,6 @@ def saveOrder(request, order_id):
             'order_saved'   : True,
         })
 
-    # render response
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+        # render response
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
