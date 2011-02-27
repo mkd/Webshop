@@ -4,7 +4,7 @@
 
 
 
-### necessary Django modules ###
+### necessary libraries ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import *
@@ -76,6 +76,7 @@ def tryLogin(request):
 ##
 # Close the session for an user and go to the front page.
 def signout(request):
+    only_auth(request)
     logout(request)
     return HttpResponseRedirect('/')  
 
@@ -145,6 +146,8 @@ def register(request):
 ##
 # Render the user profile page.
 def editProfile(request):
+    only_auth()
+
     # check for an existing session
     if request.user.is_authenticated():
         t = loader.get_template('profile.html')
@@ -185,6 +188,8 @@ def editProfile(request):
 ##
 # Save the user's profile.
 def saveProfile(request):
+    only_auth(request)
+
     t = loader.get_template('profile.html')
     if request.method == 'POST':
         # save all the data from the POST into the database
