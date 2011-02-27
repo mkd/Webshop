@@ -19,15 +19,11 @@ from models import *
 from forms import *
 import datetime, hashlib, os
 
-
-
 ### project path settings ###
 import os.path
 PROJECT_DIR = os.path.dirname(__file__)
 SID = 'keyforme'
 KEY = '8c0593199894c8135c13bf15a31240ad'
-
-
 
 ##
 # Render the home page. 
@@ -45,8 +41,8 @@ def index(request):
     
     # if the user is authenticated, then send info about the card in the request
     if request.user.is_authenticated():
-        no_items = request.user.get_profile().products_in_cart
-        context.update({'products_in_cart': no_items})
+        number_items_in_cart = request.user.get_profile().products_in_cart
+        context.update({'products_in_cart': number_items_in_cart})
     else:
         login_form = LoginForm()
         context.update({'login_form': login_form})
@@ -63,20 +59,22 @@ def index(request):
 ##
 # Render the user cart page.
 def cart(request):
+    # If user is authenticated then show the products in the user's cart.
     if is_auth(request):
-        # TODO: document me!
+        # Get the user, the template, and any message received by GET.
+        user = request.user
         template = loader.get_template('cart.html')
         message = request.GET.get('m', '')
-        user = request.user
         userProducts = CartProduct.objects.filter(user=user)
         
+        # Calculate the total amount of money spent by the user.
         total = 0
         for product in userProducts:
             total += product.quantity * product.product.price
             
-        no_items = request.user.get_profile().products_in_cart
+        number_items_in_cart = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
-            'products_in_cart' : no_items,
+            'products_in_cart' : number_items_in_cart,
             'cart'   : userProducts,
             'total'  : total,
             'message': message,
@@ -87,19 +85,21 @@ def cart(request):
 
 
 ##
-# TODO: document me!        
+# Shows the products that the user pay in a transaction.      
 def myProducts(request, payment_id):
     if is_auth(request):
         template = loader.get_template('myProducts.html')
         payment = get_object_or_404(Payment, id=payment_id) 
         
+        # Check that this transaction is related to this user. [Security check]
         if payment.user != request.user:
             return HttpResponseRedirect("/")
         
+        # Retreive all the products and render the page.
         products = Transaction.objects.filter(payment=payment)          
-        no_items = request.user.get_profile().products_in_cart
+        number_items_in_cart = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
-            'products_in_cart' : no_items,
+            'products_in_cart' : number_items_in_cart,
             'payment'  : payment,
             'products'  : products,
             'message'   : request.GET.get('m',''),
@@ -108,14 +108,14 @@ def myProducts(request, payment_id):
    
 
 ##
-# TODO: document me! 
+# Shows a list of transactions done by a user.
 def myTransactions(request):
     if is_auth(request):
         template = loader.get_template('transactions.html')
         payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
-        no_items = request.user.get_profile().products_in_cart
+        number_items_in_cart = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
-            'products_in_cart' : no_items,
+            'products_in_cart' : number_items_in_cart,
             'payments'  : payments,
             'message'   : request.GET.get('m',''),
         })
@@ -123,31 +123,35 @@ def myTransactions(request):
         
 
 ##
-# TODO: document me!
+# Add a product to the user's cart.
 def addToCart(request):
     if is_auth(request):
+        # Get the user's profile and the product.
         profile = get_object_or_404(UserProfile, user=request.user) 
-        profile.products_in_cart += 1
-        profile.save()
         product = get_object_or_404(Product, id=request.POST['product'])
 
+        # If this product is already in the cart, then increment the number of products.
         try: 
             new_prod = CartProduct.objects.get(product=product, user=request.user)
             new_prod.quantity += 1
         
+        # If not add the new product to the cart.
         except CartProduct.DoesNotExist: 
             new_prod = CartProduct(product = product, 
                               user = request.user,
                               timestamp = datetime.datetime.now(),
                               quantity = 1)
         
+        # Finally increment the number of products in the user's profile and save the objects.
+        profile.products_in_cart += 1
+        profile.save()
         new_prod.save()
         product.save()
         return HttpResponse("%s" % profile.products_in_cart)
 
 
 ##
-# TODO: document me!
+# Delete a product from the user's cart.
 def deleteFromCart(request):
     if is_auth(request) and request.method == 'POST':
         prod = get_object_or_404(CartProduct, id=request.POST['product'])
@@ -159,7 +163,7 @@ def deleteFromCart(request):
 
 
 ##
-# TODO: document me!        
+# Change the quantity of product in the user's cart.  
 def editQuantityInCart(request):
     if is_auth(request) and request.method == 'POST':
         prod = get_object_or_404(CartProduct, id=request.POST['product'])
@@ -204,9 +208,9 @@ def checkout(request):
         # generate a form to edit the postal information
         profile = request.user.get_profile()
         postal_form = PostalForm(instance=profile)
-        no_items = request.user.get_profile().products_in_cart
+        number_items_in_cart = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
-            'products_in_cart' : no_items,
+            'products_in_cart' : number_items_in_cart,
             'sid'     : SID,
             'cost'    : prices,
             'cart'    : products,
@@ -360,7 +364,7 @@ def product(request, product_id):
     # If the user is logged then get the products in the user's cart and show the comment form.
     if request.user.is_authenticated():
         comment_form = CommentForm()
-        no_items = request.user.get_profile().products_in_cart
+        number_items_in_cart = request.user.get_profile().products_in_cart
         context.update({
             'form'              : form,
             'products_in_cart'  : comment_form,
@@ -386,26 +390,25 @@ def rateProduct(request):
         element = request.POST.get('product')
         rate    = request.POST.get('rate')
        
-        # TODO: document me! 
+        # Get the product from the transaction list of products of the user.
         prodTransaction = Transaction.objects.get(user=request.user, id=element)  
         product = Product.objects.get(id=prodTransaction.product.id)
        
-        # TODO: document me! 
-        if prodTransaction.rate == 0:
-            product.votes += 1
-            product.points += int(rate)
-       
-        # TODO: document me! 
-        else:
-            product.points -= prodTransaction.rate
-            product.points += int(rate)
+        # If the user already receive the product in his home.
+        if prodTransaction.payment.status == "Delivered":
+            # If the user did not rate the product before
+            if prodTransaction.rate == 0:
+                product.votes += 1
+                product.points += int(rate)             
+            else:
+                product.points -= prodTransaction.rate
+                product.points += int(rate)
         
         prodTransaction.rate = int(rate)
         prodTransaction.save()
         product.save()
         return HttpResponse(rate)
        
-    # TODO: document me! 
     else:
         return HttpResponseRedirect("/checkout")
 
@@ -419,15 +422,15 @@ def comment(request, product_id):
     if is_auth(request) and request.method == 'POST':
         form = CommentForm(request.POST)
        
-        # TODO: document me! 
-        if form.is_valid() and request.user.is_authenticated():
+        # If the form is valid.
+        if form.is_valid():
             product = get_object_or_404(Product, id=product_id)
             user    = request.user
             text    = form.cleaned_data['comment']         
             reply   = request.POST.get('in_reply')
             product.comment_count += 1
       
-            # TODO: document me!      
+            # If the comment is areply to other comment.     
             if reply != '0':
                 reply = Comment.objects.get(id=reply)
                 new_comment = Comment(
@@ -438,7 +441,6 @@ def comment(request, product_id):
                     parent_id = reply
                 )
 
-            # TODO: document me!
             else:
                 new_comment   = Comment(
                     product   = product, 
@@ -447,7 +449,7 @@ def comment(request, product_id):
                     comment   = text
                     )
    
-            # TODO: document me! 
+            # Save the changes on the product ant the comment, and render the product page again.
             new_comment.save()
             product.save()
             comments = Comment.objects.filter(product=product_id).order_by('timestamp')
@@ -462,7 +464,6 @@ def rateComment(request, comment_id, option):
         template = loader.get_template('product.html')
         comment = get_object_or_404(Comment, id=comment_id)
        
-        # TODO: document me 
         if option == '1':
             comment.positives += 1
         else:
@@ -470,7 +471,7 @@ def rateComment(request, comment_id, option):
         
         comment.save()
 
-        # TODO: clean up!
+        # Sent by AJAX the new number of votes
         return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\" /> %s" % (comment.id, comment.positives, comment.negatives))
 
 
@@ -496,8 +497,8 @@ def category(request, category_id):
    
     # if the user is logged, send the products in the cart to the context 
     if request.user.is_authenticated():
-        no_items = request.user.get_profile().products_in_cart
-        context.update({'products_in_cart'  : no_items})
+        number_items_in_cart = request.user.get_profile().products_in_cart
+        context.update({'products_in_cart'  : number_items_in_cart})
     else:
         login_form = LoginForm()
         context.update({'login_form': login_form})
@@ -530,8 +531,8 @@ def search(request):
            
             # If the user is authenticated then show the number of products in their cart
             if request.user.is_authenticated():
-                no_items = request.user.get_profile().products_in_cart
-                context.update({ 'products_in_cart'  : no_items })
+                number_items_in_cart = request.user.get_profile().products_in_cart
+                context.update({ 'products_in_cart'  : number_items_in_cart })
             # If not the login form.
             else:
                 login_form = LoginForm()
