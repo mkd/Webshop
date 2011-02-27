@@ -1,0 +1,150 @@
+/**
+ * CSS Stylesheet for administrative pages.
+ * 
+ * Updated on 24.02.2011.
+ *
+ */
+table#admin
+{
+    font-size:              large;
+    text-align:             center;
+    width:                  100%;
+}
+
+table#admin td
+{
+    /* background */
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#feffef', endColorstr='#cfcfcf'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#fef), to(#cfcfcf)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #fef,  #cfcfcf); /* for firefox 3.6+ */
+
+    /* rounded border */
+	border:                 solid 1px #b4b4b4;
+	-webkit-border-radius:  10px;
+	-moz-border-radius:     10px;
+	border-radius:          10px;
+
+    list-style:             none;
+    padding:                1.2em;
+}
+
+table#admin td:hover
+{
+    cursor:                 pointer;
+    /* background */
+	filter:  	progid:DXImageTransform.Microsoft.gradient(startColorstr='#bfbbfb', endColorstr='#cfcfcf'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#bfb), to(#cfcfcf)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #bfb,  #cfcfcf); /* for firefox 3.6+ */
+}
+
+table#admin a
+{
+    text-decoration:        none;
+}
+
+table#admin a:hover
+{
+    text-decoration:        underline;
+}
+
+#picture_enabler
+{
+    border:                 1px ridge gray;
+}
+
+#products
+{
+    border:                 2px solid black;
+    border-collapse:        collapse;
+    color:                  #444;
+}
+
+#products a
+{
+    text-decoration:        none;
+}
+
+#products a:hover
+{
+    text-decoration:        none;
+}
+
+#products tr:nth-child(odd)   { background-color: #eee; }
+#products tr:nth-child(even)  { background-color: #fff; }
+#products tr:hover            { background-color: #ffa; }
+
+#products th
+{
+    background-color:       #afc;
+    border:                 2px solid black;
+    padding:                0.2em;
+    text-align:             center;
+}
+
+#products td
+{
+    border:                 1px solid #444;
+    padding:                0.2em;
+}
+
+.button_text
+{
+    color:                  #444;
+    display:                inline;
+    font-style:             oblique;
+    margin:                 2em;
+}
+
+.button_text:hover
+{
+    text-decoration:        underline;
+}
+
+.functions
+{
+    margin:                 0 auto 1em auto;
+    width:                  100;
+}
+
+.functions td
+{
+    padding:                0 1em;
+}
+
+#bt_delete_products
+{
+    cursor:                 pointer;
+}
+
+#lb_delete_products
+{
+    cursor:                 pointer;
+    text-decoration:        none;
+}
+
+#bt_cancel_orders
+{
+    cursor:                 pointer;
+}
+
+#lb_cancel_orders
+{
+    cursor:                 pointer;
+    text-decoration:        none;
+}
+
+.canceled td
+{
+    background:             #faa;
+}
+
+div.order-info
+{
+    float:left;
+}
+
+div.order-products
+{
+    float:left;
+    padding-left: 20px;
+}
