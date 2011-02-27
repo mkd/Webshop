@@ -43,13 +43,17 @@ def signin(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
+            # Get the clean data from the POST
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
+            # Try to validate the user against the DB
             user = authenticate(username=username, password=password)
             if user is not None:
+                # Login the user and redirect to the front page.
                 login(request, user)
                 return HttpResponseRedirect('/')
-        
+    
+    # If the input values are not correct, or direct access to this page    
     t = loader.get_template('signin.html')
     categories = Category.objects.all()
     login_form = LoginForm()
@@ -57,6 +61,7 @@ def signin(request):
         'categories' : categories,
         'login_form': login_form
     })
+    # Render the login page.
     return HttpResponse(t.render(context))
 
 
