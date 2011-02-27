@@ -57,11 +57,11 @@
                     
                     {% if not request.user.is_authenticated %}
                     <li>
-                        <a href="/signin">Sign in</a>
+                        <a href="/signin/">Sign in</a>
                         <!-- pop-up sign-in form -->
                         <ul>
-                            <form id="builtin_login" method="post"
-                                  action="/signin/">
+                            <form id="builtin_login" method="post" action="/signin/">
+
                             {% csrf_token %}
                             <table>
                             <tr>

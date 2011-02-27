@@ -17,7 +17,7 @@ def is_auth(request, r = '/'):
     if request.user.is_authenticated():
         return True
     else:
-        return HttpResponseRedirect(r)
+        return False
 
 
 ##
@@ -28,7 +28,7 @@ def is_staff(request, r = '/'):
     if is_auth(request) and request.user.is_staff:
         return True
     else:
-        return HttpResponseRedirect(r)
+        return False
 
 
 # Handle an uploaded file.

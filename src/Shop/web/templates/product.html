@@ -170,11 +170,6 @@
 				</div>
 				
 				{% if request.user.is_authenticated %}
-				
-				postal_address = models.CharField(  max_length=160 )
-			    postal_code    = models.CharField(  max_length=5 )
-			    postal_city    = models.CharField(  max_length=20 )
-			    postal_country = models.CharField(  max_length=20 )
 			
                 <!-- functionality to write (add) a commnet -->	
 				<div id="write_comment">

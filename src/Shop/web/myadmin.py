@@ -30,6 +30,8 @@ def myadmin(request):
         context = RequestContext(request, { })
         return HttpResponse(t.render(context))
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Render the products administration page.
@@ -62,6 +64,8 @@ def myadmin_products(request):
         })
         return HttpResponse(t.render(context))
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Render a page to add a new product.
@@ -74,6 +78,8 @@ def myadmin_addProduct(request):
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
+
+    return HttpResponseRedirect('/')
 
 
 ##
@@ -113,6 +119,8 @@ def addProduct(request):
         context.update(csrf(request))
         return HttpResponse(t.render(context))
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Render a page to edit a product.
@@ -129,13 +137,23 @@ def editProduct(request, product_id):
         else:
             pic = 'static/images/products/' + str(product_id)
 
+        # if a product is already used in any transaction, disable deletion
+        trs = Transaction.objects.filter(product=product_id)
+        if trs is not None:
+            disable_delete = True
+        else:
+            disable_delete = False
+
         context = RequestContext(request, {
-            'icon'         : pic,
-            'form'         : form,
-            'product_name' : p.name,
-            'product_id'   : product_id,
+            'icon'           : pic,
+            'form'           : form,
+            'product_name'   : p.name,
+            'product_id'     : product_id,
+            'disable_delete' : disable_delete,
         })
         return HttpResponse(t.render(context))
+
+    return HttpResponseRedirect('/')
 
 
 ##
@@ -176,9 +194,11 @@ def saveProduct(request, product_id):
             'product_id'    : product_id,
         })
 
-    # render response
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+        # render response
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
+
+    return HttpResponseRedirect('/')
    
     
 ##
@@ -186,6 +206,8 @@ def saveProduct(request, product_id):
 def myadmin_categories(request):
     if is_staff(request):
         return HttpResponseRedirect('/admin/web/category/')
+
+    return HttpResponseRedirect('/')
 
 
 # Render the orders administration page.
@@ -218,12 +240,16 @@ def myadmin_orders(request):
         })
         return HttpResponse(t.render(context))
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Render the users administration page.
 def myadmin_users(request):
     if is_staff(request):
         return HttpResponseRedirect('/admin/auth/user')
+
+    return HttpResponseRedirect('/')
 
 
 ##
@@ -236,8 +262,21 @@ def deleteProduct(request, product_id):
         # exist anymore)
         t = loader.get_template('myadmin_products.html')
 
-        product = Product.objects.get(pk=product_id)
-        product.delete()
+        # if a product is already used in any transaction, do not delete
+        trs = Transaction.objects.filter(product=8888)
+       
+        if len(trs) >= 1:
+            t = loader.get_template('myadmin_edit_product.html')
+            form = ProductForm(instance=product_id)
+            context = RequestContext(request, {
+                'deleted'       : False,
+                'cannot_delete' : True,
+                'form'          : form,
+            })
+            return HttpResponse(t.render(context))
+        else:
+            product = Product.objects.get(pk=product_id)
+            product.delete()
 
         # also delete the picture of the product
         if os.path.exists('web/static/images/products/' + str(product_id)):
@@ -246,10 +285,12 @@ def deleteProduct(request, product_id):
         # return to the products page
         products = Product.objects.all()
         context = RequestContext(request, {
-            'products':  products,
-            'deleted' :  True,
+            'products'      : products,
+            'deleted'       : True,
         })
         return HttpResponse(t.render(context))
+
+    return HttpResponseRedirect('/')
 
 
 ##
@@ -282,6 +323,8 @@ def deleteProducts(request):
         })
         return HttpResponse(t.render(context))
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Cancel a set of orders.
@@ -310,6 +353,8 @@ def cancelOrders(request):
         })
         return HttpResponse(t.render(context))
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Cancel a given order.
@@ -332,6 +377,8 @@ def cancelOrder(request, order_id):
         })
         return HttpResponse(t.render(context))
 
+    return HttpResponseRedirect('/')
+
 
 ##
 # Render a page to edit an order status.
@@ -349,6 +396,8 @@ def editOrder(request, order_id):
             'products'   : products,
         })
         return HttpResponse(t.render(context))
+
+    return HttpResponseRedirect('/')
 
 
 ##
@@ -376,3 +425,5 @@ def saveOrder(request, order_id):
         # render response
         context.update(csrf(request))
         return HttpResponse(t.render(context))
+
+    return HttpResponseRedirect('/')

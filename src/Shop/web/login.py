@@ -26,11 +26,13 @@ import datetime, hashlib, os
 def signup(request):
     t = loader.get_template('signup.html')
     form = RegisterForm()
+    login_form = LoginForm()
     categories = Category.objects.all()
     context = RequestContext(request,
     {
         'form'       : form,
         'categories' : categories,
+        'login_form' : login_form,
     })
     return HttpResponse(t.render(context))
 
@@ -72,7 +74,8 @@ def signin(request):
 def signout(request):
     if is_auth(request):
         logout(request)
-        return HttpResponseRedirect('/')  
+
+    return HttpResponseRedirect('/')  
 
 
 ##
@@ -98,6 +101,7 @@ def register(request):
             # form and remember the entered data
             if check_username is not None or check_email is not None:
                 t = loader.get_template('signup.html')
+                login_form = LoginForm()
                 context = RequestContext(request, {
                     'username'       : request.POST.get('user'),
                     'fname'          : request.POST.get('fname'),
@@ -107,7 +111,8 @@ def register(request):
                     'passwd'         : request.POST.get('passwd'),
                     'pass2'          : request.POST.get('pass2'),
                     'user_exists'    : True,
-                    'form'           : form
+                    'form'           : form,
+                    'login_form'     : login_form,
                 })
                 context.update(csrf(request))
                 return HttpResponse(t.render(context))
@@ -172,6 +177,8 @@ def editProfile(request):
         context.update(csrf(request))
         return HttpResponse(t.render(context))
 
+    return HttpResponseRedirect('/')  
+
 
 ##
 # Save the user's profile.
@@ -191,7 +198,7 @@ def saveProfile(request):
 
         # if pass and pass2 match, save them as the new password
         pwd = request.POST.get('passwd', None)
-        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')):
+        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')) and pwd != '******':
             u.set_password(pwd)
 
         # save the avatar picture, if available
@@ -220,18 +227,20 @@ def saveProfile(request):
         # redirect the user to the home page (already logged-in)
         context.update(csrf(request))
         return HttpResponse(t.render(context))
+
+    return HttpResponseRedirect('/')  
   
 
 ##
 # Show a dummy page telling that your password has been sent to your email.
 def forgot_password(request):
-        t = loader.get_template('forgot_password.html')
-        form = PassForm()
-        context = RequestContext(request, {
-            'form' : form,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
+    t = loader.get_template('forgot_password.html')
+    form = PassForm()
+    context = RequestContext(request, {
+        'form' : form,
+    })
+    context.update(csrf(request))
+    return HttpResponse(t.render(context))
 
 
 ##

@@ -64,6 +64,10 @@
     {% if deleted %}
         <div class="success">Product deleted successfully!</div>
     {% endif %}
+    {% if cannot_delete %}
+        <div class="error">The current product cannot be deleted because it is
+        being used in some transactions!</div>
+    {% endif %}
     {% ifequal products_no 0 %}
         <div class="error">There are no products in the system!</div>
     {% else %}
