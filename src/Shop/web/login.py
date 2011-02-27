@@ -76,9 +76,9 @@ def tryLogin(request):
 ##
 # Close the session for an user and go to the front page.
 def signout(request):
-    only_auth(request)
-    logout(request)
-    return HttpResponseRedirect('/')  
+    if is_auth(request):
+        logout(request)
+        return HttpResponseRedirect('/')  
 
 
 ##
@@ -146,10 +146,7 @@ def register(request):
 ##
 # Render the user profile page.
 def editProfile(request):
-    only_auth(request)
-
-    # check for an existing session
-    if request.user.is_authenticated():
+    if is_auth(request):
         t = loader.get_template('profile.html')
         form = ProfileForm(request.POST, request.FILES)
 
@@ -180,18 +177,14 @@ def editProfile(request):
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
-    # if no session, use a standard context
-    else:
-        return HttpResponseRedirect('/')
 
 
 ##
 # Save the user's profile.
 def saveProfile(request):
-    only_auth(request)
+    if is_auth(request) and request.method == 'POST':
+        t = loader.get_template('profile.html')
 
-    t = loader.get_template('profile.html')
-    if request.method == 'POST':
         # save all the data from the POST into the database
         up = UserProfile.objects.get(user=request.user.id)
         u = User.objects.get(id=request.user.id)
@@ -230,9 +223,9 @@ def saveProfile(request):
             'saved'          : True,
         })
 
-    # redirect the user to the home page (already logged-in)
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+        # redirect the user to the home page (already logged-in)
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
   
 
 ##
