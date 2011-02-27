@@ -72,7 +72,8 @@ def signin(request):
 def signout(request):
     if is_auth(request):
         logout(request)
-        return HttpResponseRedirect('/')  
+
+    return HttpResponseRedirect('/')  
 
 
 ##
@@ -172,6 +173,8 @@ def editProfile(request):
         context.update(csrf(request))
         return HttpResponse(t.render(context))
 
+    return HttpResponseRedirect('/')  
+
 
 ##
 # Save the user's profile.
@@ -220,18 +223,20 @@ def saveProfile(request):
         # redirect the user to the home page (already logged-in)
         context.update(csrf(request))
         return HttpResponse(t.render(context))
+
+    return HttpResponseRedirect('/')  
   
 
 ##
 # Show a dummy page telling that your password has been sent to your email.
 def forgot_password(request):
-        t = loader.get_template('forgot_password.html')
-        form = PassForm()
-        context = RequestContext(request, {
-            'form' : form,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
+    t = loader.get_template('forgot_password.html')
+    form = PassForm()
+    context = RequestContext(request, {
+        'form' : form,
+    })
+    context.update(csrf(request))
+    return HttpResponse(t.render(context))
 
 
 ##

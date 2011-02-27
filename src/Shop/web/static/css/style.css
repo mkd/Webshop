@@ -736,6 +736,19 @@ div.display-options
 	background:     #ec8080;
 }
 
+.disabled
+{
+    cursor:         pointer;
+	background:     #ddd;
+
+    /* button border and layout */
+    font-weight:            bold;
+    padding:                4px;
+	border:                 1px ridge gray;
+    -webkit-border-radius:  0.3em;
+	-moz-border-radius:     0.3em;
+}
+
 
 .buttons
 {
