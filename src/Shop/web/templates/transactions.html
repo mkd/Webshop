@@ -43,7 +43,7 @@
 				
 			</tr>
 			{% for payment in payments %}
-			<tr class="transaction" id="">
+			<tr class="transaction">
 				<td class="icon">
 					{% if payment.ref > -1 %}
 						<img class="pic" src="/static/images/{{ payment.status }}.jpg" alt="{{ payment.status }}"/></td>
