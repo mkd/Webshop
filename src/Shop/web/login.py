@@ -26,11 +26,13 @@ import datetime, hashlib, os
 def signup(request):
     t = loader.get_template('signup.html')
     form = RegisterForm()
+    login_form = LoginForm()
     categories = Category.objects.all()
     context = RequestContext(request,
     {
         'form'       : form,
         'categories' : categories,
+        'login_form' : login_form,
     })
     return HttpResponse(t.render(context))
 
@@ -99,6 +101,7 @@ def register(request):
             # form and remember the entered data
             if check_username is not None or check_email is not None:
                 t = loader.get_template('signup.html')
+                login_form = LoginForm()
                 context = RequestContext(request, {
                     'username'       : request.POST.get('user'),
                     'fname'          : request.POST.get('fname'),
@@ -108,7 +111,8 @@ def register(request):
                     'passwd'         : request.POST.get('passwd'),
                     'pass2'          : request.POST.get('pass2'),
                     'user_exists'    : True,
-                    'form'           : form
+                    'form'           : form,
+                    'login_form'     : login_form,
                 })
                 context.update(csrf(request))
                 return HttpResponse(t.render(context))

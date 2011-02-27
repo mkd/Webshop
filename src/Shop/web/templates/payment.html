@@ -30,16 +30,17 @@ function sendPayment(){
 			if(data == 'OK'){
 				$('#payment-form').submit()
 			}
+			else{
+				alert(data)
+				$('#message').html(data)
+			}
 	   });
 }
 </script>
 
 	{% if cart %}
 	<center><h2>My order</h2>
-	
-		{% if message %}
-			<p id="message">{{ message }}<p>
-		{% endif %}
+		<p id="message">{{ message }}<p>
 		
 	<table cellspacing="0" callpadding="50" border="0" width="500">
 		<form action="/checkout" method="post" id="form-myCart">

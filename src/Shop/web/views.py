@@ -2,8 +2,6 @@
 ### This module contains the main views for rendering Webshop.
 ### (c) 2011 The Webshop team
 
-
-
 ### necessary libraries ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
@@ -243,22 +241,23 @@ def checkout(request):
 # and all the products in the cart lic transactions.
 def updatePostalOrder(request):
     if is_auth(request) and request.method == 'POST':
-        pid =  request.POST.get('pid')
-        postal_address = request.POST.get('postal_address','')
-        postal_code = request.POST.get('postal_code','')
-        postal_city = request.POST.get('postal_city','')
-        postal_country = request.POST.get('postal_country','')
+        form = PostalForm(request.POST)
         
         # Get the Payment and adds the postal info.
+        pid =  request.POST.get('pid')       
         payment = get_object_or_404(Payment, pid=pid)
-        payment.postal_address = postal_address
-        payment.postal_code = postal_code
-        payment.postal_city = postal_city
-        payment.postal_country = postal_country
-        payment.save()
-        return HttpResponse("OK")
-    else:
-        return HttpResponse("NO")
+        print request.POST
+        if request.POST.get('postal_address') != '' and request.POST.get('postal_code') != '' and request.POST.get('postal_city') != '' and request.POST.get('postal_country') != '':
+            payment.postal_address = request.POST.get('postal_address')
+            payment.postal_code = request.POST.get('postal_code')
+            payment.postal_city = request.POST.get('postal_city')
+            payment.postal_country = request.POST.get('postal_country')
+            payment.save()
+            return HttpResponse("OK")
+        else:
+            return HttpResponse("[ERROR]: You have to to provide postal information.")
+    
+    return HttpResponse("NO")
 
 
 ##
@@ -386,8 +385,8 @@ def product(request, product_id):
         comment_form = CommentForm()
         number_items_in_cart = request.user.get_profile().products_in_cart
         context.update({
-            'form'              : form,
-            'products_in_cart'  : comment_form,
+            'form'              : comment_form,
+            'products_in_cart'  : number_items_in_cart,
         })
     
     # If the user is not logged then get the login form and show it.        
