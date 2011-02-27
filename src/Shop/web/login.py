@@ -146,7 +146,7 @@ def register(request):
 ##
 # Render the user profile page.
 def editProfile(request):
-    only_auth()
+    only_auth(request)
 
     # check for an existing session
     if request.user.is_authenticated():
