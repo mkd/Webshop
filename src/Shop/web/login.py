@@ -1,3 +1,9 @@
+### login.py
+### This module contains user registration and session functionalities.
+### (c) 2011 The Webshop Team
+
+
+
 ### necessary Django modules ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect

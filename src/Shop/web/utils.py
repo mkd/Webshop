@@ -1,6 +1,7 @@
 ### utils.py
-###
-### Misc utilities.
+### Misc utilities to be used in Webshop.
+### (c) 2011 The Webshop Team
+
 
 
 ### necessary libraries ###

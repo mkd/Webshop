@@ -1,5 +1,8 @@
-### admin.py
+### myadmin.py
+### This module contains the administrative functions of Webshop.
 ### (c) 2011 The Webshop Team
+
+
 
 ### necessary Django modules ###
 from django.shortcuts import render_to_response

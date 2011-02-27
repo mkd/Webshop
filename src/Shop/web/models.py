@@ -1,10 +1,18 @@
-## necessary libraries
+### models.py
+### This module contains the database definitions for each component that is
+### used in the Webshop project.
+### (c) 2011 The Webshop Team
+
+
+
+### necessary libraries ###
 from django.db import models
 from django.utils.datetime_safe import datetime
 from django.template.defaultfilters import default
 from django.contrib.admin.models import User
 from django.db.models.signals import post_save
 import math, md5
+
 
 
 ##

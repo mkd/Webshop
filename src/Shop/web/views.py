@@ -1,3 +1,9 @@
+### views.py
+### This module contains the main views for rendering Webshop.
+### (c) 2011 The Webshop team
+
+
+
 ### necessary Django modules ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
