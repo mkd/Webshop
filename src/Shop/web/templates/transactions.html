@@ -28,12 +28,12 @@
 <!-- main content -->
 {% block main_content %}
 	{% if payments %}
-	<center><h2>My transactions</h2></center>
+	    <h2>My transactions</h2>
 	
 	<div id='message'>{{ message }}<br/></div>	
 		
-	<center>	
-	<table cellspacing="0" callpadding="50" border="0" width="500">
+	<div class="centered">
+	<table>
 			<tr>
 				<td></td>
 				<td><strong>Date</strong></td>
@@ -43,7 +43,7 @@
 				
 			</tr>
 			{% for payment in payments %}
-			<tr class="transaction" id="">
+			<tr class="transaction">
 				<td class="icon">
 					{% if payment.ref > -1 %}
 						<img class="pic" src="/static/images/{{ payment.status }}.jpg" alt="{{ payment.status }}"/></td>
@@ -57,9 +57,9 @@
 			</tr>
 			{% endfor %}
 	</table>
-	</center>
+	</div>
 	
 	{% else %}
-		<center><h2>You don't have any transaction yet!</h2></center>
+		<h2>You don't have any transaction yet!</h2>
 	{% endif %}
 {% endblock %}

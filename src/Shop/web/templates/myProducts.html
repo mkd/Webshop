@@ -70,7 +70,8 @@
 
     <!-- show payment status if the user has bought something -->
 	{% if products %}
-	<center><h2>My order on {{ payment.payment_date }}</h2>
+        <div class="centered">
+	    <h2>My order on {{ payment.payment_date }}</h2>
 		<h2>Status: {{ payment.status }}</h2>
 		
 		{% if payment.status != 'Delivered' %}
@@ -81,10 +82,10 @@
 	
     <!-- display the user's products with ratings and other associated
          information -->	
-	<table cellspacing="0" callpadding="50" border="0" width="550">
+	<table>
 			{% for product in products %}
 			<tr class="item" id="item-{{ product.id }}">
-				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
+				<td class="picture"><img src="{{ product.product.picture }}" class="product-pic"/></td>
 				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
 				<td class="rate">
 					{% if payment.status == 'Delivered' %}
@@ -120,7 +121,7 @@
 			{% endfor %}
 			
 	</table>
-	</center>
+	</div>
 	
 	{% else %}
 		<div class="error">This order does not have any product!</div>

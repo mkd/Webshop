@@ -44,7 +44,7 @@
         <table>
         <tr>
             <td colspan="2">
-                <img src="{{ picture }}" align="middle"
+                <img src="{{ picture }}"
                      height="64" id="picture_enabler"
                      style="cursor: pointer;" title="Add your own picture" />
                 <em>Click on the image to change your own picture</em>
@@ -62,7 +62,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="fname">*Last name:</label>
+	        <label for="sname">*Last name:</label>
             </td>
             <td>
             <input type="text" id="sname" name="sname" value="{{ sname }}" />
@@ -74,12 +74,12 @@
             </td>
             <td>
             {{ user }}
-            <input type="hidden" name="user" value="{{ user }}" />
+            <input type="hidden" id="user" name="user" value="{{ user }}" />
             </td>
         </tr>
         <tr>
             <td>
-	        <label for="password">*Password:</label>
+	        <label for="id_password">*Password:</label>
             </td>
             <td>
             <input type="password" name="password" id="id_passwd" value="******" />
@@ -87,7 +87,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="password_again">*Repeat password:</label>
+	        <label for="id_pass2">*Repeat password:</label>
             </td>
             <td>
             <input type="password" name="password_again" id="id_pass2" value="******" />
@@ -95,7 +95,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="email">Email:</label>
+	        <label for="id_email">Email:</label>
             </td>
             <td>
             {{ email }}
@@ -127,7 +127,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="postal_country">*Country:</label>
+	        <label for="country">*Country:</label>
             </td>
             <td>
             <input type="text" id="country" name="country" value="{{ country }}" />

@@ -33,28 +33,28 @@
 				<div id='product' onclick="window.location.href='/product/{{ product.id }}'; ">
 					<h1 class="product"><a href="/product/{{ product.id }}/">{{ product.short_name }}</a></h1>
 					<div class="product-image">
-						<div class="middle"><img src="/static/images/products/{{ product.id }}" width="130" height="130"  /></div>
+						<div class="middle"><img src="/static/images/products/{{ product.id }}" /></div>
 						<div class="price">{{ product.price }} &euro;</div>
 					</div>
 					<p>
 					<!-- This is awful, I know, but I can do in range(product.average_rating) -->	
 					{% if product.average_rating == 0 %}
-						<center><img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}	
 					{% if product.average_rating == 1 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}
 					{% if product.average_rating == 2 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}
 					{% if product.average_rating == 3 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /></center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}
 					{% if product.average_rating == 4 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic-no.png" alt="heart" />
 					{% endif %}
 					{% if product.average_rating == 5 %}
-						<center><img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> </center>
+						<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" />
 					{% endif %}
 					</p>
 				</div>
@@ -66,14 +66,14 @@
 			<a href="?l=icons{% if query != '' %}&query={{ query }} {% endif %}"><img src="/static/images/list.png" /></a><br/><br/>
 		</div>
 		
-		<center>
-		<table border="0" cellpadding="2" cellspacing="0" width="100%">
+		<div class="centered">
+		<table>
 		{% for product in products %}
 			<tr>
 				<td rowspan="2" class="product">
-					<a href="/product/{{ product.id }}/"> <img class="product-pic" src="/static/images/products/{{ product.id }}" border="0" /></a>
+					<a href="/product/{{ product.id }}/"> <img class="product-pic" src="/static/images/products/{{ product.id }}" ></a>
 				</td>
-				<td class="product" with="470">
+				<td class="product">
 					<div class="title"><a href="/product/{{ product.id }}/">{{ product.name }}</a></div>
 					{{ product.description }}
 				</td>
@@ -81,7 +81,7 @@
 					<div class="price-list"  onclick="add({{product.id}});">{{ product.price }} &euro;</div>
 				</td>
 			
-			<tr height="30">
+			<tr>
 				<td colspan="2">
 				<!-- This is awful, I know, but I can do in range(product.average_rating) -->	
 				{% if product.average_rating == 0 %}
@@ -103,14 +103,14 @@
 					<img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" /> <img src="/static/images/heart-pic.png" alt="heart" />
 				{% endif %}
 				
-				&nbsp; &nbsp;&nbsp;<img src="/static/images/comments.png" width="18" height="18"/> {{ product.comment_count }} comments
+				&nbsp; &nbsp;&nbsp;<img src="/static/images/comments.png" /> {{ product.comment_count }} comments
 				
 				</td>
 				
 			</tr>
 		{% endfor %}
 		</table>
-		</center>
+		</div>
 		{% endif %}
 	</div>
 {% endblock %}

@@ -100,19 +100,19 @@
 	{% endif %}
 
     <!-- table containing the current cart situation -->	
-	<table cellspacing="0" cellpadding="50" border="0" width="660">
+	<table>
 		<form action="/checkout" method="post" id="form-myCart">
 			{% csrf_token %}
 			{% for product in cart %}
 			<tr class="item" id="item-{{ product.id }}">
-				<td class="picture" width="60">
+				<td class="picture">
                     <img src="{{ product.product.picture }}"
                          class="product-pic" />
                 </td>
 				<td class="name">
                     <a href="/product/{{ product.product.id }}">{{ product.product.name }}</a>
                 </td>
-				<td class="quantity" width="100">
+				<td class="quantity">
                     <input type="text" name="quantity-{{ product.id }}"
                            id="quantity-{{ product.id }}"
                            class="required"
@@ -124,10 +124,10 @@
                            id="before-quantity-{{ product.id }}"
                            value="{{ product.quantity }}" />
                 </td>
-				<td class="value" width="75">
+				<td class="value">
                     {{ product.product.price }} &euro;
                 </td>
-				<td class="delete_from_cart" width="40">
+				<td class="delete_from_cart">
                     <img src="/static/images/delete-icon.png"
                          onclick="deleteProduct({{ product.id }}, {{ product.product.price }})" />
                 </td>
@@ -148,7 +148,7 @@
 		</form>
 	</table>
 	{% else %}
-		<center><h2>Your cart is empty!</h2></center>
+		<h2>Your cart is empty!</h2>
 	{% endif %}
 	
 {% endblock %}

@@ -41,10 +41,11 @@ function sendPayment(){
 </script>
 
 	{% if cart %}
-	<center><h2>My order</h2>
+	<div class="centered">
+        <h2>My order</h2>
 		<p id="message">{{ message }}<p>
 		
-	<table cellspacing="0" callpadding="50" border="0" width="500">
+	<table>
 		<form action="/checkout" method="post" id="form-myCart">
 			{% csrf_token %}
 			
@@ -52,8 +53,8 @@ function sendPayment(){
 			<tr class="item" id="item-{{ product.id }}">
 				<td class="picture"><img src="{{ product.product.picture }}" class="product-pic-check"/></td>
 				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }} {{ product.id }}</a></td>
-				<td class="quantity" width="100"> {{ product.quantity }} items x {{ product.product.price }}</td>
-				<td class="value" width="75">{{ product.total }} &euro;</td>
+				<td class="quantity"> {{ product.quantity }} items x {{ product.product.price }}</td>
+				<td class="value">{{ product.total }} &euro;</td>
 			</tr>
 			{% endfor %}
 			
@@ -74,16 +75,16 @@ function sendPayment(){
 		{{ postal_form.as_table }}
 		<tr>
 			<td colspan="2"><br/>
-				<center><div id="checkout" onclick="sendPayment()">
-				Pay
-				</div>
-				<br/><br/>
-				<center>
+			    <div class="centered">
+                    <div id="checkout" onclick="sendPayment()">
+					 Pay 
+				    </div>
+                </div>
+				<br /><br />
 			</td>
 		</table>
 	</form>
-	
-	</center>
+	</div>
 
 	<form action="http://webcourse.cs.hut.fi/payment/pay/" method="POST" id="payment-form">
 	    <input type="hidden" name="pid" value="{{ payment.pid }}" />
@@ -97,7 +98,7 @@ function sendPayment(){
 	</form>
 	
 	{% else %}
-		<center><h2>Your cart is empty!</h2></center>
+		<h2>Your cart is empty!</h2>
 	{% endif %}
 	
 {% endblock %}

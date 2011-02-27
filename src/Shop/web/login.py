@@ -2,6 +2,8 @@
 ### This module contains user registration and session functionalities.
 ### (c) 2011 The Webshop Team
 
+
+
 ### necessary libraries ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
@@ -17,20 +19,114 @@ from models import *
 from forms import *
 import datetime, hashlib, os
 
+
+
 ##
 # Render a simple registration form (sign up)
 def signup(request):
-    t = loader.get_template('signup.html')
-    form = RegisterForm()
-    login_form = LoginForm()
-    categories = Category.objects.all()
-    context = RequestContext(request,
-    {
-        'form'       : form,
-        'categories' : categories,
-        'login_form' : login_form,
-    })
-    return HttpResponse(t.render(context))
+    
+    if request.method == 'POST':
+        form = RegisterForm(request.POST, request.FILES)
+        
+        errors = False
+        name_error = ""
+        mail_error = ""
+        check_email = ""
+        message_error = ""
+        
+        # check if the user already exists in the database
+        try:
+            check_username = User.objects.get(username=request.POST.get('user'))
+            errors = True
+            name_error = "Username already exist in the system!"
+            print "name error"
+        except:
+            check_username = None
+            
+        try:
+            check_email = User.objects.get(email=request.POST.get('email'))
+            errors = True
+            mail_error = "Mail already exist in the system! \n"
+            
+        except:
+            if request.POST.get('email') != request.POST.get('email2'):    
+                errors = True
+                mail_error = "The mails does not match."
+            check_email = None
+        
+        if request.POST.get('passwd') != request.POST.get('pass2'):    
+            errors = True
+            message_error = "The password does not match."
+
+        # if the username or email already exist, go back to the sign-up
+        # form and remember the entered data
+        if errors:
+            t = loader.get_template('signup.html')
+            login_form = LoginForm()
+            print message_error
+            context = RequestContext(request, {
+                'username'       : request.POST.get('user'),
+                'fname'          : request.POST.get('fname'),
+                'sname'          : request.POST.get('sname'),
+                'email'          : request.POST.get('email'),
+                'email2'         : request.POST.get('email2'),
+                'passwd'         : request.POST.get('passwd'),
+                'pass2'          : request.POST.get('pass2'),
+                'user_exists'    : True,
+                'form'           : form,
+                'login_form'     : login_form,
+                'name_error'     : name_error,
+                'mail_error'     : mail_error,
+                'check_email'    : check_email,
+                'message_error'  : message_error,
+                })
+            context.update(csrf(request))
+            return HttpResponse(t.render(context))
+            
+        else:
+
+            # save all the data from the POST into the database
+            u  = User.objects.create_user(
+                request.POST.get('user'),
+                request.POST.get('email'),
+                request.POST.get('passwd')
+            )
+            up = UserProfile.objects.create(user_id=u.id)
+            u.is_staff   = False
+            u.first_name = request.POST.get('fname')
+            u.last_name  = request.POST.get('sname')
+            u.save()
+            up.save()
+
+            # save also avatar picture, if available
+            handleUploadedPic('users', request.FILES.get('picture'), u.id)
+            
+            t = loader.get_template('signin.html')
+            login_form = LoginForm()
+            
+            categories = Category.objects.all()
+            # redirect the user to the login page with a welcome
+            context = RequestContext(request, {
+                'user'       : request.POST.get('user'),
+                'categories'  : categories,
+                'login_form': login_form,
+                'registered' : True,
+            })
+            context.update(csrf(request))
+            return HttpResponse(t.render(context))
+    
+    else:
+        t = loader.get_template('signup.html')
+        form = RegisterForm()
+        login_form = LoginForm()
+        categories = Category.objects.all()
+        context = RequestContext(request,
+        {
+            'form'       : form,
+            'categories' : categories,
+            'login_form' : login_form,
+        })
+        return HttpResponse(t.render(context))
 
 
 ##
@@ -70,73 +166,7 @@ def signin(request):
 def signout(request):
     if is_auth(request):
         logout(request)
-
-    return HttpResponseRedirect('/')  
-
-
-##
-# Add a new user.
-def register(request):
-    t = loader.get_template('signin.html')
-    if request.method == 'POST':
-        form = RegisterForm(request.POST, request.FILES)
-
-        # server-side validation
-        if form.is_valid():
-            # check if the user already exists in the database
-            try:
-                check_username = User.objects.get(username=request.POST.get('user'))
-            except:
-                check_username = None
-            try:
-                check_email = User.objects.get(email=request.POST.get('email'))
-            except:
-                check_email = None
-
-            # if the username or email already exist, go back to the sign-up
-            # form and remember the entered data
-            if check_username is not None or check_email is not None:
-                t = loader.get_template('signup.html')
-                login_form = LoginForm()
-                context = RequestContext(request, {
-                    'username'       : request.POST.get('user'),
-                    'fname'          : request.POST.get('fname'),
-                    'sname'          : request.POST.get('sname'),
-                    'email'          : request.POST.get('email'),
-                    'email2'         : request.POST.get('email2'),
-                    'passwd'         : request.POST.get('passwd'),
-                    'pass2'          : request.POST.get('pass2'),
-                    'user_exists'    : True,
-                    'form'           : form,
-                    'login_form'     : login_form,
-                })
-                context.update(csrf(request))
-                return HttpResponse(t.render(context))
-
-            # save all the data from the POST into the database
-            u  = User.objects.create_user(
-                request.POST.get('user'),
-                request.POST.get('email'),
-                request.POST.get('passwd')
-            )
-            up = UserProfile.objects.create(user_id=u.id)
-            u.is_staff   = False
-            u.first_name = request.POST.get('fname')
-            u.last_name  = request.POST.get('sname')
-            u.save()
-            up.save()
-
-            # save also avatar picture, if available
-            handleUploadedPic('users', request.FILES.get('picture'), u.id)
-
-            # redirect the user to the login page with a welcome
-            context = RequestContext(request, {
-                'user'       : request.POST.get('user'),
-                'registered' : True,
-            })
-            context.update(csrf(request))
-            return HttpResponse(t.render(context))
-
+        return HttpResponseRedirect('/')  
 
 ##
 # Render the user profile page.
@@ -173,8 +203,6 @@ def editProfile(request):
         context.update(csrf(request))
         return HttpResponse(t.render(context))
 
-    return HttpResponseRedirect('/')  
-
 
 ##
 # Save the user's profile.
@@ -194,7 +222,7 @@ def saveProfile(request):
 
         # if pass and pass2 match, save them as the new password
         pwd = request.POST.get('passwd', None)
-        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')) and pwd != '******':
+        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')):
             u.set_password(pwd)
 
         # save the avatar picture, if available
@@ -223,20 +251,18 @@ def saveProfile(request):
         # redirect the user to the home page (already logged-in)
         context.update(csrf(request))
         return HttpResponse(t.render(context))
-
-    return HttpResponseRedirect('/')  
   
 
 ##
 # Show a dummy page telling that your password has been sent to your email.
 def forgot_password(request):
-    t = loader.get_template('forgot_password.html')
-    form = PassForm()
-    context = RequestContext(request, {
-        'form' : form,
-    })
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+        t = loader.get_template('forgot_password.html')
+        form = PassForm()
+        context = RequestContext(request, {
+            'form' : form,
+        })
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
 
 
 ##
