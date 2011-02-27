@@ -1,3 +1,5 @@
+
+
 {% extends "base.html" %}
 
 {% block title %} My cart {% endblock %}
@@ -66,8 +68,7 @@ function sendPayment(){
 	
 	<p>
 		Your order will be sent to this location, but you can change it.
-	</p>
-	
+	</p>                                                                                                      
 	<form method="post" id="postal_info">
 		<table border="0">
 		{% csrf_token %}
