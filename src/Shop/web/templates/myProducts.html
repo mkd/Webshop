@@ -82,7 +82,7 @@
 	
     <!-- display the user's products with ratings and other associated
          information -->	
-	<table cellspacing="0" callpadding="50" border="0" width="550">
+	<table cellspacing="0" cellpadding="50" width="550">
 			{% for product in products %}
 			<tr class="item" id="item-{{ product.id }}">
 				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
