@@ -252,7 +252,7 @@ def myadmin_users(request):
 ##
 # Delete one product.
 def deleteProduct(request, product_id):
-    if is_staff(request) and request.method == 'POST':
+    if is_staff(request) and is_post(request):
         # delete product
         # note: comments are not necessarily deleted, because the user might want to
         # check a comment he or she wrote in the past (even if the product does not

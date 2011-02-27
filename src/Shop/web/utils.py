@@ -8,10 +8,17 @@ from django.contrib.auth.models import User
 
 
 ##
+# Check if the request is made through POST, otherwise redirect.
+def is_post(request):
+    if request.method == 'POST':
+        return True
+    else:
+        return False
+
+
+##
 # Check if the user is logged  in, or redirect to another page otherwise.
-#
-# @param r URL to which redirect in case of not being staff.
-def is_auth(request, r = '/'):
+def is_auth(request):
     if request.user.is_authenticated():
         return True
     else:
@@ -22,7 +29,7 @@ def is_auth(request, r = '/'):
 # Check if the user is staff, or redirect to another page otherwise.
 #
 # @param r URL to which redirect in case of not being staff.
-def is_staff(request, r = '/'):
+def is_staff(request):
     if is_auth(request) and request.user.is_staff:
         return True
     else:
