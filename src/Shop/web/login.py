@@ -198,7 +198,7 @@ def saveProfile(request):
 
         # if pass and pass2 match, save them as the new password
         pwd = request.POST.get('passwd', None)
-        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')):
+        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')) and pwd != '******':
             u.set_password(pwd)
 
         # save the avatar picture, if available
