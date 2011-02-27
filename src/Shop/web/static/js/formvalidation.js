@@ -16,120 +16,119 @@ $(document).ready(function()
     // client-side validation for the profile form
     $("#submit").click(function()
     {
-    $("#profile_form").validate({
-        rules:
-        {
-            fname:
+        $("#profile_form").validate({
+            rules:
             {
-                maxlength: 16,
-                required:  true
-            },
-            
-            sname:
-            {
-                maxlength: 16,
-                required:  true
-            },
+                fname:
+                {
+                    maxlength: 16,
+                    required:  true
+                },
+                
+                sname:
+                {
+                    maxlength: 16,
+                    required:  true
+                },
 
-            email:
+                email:
+                {
+                    maxlength: 32,
+                    required:  true
+                },
+            }
+        });
+
+        // client-side validation for the registration form
+        $("#register_form").validate({
+            rules:
             {
-                maxlength: 32,
-                required:  true
-            },
-        }
-    });
+                fname:
+                {
+                    maxlength: 16,
+                    required:  true
+                },
+                
+                sname:
+                {
+                    maxlength: 16,
+                    required:  true
+                },
+
+                user:
+                {
+                    required:  true
+                },
+
+                passwd:
+                {
+                    required:  true
+                },
+
+                pass2:
+                {
+                    required:  true
+                },
+
+                email:
+                {
+                    maxlength: 32,
+                    required:  true
+                },
+
+                email2:
+                {
+                    maxlength: 32,
+                    required:  true
+                },
+            }
+        });
 
 
-    // client-side validation for the registration form
-    $("#register_form").validate({
-        rules:
-        {
-            fname:
+        // client-side validation for the product form
+        $("#add_product_form").validate({
+            rules:
             {
-                maxlength: 16,
-                required:  true
-            },
-            
-            sname:
-            {
-                maxlength: 16,
-                required:  true
-            },
+                name:
+                {
+                    maxlength: 32,
+                    required:  true
+                },
+                
+                desc:
+                {
+                    maxlength: 512,
+                },
 
-            user:
-            {
-                required:  true
-            },
+                price:
+                {
+                    required:  true
+                },
 
-            passwd:
+                stock_count:
+                {
+                    required:  true
+                },
+            }
+        });
+        
+        
+        // client-side validation for the signin form
+        $("#signin_form").validate({
+            rules:
             {
-                required:  true
-            },
-
-            pass2:
-            {
-                required:  true
-            },
-
-            email:
-            {
-                maxlength: 32,
-                required:  true
-            },
-
-            email2:
-            {
-                maxlength: 32,
-                required:  true
-            },
-        }
-    });
-
-
-    // client-side validation for the product form
-    $("#add_product_form").validate({
-        rules:
-        {
-            name:
-            {
-                maxlength: 32,
-                required:  true
-            },
-            
-            desc:
-            {
-                maxlength: 512,
-            },
-
-            price:
-            {
-                required:  true
-            },
-
-            stock_count:
-            {
-                required:  true
-            },
-        }
-    });
-    
-    
-    // client-side validation for the signin form
-    $("#signin_form").validate({
-        rules:
-        {
-        	user:
-            {
-                maxlength: 32,
-                required:  true
-            },
-            
-            pass:
-            {
-                maxlength: 128,
-                required:  true
-            },
-        }
-    });
+                user:
+                {
+                    maxlength: 32,
+                    required:  true
+                },
+                
+                pass:
+                {
+                    maxlength: 128,
+                    required:  true
+                },
+            }
+        });
     });
 });
