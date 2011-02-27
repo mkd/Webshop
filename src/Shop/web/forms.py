@@ -2,24 +2,10 @@
 ### This module contains all the form definitions for Webshop.
 ### (c) 2011 The Webshop Team.
 
-
 ### necessary Django modules ###
 from django import forms
 from django.forms import widgets, ModelForm, ClearableFileInput
 from models import *
-
-
-
-### custom functionality ###
-##
-# Retrieve a list of categories and create a list ready to be used as a dropdown
-# list.
-def all_categories():
-    cats = Category.objects.all()
-    categories = [('', '')]
-    for c in cats:
-        categories.append((c.id, c.name))
-    return categories
 
 
 ### custom forms ###
