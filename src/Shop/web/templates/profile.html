@@ -17,7 +17,9 @@
 {% block title %} Webshop | My Profile {% endblock %}
 {% block extra_head %}
     <!-- immediately refresh user's avatar on reload -->
-	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-store" />
 {% endblock %}
 
 
@@ -70,7 +72,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="user">Username:</label>
+	        Username:
             </td>
             <td>
             {{ user }}
@@ -95,7 +97,7 @@
         </tr>
         <tr>
             <td>
-	        <label for="id_email">Email:</label>
+	        Email:
             </td>
             <td>
             {{ email }}
