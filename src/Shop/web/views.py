@@ -360,27 +360,29 @@ def paymentError(request):
 ##
 # Render a specific product page.    
 def product(request, product_id):
+    # Get the template and try to get the product, if not it thow a 404 error.
     template = loader.get_template('product.html')   
     product = get_object_or_404(Product, id=product_id)
     comments = Comment.objects.filter(product=product_id).order_by('timestamp')
    
-    # TODO: document me!
+    context = RequestContext(request, {
+        'product'  : product,
+        'comments' : comments,
+    })
+   
+    # If the user is logged then get the products in the user's cart and show the comment form.
     if request.user.is_authenticated():
-        form = CommentForm()
+        comment_form = CommentForm()
         no_items = request.user.get_profile().products_in_cart
-        context = RequestContext(request, {
-            'product'           : product,
-            'comments'          : comments,
+        context.update({
             'form'              : form,
-            'products_in_cart'  : no_items,
+            'products_in_cart'  : comment_form,
         })
-        
-    # TODO: document me!    
+    
+    # If the user is not logged then get the login form and show it.        
     else:
-        context = RequestContext(request, {
-            'product'  : product,
-            'comments' : comments,
-        })
+        login_form = LoginForm()
+        context.update({'login_form': login_form})
    
     # increment the number of visits to the product 
     product.visit_count +=1;
@@ -497,7 +499,7 @@ def category(request, category_id):
     best_products = Product.objects.filter(category=thisCategory.id).filter(stock_count__gt=0).order_by('-average_rating')[:10]
     message = "Products on " + thisCategory.name
    
-   # generate a base context
+   # Generate a base context
     context = RequestContext(request, {
         'message'           : message,
         'this'              : thisCategory,
@@ -509,6 +511,9 @@ def category(request, category_id):
     if request.user.is_authenticated():
         no_items = request.user.get_profile().products_in_cart
         context.update({'products_in_cart'  : no_items})
+    else:
+        login_form = LoginForm()
+        context.update({'login_form': login_form})
 
     # if receives the option to show as icons the send this option to the template
     if request.GET.get('l') == 'icons':
@@ -521,50 +526,53 @@ def category(request, category_id):
 ##
 # Search for a product.
 def search(request):
+    # If get a query thorugh GET.
     if request.method == 'GET':
         form = SearchForm(request.GET)
-       
+        
         if form.is_valid():
-            query = form.cleaned_data['query']
-           
-            try: 
-                products = Product.objects.filter(name__icontains = query)
-            except Product.DoesNotExist: 
-                # TODO: redirect to a good-looking page!
-                return HttpResponse("Sorry, we couldn't find your product.")
-           
-            categories = Category.objects.all()            
             template = loader.get_template('list.html')
-            message = "Search results for %s." % query
-         
-            # TODO: document me! 
+            # Get clean information of the query.
+            query = form.cleaned_data['query']
+            categories = Category.objects.all()
+            
+            context = RequestContext(request, {
+                'categories'  : categories,
+                'query'       : request.GET.get('query'),
+            })
+           
+            # If the user is authenticated then show the number of products in their cart
             if request.user.is_authenticated():
                 no_items = request.user.get_profile().products_in_cart
-                context = RequestContext(request, {
-                    'message'           : message,
-                    'categories'        : categories,
-                    'products'          : products,
-                    'products_in_cart'  : no_items,
-                    'query'             : request.GET.get('query'),
-                })
-
-            # TODO: document me!
+                context.update({ 'products_in_cart'  : no_items })
+            # If not the login form.
             else:
-                context = RequestContext(request, {
-                    'message'     : message,
-                    'categories'  : categories,
-                    'products'    : products,
-                    'query'       : request.GET.get('query'),
-                })
-            
-            
-            if request.GET.get('l') == 'icons':
-                context.update({'icons': 'OK'})
+                login_form = LoginForm()
+                context.update({ 'login_form': login_form })
+           
+            # Try to get the products that validate the query.
+            try: 
+                products = Product.objects.filter(name__icontains = query)
+                if len(products) > 0:
+                    message = "Search results for \"%s\"." % query
+                    context.update({ 
+                        'products'  : products,
+                        'message'  : message,
+                     })
+                     
+                    if request.GET.get('l') == 'icons':
+                        context.update({'icons': 'OK'})
+                        
+                # If the query does not return products:
+                else:
+                    message = "Sorry, we couldn't find your product for \"%s\"." % query
+                    context.update({ 'message'  : message })
+                    
+            except Product.DoesNotExist:         
+                message = "Sorry, we couldn't find your product for \"%s\"." % query
+                context.update({ 'message'  : message })
+                
             context.update(csrf(request))
             return HttpResponse(template.render(context))
-            
-        else:
-           return HttpResponseRedirect('/') 
            
-    else:
-        return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/')
