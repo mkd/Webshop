@@ -525,7 +525,18 @@ div.title a:hover
 .product-image {
 	position: relative;
 	height: 130px;
+    text-align: center;
 }
+
+.product-image img
+{
+    margin:     0 auto;
+    max-height: 120px;
+    max-width:  120px;
+    text-align: center;
+}
+
+
 .price {
     position: absolute;
     text-align: center;
@@ -588,9 +599,9 @@ div.title a:hover
 
 .middle
 {
-	display: table-cell; 
+	display:        table-cell; 
 	vertical-align: middle;
-	height: 130px;
+	height:         130px;
 }
 
 input
