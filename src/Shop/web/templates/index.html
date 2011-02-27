@@ -1,13 +1,33 @@
+<!--
+   - index.html
+   -
+   - Front-page of Webshop.
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from list.html -->
 {% extends "list.html" %}
 
+
+
+<!-- title and extra headers -->
 {% block title %} Welcome to Webshop! {% endblock %}
 
+
+
+<!-- main content -->
 {% block main_content %}
+    <!-- welcome the user, if authenticated -->
     {% if request.user.is_authenticated %}
         <h2>Welcome {{ request.user.username }}!</h2>
     {% else %}
         <h2>Welcome to Webshop</h2>
     {% endif %}
+
+    <!-- regular descriptive text of the website for everybody -->
 	<p>
         <strong>Webshop</strong> is an open community where you can
         purchase the latest products and share your experience with millions of
@@ -19,9 +39,9 @@
         coolest products on our online store and become part of our social
         network of online buyers.
     </p>
-
     <p><br /></p>
 
+    <!-- logo and slogan -->
     <div class="note">
         <img src="/static/images/presentation.png" width="550" />
         <br />
@@ -32,6 +52,7 @@
 
     <p><br /></p>
 
+    <!-- let new users to easily join our network -->
     {% if not request.user.is_authenticated %}
     <h2>Start shopping right now</h2>
     <p>
@@ -46,6 +67,7 @@
 	<br/>
     {% endif %}
 
+    <!-- include a list of the most popular products in the front-page -->
 	{{ block.super }}
 	
 {% endblock %}

@@ -1,24 +1,43 @@
 <!--
-  - myadmin_add_product.html
-  -
-  - This form is used to add a new product.
--->
+   - myadmin_add_product.html
+   -
+   - Template to support product addition.
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from base.html -->
 {% extends "base.html" %}
 
+
+
+<!-- title and extra headers -->
 {% block title %} Webshop -- New Product {% endblock %}
 
+
+
+<!-- administrative sidebar -->
 {% block side_bar %}
     {% include "admin_sidebar.html" %}
 {% endblock %}
 
+
+
+<!-- main content -->
 {% block main_content %}
-    {% block new_product_form %}
+    <h1>New Product</h1>
+
+    <!-- notify users when a product couldn't be added -->
     {% if product_not_added %}
         <div class="error">Product could not be added!</div>
     {% endif %}
-        <h1>New Product</h1>
-        <form enctype="multipart/form-data" id="add_product_form" method="post"
-              action="/addProduct">
+
+    <!-- display the form to introduce a new product -->
+    {% block new_product_form %}
+    <form enctype="multipart/form-data" id="add_product_form" method="post"
+          action="/addProduct">
         {% csrf_token %}
         <table>
         <tr>
@@ -71,7 +90,8 @@
             {{ form.price }}
             </td>
         </tr>
-        <!--
+
+        <!-- Note: tags are not supported yet in Webshop
         <tr>
             <td>
 	        <label for="price">Tags (comma-separated):</label>
@@ -81,6 +101,8 @@
             </td>
         </tr>
         -->
+
+        <!-- add/delete/return functionality buttons -->
         <tr>
             <td colspan="2" class="buttons">
                 <input class="button" type="submit" id="submit" value="Save" />
@@ -90,6 +112,6 @@
             </td>
         </tr>
         </table>
-        </form>
+     </form>
     {% endblock %}
 {% endblock %}

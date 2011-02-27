@@ -1,23 +1,41 @@
+<!--
+   - cart.html
+   -
+   - Template to render the cart details (products and shopping status).
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from base.html -->
 {% extends "base.html" %}
 
+
+
+<!-- title and extra headers -->
 {% block title %} My cart {% endblock %}
 {% block extra_head %}
 	<link rel=stylesheet href="/static/css/cart.css" type="text/css" />
 {% endblock %}
 
+
+
+<!-- buyer's sidebar -->
 {% block side_bar %}
-	<div id="side_bar">
-		<ul id="side_bar">
-			<li><a href="/editProfile">My profile</a></li>
-			<li><a href="/cart">My cart</a></li>
-			<li><a href="/myTransactions">My transactions</a></li>
-		</ul>	
-	</div>
+    {% include "buyer_sidebar.html" %}
 {% endblock %}
 
-{% block main_content %}
 
-	<script>
+
+<!-- main content -->
+{% block main_content %}
+    <!-- javascript functionality -->
+	<script type="text/javascript">
+
+    /*!
+     * Delete a product from the cart.
+     */
 	function deleteProduct(product, thisPrice){
 		var answer = confirm("Are you sure?")
 		if (answer){
@@ -38,7 +56,10 @@
 			$("#total").fadeIn();
 		}	
 	}
-	
+
+    /*!
+     * Modify the amount of items in the cart (per product).
+     */	
 	function editQuantity(product, thisPrice){
 		total = $('#total').html();
 		beforeQuantity = $('#before-quantity-'+product).val();
@@ -63,32 +84,55 @@
 	
 	</script>
 
+    <!-- cart and messages access -->
 	{% if cart %}
-	<center><h2>My cart</h2></center>
-	
+	    <h2>My cart</h2>
 	{% if message %}
 		<p>{{ message }}<p>
 	{% endif %}
-	
-	<table cellspacing="0" callpadding="50" border="0" width="660">
+
+    <!-- table containing the current cart situation -->	
+	<table cellspacing="0" cellpadding="50" border="0" width="660">
 		<form action="/checkout" method="post" id="form-myCart">
 			{% csrf_token %}
 			{% for product in cart %}
 			<tr class="item" id="item-{{ product.id }}">
-				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
-				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
-				<td class="quantity" width="100"><input type="text" name="quantity-{{ product.id }}" id="quantity-{{ product.id }}" value="{{ product.quantity }}" size="8" onChange="editQuantity({{ product.id }}, {{ product.product.price }} )"/>
-					<input type="hidden" id="before-quantity-{{ product.id }}" value="{{ product.quantity }}" /></td>
-				<td class="value" width="75">{{ product.product.price }} &euro;</td>
-				<td class="delete" width="40"><img src="/static/images/delete-icon.png" onclick="deleteProduct({{ product.id }}, {{ product.product.price }})" /></td>
+				<td class="picture" width="60">
+                    <img src="{{ product.product.picture }}"
+                         class="product-pic" />
+                </td>
+				<td class="name">
+                    <a href="/product/{{ product.product.id }}">{{ product.product.name }}</a>
+                </td>
+				<td class="quantity" width="100">
+                    <input type="text" name="quantity-{{ product.id }}"
+                           id="quantity-{{ product.id }}"
+                           value="{{ product.quantity }}" size="8"
+                           onChange="editQuantity({{ product.id }}, {{ product.product.price }} )" />
+					<input type="hidden"
+                           id="before-quantity-{{ product.id }}"
+                           value="{{ product.quantity }}" />
+                </td>
+				<td class="value" width="75">
+                    {{ product.product.price }} &euro;
+                </td>
+				<td class="delete" width="40">
+                    <img src="/static/images/delete-icon.png"
+                         onclick="deleteProduct({{ product.id }}, {{ product.product.price }})" />
+                </td>
 			</tr>
 			{% endfor %}
-			
+		
+            <!-- total and checkout possibility -->	
 			<tr>
-				<td colspan="5" class="total">Total: <span id="total">{{ total }}</span> &euro; 
-				<div id="checkout" onclick="$('#form-myCart').submit()">
-					 Checkout 
-				</div></td>
+				<td colspan="5" class="total">
+                    <strong>Total:</strong>
+                    <span id="total">{{ total }}</span> &euro; 
+
+				    <div id="checkout" onclick="$('#form-myCart').submit()">
+                        Checkout
+                    </div>
+                </td>
 			</tr>
 		</form>
 	</table>

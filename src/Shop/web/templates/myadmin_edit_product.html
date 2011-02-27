@@ -1,23 +1,39 @@
 <!--
   - myadmin_edit_product.html
   -
-  - This form is used to edit a product.
--->
+   - Template used for displaying a product in edit mode.
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from base.html -->
 {% extends "base.html" %}
 
+
+
+<!-- title and extra headers -->
 {% block title %} Webshop -- Edit Product {% endblock %}
 {% block extra_head %}
 	<meta http-equiv="cache-control" content="no-cache" />
 	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
 {% endblock %}
 
+
+
+<!-- administrative sidebar -->
 {% block side_bar %}
     {% include "admin_sidebar.html" %}
 {% endblock %}
 
+
+
+<!-- main content -->
 {% block main_content %}
-    {% block new_product_form %}
     <h1>{{ product_name }}</h1>
+
+    <!-- report about the previous transaction (added/not added) -->
     {% if product_not_saved %}
         <div class="error">Product could not be modified!</div>
     {% endif %}
@@ -27,8 +43,11 @@
     {% if product_added %}
         <div class="success">Product added successfully!</div>
     {% endif %}
-        <form enctype="multipart/form-data" id="add_product_form" method="post"
-              action="/saveProduct/{{ product_id }}">
+
+    <!-- display the actual form to modify a product -->
+    {% block new_product_form %}
+    <form enctype="multipart/form-data" id="add_product_form" method="post"
+          action="/saveProduct/{{ product_id }}">
         {% csrf_token %}
         <table>
         <tr>
@@ -81,7 +100,7 @@
             {{ form.price }}
             </td>
         </tr>
-        <!--
+        <!-- Note: tags are not supported yet in Webshop.
         <tr>
             <td>
 	        <label for="price">Tags (comma-separated):</label>
@@ -90,7 +109,9 @@
             {{ form.tags }}
             </td>
         </tr>
-        -->
+        !-->
+
+        <!-- save/delete/return functionality buttons -->
         <tr>
             <td colspan="2" class="buttons">
                 <input class="button" type="submit" id="submit" value="Save" />
@@ -102,6 +123,6 @@
             </td>
         </tr>
         </table>
-        </form>
+    </form>
     {% endblock %}
 {% endblock %}

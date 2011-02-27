@@ -1,15 +1,36 @@
+<!--
+   - myadmin_products.html
+   -
+   - Template that shows the existing products and the main administrative
+   - functions for them.
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from base.html -->
 {% extends "base.html" %}
 
+
+
+<!-- title and extra headers -->
 {% block title %} Administrative Pages -- All Products {% endblock %}
 {% block extra_head %}
 	<link rel=stylesheet href="/static/css/admin.css" type="text/css" />
     <script src="/static/js/admin.js"></script>
 {% endblock %}
 
+
+
+<!-- administrative sidebar -->
 {% block side_bar %}
     {% include "admin_sidebar.html" %}
 {% endblock %}
 
+
+
+<!-- main content -->
 {% block main_content %}
     <h1>Administrate Products</h1>
     <div class="functions">

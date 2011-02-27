@@ -1,19 +1,32 @@
+<!--
+   - transactions.html
+   -
+   - Template used to display the user's payments (transactions).
+   -
+   - (c) 2011 The Webshop Team
+!-->
+
+
+
+<!-- layout inherited from base.html -->
 {% extends "base.html" %}
 
+
+
+<!-- title and extra headers -->
 {% block title %} My cart {% endblock %}
 
+
+
+<!-- buyer's sidebar -->
 {% block side_bar %}
-	<div id="side_bar">
-		<ul id="side_bar">
-			<li><a href="/editProfile">My profile</a></li>
-			<li><a href="/cart">My cart</a></li>
-			<li><a href="/myTransactions">My shopping history</a></li>
-		</ul>	
-	</div>
+    {% include "buyer_sidebar.html" %}
 {% endblock %}
 
-{% block main_content %}
 
+
+<!-- main content -->
+{% block main_content %}
 	{% if payments %}
 	<center><h2>My transactions</h2></center>
 	
@@ -49,5 +62,4 @@
 	{% else %}
 		<center><h2>You don't have any transaction yet!</h2></center>
 	{% endif %}
-	
 {% endblock %}
