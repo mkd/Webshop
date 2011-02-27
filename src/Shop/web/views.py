@@ -47,6 +47,9 @@ def index(request):
     if request.user.is_authenticated():
         no_items = request.user.get_profile().products_in_cart
         context.update({'products_in_cart': no_items})
+    else:
+        login_form = LoginForm()
+        context.update({'login_form': login_form})
     
     # if show-as-icons option, then send this option to the template
     if request.GET.get('l') == 'icons':
@@ -60,111 +63,105 @@ def index(request):
 ##
 # Render the user cart page.
 def cart(request):
-    only_auth(request)
-
-    # TODO: document me!
-    template = loader.get_template('cart.html')
-    message = request.GET.get('m', '')
-    user = request.user
-    userProducts = CartProduct.objects.filter(user=user)
-    
-    total = 0
-    for product in userProducts:
-        total += product.quantity * product.product.price
+    if is_auth(request):
+        # TODO: document me!
+        template = loader.get_template('cart.html')
+        message = request.GET.get('m', '')
+        user = request.user
+        userProducts = CartProduct.objects.filter(user=user)
         
-    no_items = request.user.get_profile().products_in_cart
-    context = RequestContext(request, {
-        'products_in_cart' : no_items,
-        'cart'   : userProducts,
-        'total'  : total,
-        'message': message,
-    })
-    
-    context.update(csrf(request))
-    return HttpResponse(template.render(context))
+        total = 0
+        for product in userProducts:
+            total += product.quantity * product.product.price
+            
+        no_items = request.user.get_profile().products_in_cart
+        context = RequestContext(request, {
+            'products_in_cart' : no_items,
+            'cart'   : userProducts,
+            'total'  : total,
+            'message': message,
+        })
+        
+        context.update(csrf(request))
+        return HttpResponse(template.render(context))
 
 
 ##
 # TODO: document me!        
 def myProducts(request, payment_id):
-    only_auth(request)
-
-    template = loader.get_template('myProducts.html')
-    payment = get_object_or_404(Payment, id=payment_id) 
-    
-    if payment.user != request.user:
-        return HttpResponseRedirect("/")
-    
-    products = Transaction.objects.filter(payment=payment)          
-    no_items = request.user.get_profile().products_in_cart
-    context = RequestContext(request, {
-        'products_in_cart' : no_items,
-        'payment'  : payment,
-        'products'  : products,
-        'message'   : request.GET.get('m',''),
-    })
-    return HttpResponse(template.render(context))
+    if is_auth(request):
+        template = loader.get_template('myProducts.html')
+        payment = get_object_or_404(Payment, id=payment_id) 
+        
+        if payment.user != request.user:
+            return HttpResponseRedirect("/")
+        
+        products = Transaction.objects.filter(payment=payment)          
+        no_items = request.user.get_profile().products_in_cart
+        context = RequestContext(request, {
+            'products_in_cart' : no_items,
+            'payment'  : payment,
+            'products'  : products,
+            'message'   : request.GET.get('m',''),
+        })
+        return HttpResponse(template.render(context))
    
 
 ##
 # TODO: document me! 
 def myTransactions(request):
-    only_auth(request)
-
-    template = loader.get_template('transactions.html')
-    payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
-    no_items = request.user.get_profile().products_in_cart
-    context = RequestContext(request, {
-        'products_in_cart' : no_items,
-        'payments'  : payments,
-        'message'   : request.GET.get('m',''),
-    })
-    return HttpResponse(template.render(context))
+    if is_auth(request):
+        template = loader.get_template('transactions.html')
+        payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
+        no_items = request.user.get_profile().products_in_cart
+        context = RequestContext(request, {
+            'products_in_cart' : no_items,
+            'payments'  : payments,
+            'message'   : request.GET.get('m',''),
+        })
+        return HttpResponse(template.render(context))
         
 
 ##
 # TODO: document me!
 def addToCart(request):
-    only_auth(request)
+    if is_auth(request):
+        profile = get_object_or_404(UserProfile, user=request.user) 
+        profile.products_in_cart += 1
+        profile.save()
+        product = get_object_or_404(Product, id=request.POST['product'])
 
-    profile = get_object_or_404(UserProfile, user=request.user) 
-    profile.products_in_cart += 1
-    profile.save()
-    product = get_object_or_404(Product, id=request.POST['product'])
-
-    try: 
-        new_prod = CartProduct.objects.get(product=product, user=request.user)
-        new_prod.quantity += 1
-    
-    except CartProduct.DoesNotExist: 
-        new_prod = CartProduct(product = product, 
-                          user = request.user,
-                          timestamp = datetime.datetime.now(),
-                          quantity = 1)
-    
-    new_prod.save()
-    product.save()
-    return HttpResponse("%s" % profile.products_in_cart)
+        try: 
+            new_prod = CartProduct.objects.get(product=product, user=request.user)
+            new_prod.quantity += 1
+        
+        except CartProduct.DoesNotExist: 
+            new_prod = CartProduct(product = product, 
+                              user = request.user,
+                              timestamp = datetime.datetime.now(),
+                              quantity = 1)
+        
+        new_prod.save()
+        product.save()
+        return HttpResponse("%s" % profile.products_in_cart)
 
 
 ##
 # TODO: document me!
 def deleteFromCart(request):
-    if request.method == 'POST':
+    if is_auth(request) and request.method == 'POST':
         prod = get_object_or_404(CartProduct, id=request.POST['product'])
         profile = get_object_or_404(UserProfile, user=request.user) 
         profile.products_in_cart -= prod.quantity
         profile.save()
         prod.delete()
         return HttpResponse(profile.products_in_cart)
-    else:
-        return HttpResponseRedirect("/")
 
 
 ##
 # TODO: document me!        
 def editQuantityInCart(request):
-    if request.method == 'POST':
+    if is_auth(request) and request.method == 'POST':
         prod = get_object_or_404(CartProduct, id=request.POST['product'])
         profile = get_object_or_404(UserProfile, user=request.user) 
         
@@ -177,60 +174,57 @@ def editQuantityInCart(request):
         profile.save()
         prod.save()
         return HttpResponse(profile.products_in_cart)
-    else:
-        return HttpResponseRedirect("/")
 
 
 ##
 # Show the payment page of an order, the user see the list of products to buy
 #  and the postal address wher the products will be sent.      
 def checkout(request):
-    only_auth()
+    if is_auth(request):
+        template = loader.get_template('payment.html')
+        products = CartProduct.objects.filter(user=request.user)
+        message = request.GET.get('m', '')
+        prices = []
+        total = 0
+        
+        # calculate the total amount of the order
+        for product in products:
+            thisProd = get_object_or_404(Product, id=product.product.id)
+            product.total = product.quantity * thisProd.price
+            total += product.total
+        
+        # generate the data to send to the bank and the Payment object
+        payment = Payment( user=request.user, amount=total)
+        payment.pid = "%d-%s" % (request.user.id, datetime.datetime.now())
+        checksumstr = "pid=%s&sid=%s&amount=%s&token=%s" % (payment.pid, SID, payment.amount, KEY)
+        m = md5.new(checksumstr)
+        payment.checksum = m.hexdigest()
+        payment.save()
+        
+        # generate a form to edit the postal information
+        profile = request.user.get_profile()
+        postal_form = PostalForm(instance=profile)
+        no_items = request.user.get_profile().products_in_cart
+        context = RequestContext(request, {
+            'products_in_cart' : no_items,
+            'sid'     : SID,
+            'cost'    : prices,
+            'cart'    : products,
+            'payment' : payment,
+            'message' : message,
+            'postal_form' : postal_form,
+            'profile' : profile,
+        })
 
-    template = loader.get_template('payment.html')
-    products = CartProduct.objects.filter(user=request.user)
-    message = request.GET.get('m', '')
-    prices = []
-    total = 0
-    
-    # calculate the total amount of the order
-    for product in products:
-        thisProd = get_object_or_404(Product, id=product.product.id)
-        product.total = product.quantity * thisProd.price
-        total += product.total
-    
-    # generate the data to send to the bank and the Payment object
-    payment = Payment( user=request.user, amount=total)
-    payment.pid = "%d-%s" % (request.user.id, datetime.datetime.now())
-    checksumstr = "pid=%s&sid=%s&amount=%s&token=%s" % (payment.pid, SID, payment.amount, KEY)
-    m = md5.new(checksumstr)
-    payment.checksum = m.hexdigest()
-    payment.save()
-    
-    # generate a form to edit the postal information
-    profile = request.user.get_profile()
-    postal_form = PostalForm(instance=profile)
-    no_items = request.user.get_profile().products_in_cart
-    context = RequestContext(request, {
-        'products_in_cart' : no_items,
-        'sid'     : SID,
-        'cost'    : prices,
-        'cart'    : products,
-        'payment' : payment,
-        'message' : message,
-        'postal_form' : postal_form,
-        'profile' : profile,
-    })
-
-    context.update(csrf(request))
-    return HttpResponse(template.render(context))
+        context.update(csrf(request))
+        return HttpResponse(template.render(context))
   
 
 ##
 # If the bank returns an OK response then we store the Payments
 # and all the products in the cart lic transactions.
 def updatePostalOrder(request):
-    if request.method == 'POST' and request.user.is_authenticated():
+    if is_auth(request) and request.method == 'POST':
         pid =  request.POST.get('pid')
         postal_address = request.POST.get('postal_address','')
         postal_code = request.POST.get('postal_code','')
@@ -245,7 +239,6 @@ def updatePostalOrder(request):
         payment.postal_country = postal_country
         payment.save()
         return HttpResponse("OK")
-
     else:
         return HttpResponse("NO")
 
@@ -254,104 +247,101 @@ def updatePostalOrder(request):
 # If the bank returns an OK response then we store the Payments
 # and all the products in the cart lic transactions.
 def paymentOk(request):
-    only_auth(request)
-
-    # obtain the data from the GET request
-    pid = request.GET.get('pid')
-    ref = request.GET.get('ref')
-    checksum = request.GET.get('checksum')
-    
-    # do the checksum
-    checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
-    m = md5.new(checksumstr)
-    myChecksum = m.hexdigest()
-    
-    # check that the checksum is correct
-    if checksum == myChecksum and ref > 0:
-        # Get the Payment and adds the ref.
-        payment = get_object_or_404(Payment, pid=pid)
-        payment.ref = ref
-        payment.save()
+    if is_auth(request):
+        # obtain the data from the GET request
+        pid = request.GET.get('pid')
+        ref = request.GET.get('ref')
+        checksum = request.GET.get('checksum')
         
-        # get the products in the user's cart and add them to the transaction
-        user = request.user
-        products = CartProduct.objects.filter(user=user)
+        # do the checksum
+        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
+        m = md5.new(checksumstr)
+        myChecksum = m.hexdigest()
         
-        for product in products:
-            transaction = Transaction( 
-                product = product.product,
-                user = user,
-                payment = payment,
-                quantity = product.quantity,
-                unit_price = product.product.price)
+        # check that the checksum is correct
+        if checksum == myChecksum and ref > 0:
+            # Get the Payment and adds the ref.
+            payment = get_object_or_404(Payment, pid=pid)
+            payment.ref = ref
+            payment.save()
             
-            theProduct = product.product
-            theProduct.stock_count -= product.quantity
-            theProduct.sold_count += product.quantity
-            theProduct.save()
-            transaction.save()
-            product.delete()
-        
-        # reset the cart product counter of the user
-        profile = get_object_or_404(UserProfile, user=user) 
-        profile.products_in_cart = 0
-        profile.save()
-        
-        return HttpResponseRedirect("/myTransactions?m=Payment succesful!")
-     
-    # if the checksum doesn't validate, then delete the payment
-    else:
-        payment = get_object_or_404(Payment, pid=pid)
-        payment.delete()
-        return HttpResponseRedirect("/checkout?m=The checksum does not validate!")
+            # get the products in the user's cart and add them to the transaction
+            user = request.user
+            products = CartProduct.objects.filter(user=user)
+            
+            for product in products:
+                transaction = Transaction( 
+                    product = product.product,
+                    user = user,
+                    payment = payment,
+                    quantity = product.quantity,
+                    unit_price = product.product.price)
+                
+                theProduct = product.product
+                theProduct.stock_count -= product.quantity
+                theProduct.sold_count += product.quantity
+                theProduct.save()
+                transaction.save()
+                product.delete()
+            
+            # reset the cart product counter of the user
+            profile = get_object_or_404(UserProfile, user=user) 
+            profile.products_in_cart = 0
+            profile.save()
+            
+            return HttpResponseRedirect("/myTransactions?m=Payment succesful!")
+         
+        # if the checksum doesn't validate, then delete the payment
+        else:
+            payment = get_object_or_404(Payment, pid=pid)
+            payment.delete()
+            return HttpResponseRedirect("/checkout?m=The checksum does not validate!")
 
 
 ##
 # Handle an canceled payment, triggered when the user cancel the payment in the bank.
 def paymentNo(request):
-    only_auth(request)
-
-    # get the values sent by the bank and check that the checksum matches
-    pid = request.GET.get('pid')
-    ref = request.GET.get('ref')
-    checksum = request.GET.get('checksum')
-    
-    checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
-    m = md5.new(checksumstr)
-    myChecksum = m.hexdigest()
-    
-    # if the checksum matches then delete the payment and returns the user to 
-    # the cart page showing a message
-    if checksum == myChecksum:
-        payment = get_object_or_404(Payment, pid=pid)  
-        payment.delete()
-        return HttpResponseRedirect("/cart?m=You cancel the payment.")
-    else:
-        return HttpResponseRedirect("/")
+    if is_auth(request):
+        # get the values sent by the bank and check that the checksum matches
+        pid = request.GET.get('pid')
+        ref = request.GET.get('ref')
+        checksum = request.GET.get('checksum')
+        
+        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
+        m = md5.new(checksumstr)
+        myChecksum = m.hexdigest()
+        
+        # if the checksum matches then delete the payment and returns the user to 
+        # the cart page showing a message
+        if checksum == myChecksum:
+            payment = get_object_or_404(Payment, pid=pid)  
+            payment.delete()
+            return HttpResponseRedirect("/cart?m=You cancel the payment.")
+        else:
+            return HttpResponseRedirect("/")
 
 
 ##
 # Handle an error on payment. 
 def paymentError(request):
-    only_auth(request)
+    if is_auth(request):
+        # get the values sent by the bank and check that the checksum matches
+        pid = request.GET.get('pid')
+        ref = request.GET.get('ref')
+        checksum = request.GET.get('checksum')
 
-    # get the values sent by the bank and check that the checksum matches
-    pid = request.GET.get('pid')
-    ref = request.GET.get('ref')
-    checksum = request.GET.get('checksum')
-
-    checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
-    m = md5.new(checksumstr)
-    myChecksum = m.hexdigest()
-    
-    # if the checksum matches then delete the payment and returns the user to 
-    # the checkout page showing a message
-    if checksum == myChecksum:
-        payment = get_object_or_404(Payment, pid=pid)
-        payment.delete()
-        return HttpResponseRedirect("/checkout?m=Some error occurs while trying to connect to the bank.")
-    else:
-        return HttpResponseRedirect("/")
+        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, KEY)
+        m = md5.new(checksumstr)
+        myChecksum = m.hexdigest()
+        
+        # if the checksum matches then delete the payment and returns the user to 
+        # the checkout page showing a message
+        if checksum == myChecksum:
+            payment = get_object_or_404(Payment, pid=pid)
+            payment.delete()
+            return HttpResponseRedirect("/checkout?m=Some error occurs while trying to connect to the bank.")
+        else:
+            return HttpResponseRedirect("/")
 
 
 ##
@@ -390,7 +380,7 @@ def product(request, product_id):
 ##
 # Set a rating for a given product.
 def rateProduct(request):
-    if request.user.is_authenticated() and request.method == 'POST':
+    if is_auth(request) and request.method == 'POST':
         element = request.POST.get('product')
         rate    = request.POST.get('rate')
        
@@ -423,9 +413,8 @@ def rateProduct(request):
 # Publish a comment on a page 
 def comment(request, product_id):
     template = loader.get_template('product.html')
-   
-    # TODO: document me! 
-    if request.method == 'POST':
+
+    if is_auth(request) and request.method == 'POST':
         form = CommentForm(request.POST)
        
         # TODO: document me! 
@@ -467,19 +456,20 @@ def comment(request, product_id):
 ##
 # Rate a comment for a product.
 def rateComment(request, comment_id, option): 
-    template = loader.get_template('product.html')
-    comment = get_object_or_404(Comment, id=comment_id)
-   
-    # TODO: document me 
-    if option == '1':
-        comment.positives += 1
-    else:
-        comment.negatives -= 1
-    
-    comment.save()
+    if is_auth(request):
+        template = loader.get_template('product.html')
+        comment = get_object_or_404(Comment, id=comment_id)
+       
+        # TODO: document me 
+        if option == '1':
+            comment.positives += 1
+        else:
+            comment.negatives -= 1
+        
+        comment.save()
 
-    # TODO: clean up!
-    return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\" /> %s" % (comment.id, comment.positives, comment.negatives))
+        # TODO: clean up!
+        return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\" /> %s" % (comment.id, comment.positives, comment.negatives))
 
 
 

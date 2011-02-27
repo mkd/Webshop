@@ -37,48 +37,42 @@ def signup(request):
 
 ##
 # Render a simple login form (sign in)
+# If receie data from POST validate the data an login the user.
+# If not orif the user is invalid the render the form again.
 def signin(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            # get the clean data from the POST
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            # try to validate the user against the DB
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                # login the user and redirect to the front page.
+                login(request, user)
+                return HttpResponseRedirect('/')
+    
+    # if the input values are not correct, or direct access to this page    
     t = loader.get_template('signin.html')
     categories = Category.objects.all()
+    login_form = LoginForm()
     context = RequestContext(request, { 
         'categories' : categories,
+        'login_form': login_form
     })
+
+    # render the login page.
     return HttpResponse(t.render(context))
-
-
-##
-# Perform the actual login.
-#
-# This function checks the user and password against the users in the database
-# and tries to log in. If successful, the user is redirected to the home page,
-# otherwise an error is displayed.
-def tryLogin(request):
-    # authenticate the user
-    username = request.POST.get('user')
-    password = request.POST.get('pass')
-    user = authenticate(username=username, password=password)
-
-    # on sign-in go to front-page, otherwise go back to sign-in form
-    if user is not None:
-        login(request, user)
-        return HttpResponseRedirect('/')
-    else:
-        t = loader.get_template('signin.html')
-        categories = Category.objects.all()
-        context = RequestContext(request, {
-            'login_failed' : True,
-            'categories'   : categories,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
 
 
 ##
 # Close the session for an user and go to the front page.
 def signout(request):
-    only_auth(request)
-    logout(request)
-    return HttpResponseRedirect('/')  
+    if is_auth(request):
+        logout(request)
+        return HttpResponseRedirect('/')  
 
 
 ##
@@ -146,10 +140,7 @@ def register(request):
 ##
 # Render the user profile page.
 def editProfile(request):
-    only_auth(request)
-
-    # check for an existing session
-    if request.user.is_authenticated():
+    if is_auth(request):
         t = loader.get_template('profile.html')
         form = ProfileForm(request.POST, request.FILES)
 
@@ -180,18 +171,14 @@ def editProfile(request):
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
-    # if no session, use a standard context
-    else:
-        return HttpResponseRedirect('/')
 
 
 ##
 # Save the user's profile.
 def saveProfile(request):
-    only_auth(request)
+    if is_auth(request) and request.method == 'POST':
+        t = loader.get_template('profile.html')
 
-    t = loader.get_template('profile.html')
-    if request.method == 'POST':
         # save all the data from the POST into the database
         up = UserProfile.objects.get(user=request.user.id)
         u = User.objects.get(id=request.user.id)
@@ -230,9 +217,9 @@ def saveProfile(request):
             'saved'          : True,
         })
 
-    # redirect the user to the home page (already logged-in)
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+        # redirect the user to the home page (already logged-in)
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
   
 
 ##
