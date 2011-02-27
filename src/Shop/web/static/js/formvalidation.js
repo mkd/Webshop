@@ -55,17 +55,17 @@ $(document).ready(function()
                 required:  true
             },
             
-            passwd:
+            password:
             {
                 maxlength: 128,
-//                required:  true
+                required:  true
             },
             
-            pass2:
+            password_again:
             {
                 maxlength: 128,
-                equalTo: "#passwd"
-//                required:  true
+                equalTo: '#id_passwd',
+                required:  true
             },
         }
     });
