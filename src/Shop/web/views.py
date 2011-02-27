@@ -47,6 +47,9 @@ def index(request):
     if request.user.is_authenticated():
         no_items = request.user.get_profile().products_in_cart
         context.update({'products_in_cart': no_items})
+    else:
+        login_form = LoginForm()
+        context.update({'login_form': login_form})
     
     # if show-as-icons option, then send this option to the template
     if request.GET.get('l') == 'icons':
