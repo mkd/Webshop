@@ -43,17 +43,18 @@ def signin(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            # Get the clean data from the POST
+            # get the clean data from the POST
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            # Try to validate the user against the DB
+
+            # try to validate the user against the DB
             user = authenticate(username=username, password=password)
             if user is not None:
-                # Login the user and redirect to the front page.
+                # login the user and redirect to the front page.
                 login(request, user)
                 return HttpResponseRedirect('/')
     
-    # If the input values are not correct, or direct access to this page    
+    # if the input values are not correct, or direct access to this page    
     t = loader.get_template('signin.html')
     categories = Category.objects.all()
     login_form = LoginForm()
@@ -61,16 +62,17 @@ def signin(request):
         'categories' : categories,
         'login_form': login_form
     })
-    # Render the login page.
+
+    # render the login page.
     return HttpResponse(t.render(context))
 
 
 ##
 # Close the session for an user and go to the front page.
 def signout(request):
-    only_auth(request)
-    logout(request)
-    return HttpResponseRedirect('/')  
+    if is_auth(request):
+        logout(request)
+        return HttpResponseRedirect('/')  
 
 
 ##
@@ -138,10 +140,7 @@ def register(request):
 ##
 # Render the user profile page.
 def editProfile(request):
-    only_auth(request)
-
-    # check for an existing session
-    if request.user.is_authenticated():
+    if is_auth(request):
         t = loader.get_template('profile.html')
         form = ProfileForm(request.POST, request.FILES)
 
@@ -172,18 +171,14 @@ def editProfile(request):
         })
         context.update(csrf(request))
         return HttpResponse(t.render(context))
-    # if no session, use a standard context
-    else:
-        return HttpResponseRedirect('/')
 
 
 ##
 # Save the user's profile.
 def saveProfile(request):
-    only_auth(request)
+    if is_auth(request) and request.method == 'POST':
+        t = loader.get_template('profile.html')
 
-    t = loader.get_template('profile.html')
-    if request.method == 'POST':
         # save all the data from the POST into the database
         up = UserProfile.objects.get(user=request.user.id)
         u = User.objects.get(id=request.user.id)
@@ -222,9 +217,9 @@ def saveProfile(request):
             'saved'          : True,
         })
 
-    # redirect the user to the home page (already logged-in)
-    context.update(csrf(request))
-    return HttpResponse(t.render(context))
+        # redirect the user to the home page (already logged-in)
+        context.update(csrf(request))
+        return HttpResponse(t.render(context))
   
 
 ##
