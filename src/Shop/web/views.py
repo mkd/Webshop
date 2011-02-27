@@ -2,8 +2,6 @@
 ### This module contains the main views for rendering Webshop.
 ### (c) 2011 The Webshop team
 
-
-
 ### necessary libraries ###
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
@@ -366,8 +364,8 @@ def product(request, product_id):
         comment_form = CommentForm()
         number_items_in_cart = request.user.get_profile().products_in_cart
         context.update({
-            'form'              : form,
-            'products_in_cart'  : comment_form,
+            'form'              : comment_form,
+            'products_in_cart'  : number_items_in_cart,
         })
     
     # If the user is not logged then get the login form and show it.        
