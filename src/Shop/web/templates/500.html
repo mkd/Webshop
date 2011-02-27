@@ -1,7 +1,7 @@
 <!--
-   - 404.html
+   - 500.html
    -
-   - Front-page of Webshop.
+   - Custom template for Internal Server Error (HTTP response).
    -
    - (c) 2011 The Webshop Team
 !-->
@@ -14,11 +14,11 @@
 
 
 <!-- title and extra headers -->
-{% block title %} ERROR 404 {% endblock %}
+{% block title %} ERROR 500 {% endblock %}
 
 
 
 <!-- main content -->
 {% block main_content %}
-	The page that are you looking for does not exists.
+	The server encountered an internal error.
 {% endblock %}
