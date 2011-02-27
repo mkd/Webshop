@@ -33,31 +33,32 @@
 <!-- main content -->
 {% block main_content %}
     <h1>Administrate Products</h1>
-    <div class="functions">
     {% block admin_products_form %}
     <form id="admin_products" method="post" action="/deleteProducts">
         {% csrf_token %}
-        <div class="button_text">
-            <a href="/myadmin_addProduct"><img src="/static/images/new_product.png" /></a>
-            <a href="/myadmin_addProduct"
-               style="font-style: oblique; text-decoration: none;">Add a new product</a>
-        </div>
+            <table class="fuctions">
+                <tr>
+                    <td>
+                <a href="/myadmin_addProduct"><img src="/static/images/new_product.png" /></a>
+                <a href="/myadmin_addProduct"
+                   style="font-style: oblique; text-decoration: none;">Add a new product</a>
+                   </td>
 
-        {% if not products_no_0 %}
-        <div class="button_text">
-            <img id="bt_delete_products" src="/static/images/delete.png" />
-            <span id="lb_delete_products">Delete selected products</span>
-        </div>
-        {% endif %}
-
-        <div class="button_text">
-            <a href="/myadmin"><img src="/static/images/return.png"
-                                    alt="Back to admin" /></a>
-            <a href="/myadmin"
-               style="font-style: oblique; text-decoration: none;">Return to
-               administrative functions</a>
-        </div>
-    </div>
+            {% if not products_no_0 %}
+                   <td>
+            <div class="button_text">
+                <img id="bt_delete_products" src="/static/images/delete.png" />
+                <span id="lb_delete_products">Delete selected products</span>
+            </div>
+            </td>
+            {% endif %}
+            <td>
+                <a href="/myadmin"><img src="/static/images/return.png"
+                                        alt="Back to admin" /></a>
+                <a href="/myadmin"
+                   style="font-style: oblique; text-decoration: none;">Return to
+                   administrative functions</a>
+                   </td></tr></table>
     {% if deleted %}
         <div class="success">Product deleted successfully!</div>
     {% endif %}
