@@ -53,8 +53,8 @@ function sendPayment(){
 			<tr class="item" id="item-{{ product.id }}">
 				<td class="picture"><img src="{{ product.product.picture }}" class="product-pic-check"/></td>
 				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }} {{ product.id }}</a></td>
-				<td class="quantity" width="100"> {{ product.quantity }} items x {{ product.product.price }}</td>
-				<td class="value" width="75">{{ product.total }} &euro;</td>
+				<td class="quantity"> {{ product.quantity }} items x {{ product.product.price }}</td>
+				<td class="value">{{ product.total }} &euro;</td>
 			</tr>
 			{% endfor %}
 			

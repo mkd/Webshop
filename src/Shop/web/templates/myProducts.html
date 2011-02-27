@@ -85,7 +85,7 @@
 	<table>
 			{% for product in products %}
 			<tr class="item" id="item-{{ product.id }}">
-				<td class="picture" width="60"><img src="{{ product.product.picture }}" class="product-pic"/></td>
+				<td class="picture"><img src="{{ product.product.picture }}" class="product-pic"/></td>
 				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
 				<td class="rate">
 					{% if payment.status == 'Delivered' %}
