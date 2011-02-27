@@ -106,27 +106,8 @@ $(document).ready(function()
                 required:  true
             },
 
-            stock_count:
+            units:
             {
-                required:  true
-            },
-        }
-    });
-    
-    
-    // client-side validation for the signin form
-    $("#signin_form").validate({
-        rules:
-        {
-        	user:
-            {
-                maxlength: 32,
-                required:  true
-            },
-            
-            pass:
-            {
-                maxlength: 128,
                 required:  true
             },
         }
