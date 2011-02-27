@@ -99,7 +99,7 @@ $(document).ready(function()
 
             passwd2:
             {
-                required:  true
+                required:  true,
                 equalTo: '#passwd'
             },
 
