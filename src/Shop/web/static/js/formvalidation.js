@@ -97,21 +97,25 @@ $(document).ready(function()
                 required:  true
             },
 
-            pass2:
+            passwd2:
             {
                 required:  true
+                equalTo: '#passwd'
             },
 
             email:
             {
-                maxlength: 32,
-                required:  true
+                maxlength:  32,
+                required:   true,
+                email:		true
             },
 
             email2:
             {
-                maxlength: 32,
-                required:  true
+                maxlength:  32,
+                required:   true,
+                email:		true,
+                equalTo: '#email'
             },
         }
     });
