@@ -10,7 +10,7 @@
 
 	<script>
 	function add(id){
-		$.post('/cart/add', { product: id },
+		$.post('/cart/add', { product: id, csrfmiddlewaretoken: {% csrf_token %}},
 		 function(data) {
 			$('#products-in-cart').html(data);
 			$("#my-cart").hide();

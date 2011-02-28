@@ -564,22 +564,34 @@ def search(request):
             # Try to get the products that validate the query.
             try: 
                 products = Product.objects.filter(name__icontains = query)
-                if len(products) > 0:
-                    message = "Search results for \"%s\"." % query
-                    context.update({ 
-                        'products'  : products,
-                        'message'  : message,
-                     })
-                     
-                    if request.GET.get('l') == 'icons':
-                        context.update({'icons': 'OK'})
-                        
-                # If the query does not return products:
-                else:
-                    message = "Sorry, we couldn't find your product for \"%s\"." % query
-                    context.update({ 'message'  : message })
                     
-            except Product.DoesNotExist:         
+            except Product.DoesNotExist:
+                a=1
+                
+            # Try to get the products that validate the query.
+            try: 
+                products2 = Product.objects.filter(description__icontains = query)
+
+            except Product.DoesNotExist:
+                a=1
+            
+            print products2.values()   
+            #products.concat(products2)
+            
+            products = products.values()
+            #products = products.add(products2.values())
+            if products.count() > 0:
+                message = "Search results for \"%s\"." % query
+                context.update({ 
+                    'products'  : products,
+                    'message'  : message,
+                 })
+                 
+                if request.GET.get('l') == 'icons':
+                    context.update({'icons': 'OK'})
+                    
+            # If the query does not return products:
+            else:
                 message = "Sorry, we couldn't find your product for \"%s\"." % query
                 context.update({ 'message'  : message })
                 
