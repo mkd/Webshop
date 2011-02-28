@@ -225,9 +225,10 @@ def saveProfile(request):
         up.postal_country = request.POST.get('country')
 
         # if pass and pass2 match, save them as the new password
-        pwd = request.POST.get('passwd', None)
-        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')):
-            u.set_password(pwd)
+        pwd1 = request.POST.get('password', None)
+        pwd2 = request.POST.get('password_again', None)
+        if pwd1 != '' and pwd1 != None and (pwd1 == pwd2) and pwd1 != '******':
+            u.set_password(pwd1)
 
         # save the avatar picture, if available
         handleUploadedPic('users', request.FILES.get('picture'), str(u.id))
