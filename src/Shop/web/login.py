@@ -17,6 +17,8 @@ from models import *
 from forms import *
 import datetime, hashlib, os
 
+
+
 ##
 # Render a simple registration form (sign up)
 def signup(request):
@@ -130,6 +132,9 @@ def signup(request):
 # If receie data from POST validate the data an login the user.
 # If not orif the user is invalid the render the form again.
 def signin(request):
+    t = loader.get_template('signin.html')
+    categories = Category.objects.all()
+    login_form = LoginForm()
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -143,15 +148,18 @@ def signin(request):
                 # login the user and redirect to the front page.
                 login(request, user)
                 return HttpResponseRedirect('/')
-    
-    # if the input values are not correct, or direct access to this page    
-    t = loader.get_template('signin.html')
-    categories = Category.objects.all()
-    login_form = LoginForm()
-    context = RequestContext(request, { 
-        'categories' : categories,
-        'login_form': login_form
-    })
+            else:
+                context = RequestContext(request, { 
+                    'categories'   : categories,
+                    'login_form'   : login_form,
+                    'login_failed' : True,
+                })
+    else:
+        # if the input values are not correct, or direct access to this page    
+        context = RequestContext(request, { 
+            'categories'   : categories,
+            'login_form'   : login_form,
+        })
 
     # render the login page.
     return HttpResponse(t.render(context))
