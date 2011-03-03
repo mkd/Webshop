@@ -22,7 +22,6 @@ import datetime, hashlib, os
 ##
 # Render a simple registration form (sign up)
 def signup(request):
-    
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         
@@ -145,7 +144,7 @@ def signin(request):
             # try to validate the user against the DB
             user = authenticate(username=username, password=password)
             if user is not None:
-                # login the user and redirect to the front page.
+                # login the user and redirect to the front page
                 login(request, user)
                 return HttpResponseRedirect('/')
             else:
@@ -171,6 +170,7 @@ def signout(request):
     if is_auth(request):
         logout(request)
         return HttpResponseRedirect('/')  
+
 
 ##
 # Render the user profile page.
@@ -261,13 +261,13 @@ def saveProfile(request):
 ##
 # Show a dummy page telling that your password has been sent to your email.
 def forgot_password(request):
-        t = loader.get_template('forgot_password.html')
-        form = PassForm()
-        context = RequestContext(request, {
-            'form' : form,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
+    t = loader.get_template('forgot_password.html')
+    form = PassForm()
+    context = RequestContext(request, {
+        'form' : form,
+    })
+    context.update(csrf(request))
+    return HttpResponse(t.render(context))
 
 
 ##
