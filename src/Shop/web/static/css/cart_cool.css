@@ -1,94 +1,96 @@
 /**
  * CSS Stylesheet for cart views.
  *
- * W3C-compliant version.
+ * Updated on 3.3.2011.
  *
  */
 img.product-pic
 {
-	width: 50px;
-	height: 50px;
-	padding:2px;
-	border: solid #888 1px;
+	border:             1px solid #888;
     -webkit-border-radius: 1em;
-	-moz-border-radius: 1em;
+	-moz-border-radius:    1em;
+	height:             50px;
+	padding:            2px;
+	width:              50px;
 }
 
 img.product-pic-check
 {
-	width: 30px;
-	height: 30px;
-	padding:2px;
-	border: solid #888 1px;
+	border:             1px solid #888;
     -webkit-border-radius: 1em;
-	-moz-border-radius: 1em;
+	-moz-border-radius:    1em;
+	height:             30px;
+	padding:            2px;
+	width:              30px;
 }
 
 tr.item:hover
 {
-	background: #ded;
+	background:         #ded;
 }
 
 td.name a
 {
-	text-decoration: none;
-	font-size: 16px;
-	color: #666;
+	color:              #666;
+	font-size:          16px;
+	text-decoration:    none;
 }
 
 td.value
 {
-    text-align: right;
+    text-align:         right;
 }
 
 td.quantity
 {
-    text-align: left;
+    text-align:         left;
 }
 
 td.total
 {
-    text-align: right;
-	font-size: 18px;
-	font-weight: bold;
-	padding-top: 12px;
-	border-top: 1px solid #999;  
+	border-top:         1px solid #999;  
+	font-size:          18px;
+	font-weight:        bold;
+	padding-top:        12px;
+    text-align:         right;
 }
 
 #checkout
 {
-    text-align: center;
-    font-size: 14px;
-    font-weight: 800;
-    display: inline;
-        
-	background: #d1d1d1; /* for non-css3 browsers */
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* for IE */
-	background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#a1a1a1)); /* for webkit browsers */
-	background: -moz-linear-gradient(top,  #ebebeb,  #a1a1a1); /* for firefox 3.6+ */
- 
-	color: #444;
-	border-top: solid 1px #f8f8f8;
-	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
-	-moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
-	box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
-	text-shadow: 0 1px 0 rgba(255, 255, 255, .8);
-	
-	margin-left: 10px;
-	padding:  7px 30px;
+	background:         #d1d1d1; /* non-CSS3 browsers */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* MSIE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#a1a1a1)); /* webkit */
+	background: -moz-linear-gradient(top,  #ebebeb,  #a1a1a1); /* firefox 3.6+ */
+
+	border-top:         1px solid #f8f8f8;
 	-webkit-border-radius: 1.6em;
-	-moz-border-radius: 1.6em;
+	-moz-border-radius:    1.6em;
+
+	color:              #444;
+    display:            inline;
+    font-size:          14px;
+    font-weight:        800;
+
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	-moz-box-shadow:    0 1px 1px rgba(0, 0, 0, .2);
+	box-shadow:         0 1px 1px rgba(0, 0, 0, .2);
+	text-shadow:        0 1px 0 rgba(255, 255, 255, .8);
+	
+	margin-left:        10px;
+	padding:            7px 30px;
+    text-align:         center;
 }
 
 #checkout:hover
 {
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#a1a1a1', endColorstr='#ebebeb'); /* for IE */
-	background: -webkit-gradient(linear, left top, left bottom, from(#a1a1a1), to(#ebebeb)); /* for webkit browsers */
-	background: -moz-linear-gradient(top,  #a1a1a1,  #ebebeb); /* for firefox 3.6+ */
-	cursor: pointer;
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#a1a1a1', endColorstr='#ebebeb'); /* MSIE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#a1a1a1), to(#ebebeb)); /* webkit */
+	background: -moz-linear-gradient(top,  #a1a1a1,  #ebebeb); /* firefox 3.6+ */
+
+	cursor:             pointer;
 }
 
 .delete_from_cart
 {
-    cursor: pointer;
+    cursor:             pointer;
 }

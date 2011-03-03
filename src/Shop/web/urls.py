@@ -51,8 +51,9 @@ urlpatterns = patterns('',
     (r'^editOrder/(?P<order_id>\d+)$', 'web.views.editOrder'),
     (r'^cancelOrder/(?P<order_id>\d+)$', 'web.views.cancelOrder'),
     (r'^saveOrder/(?P<order_id>\d+)$', 'web.views.saveOrder'),
-
     (r'^sendPassword$', 'web.views.sendPassword'),
+
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'}),
 
     (r'^$', 'web.views.index'),
 )

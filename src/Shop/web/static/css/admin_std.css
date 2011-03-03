@@ -3,7 +3,7 @@
  *
  * W3C-compliant version.
  * 
- * Updated on 24.02.2011.
+ * Updated on 3.3.2011.
  *
  */
 table#admin
@@ -57,7 +57,10 @@ table#admin a:hover
     text-decoration:        none;
 }
 
-#products tr:hover            { background-color: #ffa; }
+#products tr:hover
+{
+    background-color:       #ffa;
+}
 
 #products th
 {
@@ -120,11 +123,11 @@ table#admin a:hover
 
 div.order-info
 {
-    float:left;
+    float:                  left;
 }
 
 div.order-products
 {
-    float:left;
-    padding-left: 20px;
+    float:                  left;
+    padding-left:           20px;
 }

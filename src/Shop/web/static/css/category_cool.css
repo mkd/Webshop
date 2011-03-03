@@ -1,107 +1,110 @@
 /*
  * CSS Stylesheet for categories.
  *
+ * Updated on 3.3.2011.
+ *
  */
 #category-content
 {
-	width: 880px;
+	width:              880px;
 }
 
 #left-side
 {
-	width: 270px;
-	float: left;
+	float:              left;
+	width:              270px;
 }
 
 #left-side img
 {
-	width: 260px;
-	border: solid #888 1px;
-	-webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
-	-moz-box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
-	box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
-	text-shadow: 0 1px 5px rgba(255, 255, 255, .8);
-	
+	border:             1px solid #888;
     -webkit-border-radius: 1em;
-	-moz-border-radius: 1em;
+	-moz-border-radius:    1em;
+
+	-webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
+	-moz-box-shadow:    0 1px 5px rgba(0, 0, 0, .2);
+	box-shadow:         0 1px 5px rgba(0, 0, 0, .2);
+	text-shadow:        0 1px 5px rgba(255, 255, 255, .8);
+
+	width: 260px;
 }
 
 #right-side
 {
-	float: left;
-	padding-left: 10px;
-	width: 600px;
+	float:              left;
+	padding-left:       10px;
+	width:              600px;
 }
 
 #headder
 {
-	float: left;
+	float:              left;
 }
 
 #clear
 {
-	clear: both;
-	text-align: left;
+	clear:              both;
+	text-align:         left;
 }
 
 .note
 {
+	border-radius:      10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius:    10px;
     margin:             0 auto;
     text-align:         center;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
 }
 
 #categories
 {
-	margin:                 0 auto; 
-	width:                  690px;	
+	margin:             0 auto; 
+	width:              690px;	
 }
 
 #categories h2
 {
-	margin-top:             2em;
+	margin-top:         2em;
 }
 
 #checkbox
 {
-	background: #fee;
-	float: left;
+	background:         #fee;
+	float:              left;
 }
 
 #category
 {
-	background: #fee;
-	border:  1px solid #fde;
-	width:   690px;
-	height:  20px;
-    float: left;
-    text-align: left;
-    display: inline;
+	background:         #fee;
+	border:             1px solid #fde;
     -webkit-border-radius: 1em;
-	-moz-border-radius: 1em;
+	-moz-border-radius:    1em;
+    display:            inline;
+    float:              left;
+	height:             20px;
+    text-align:         left;
+	width:              690px;
 }
 
 #category:hover
 {
-	background: #ded;
-	cursor: pointer;
+	background:         #ded;
+	cursor:             pointer;
 }
 
 h1.category
 {
-	text-transform:capitalize;
-	margin-top: -22px;
-	font: normal Helvetica, sans-serif;
-	text-shadow: Silver 2px 2px 2px;
-	font-size: 16px;
-	color: #666;
+	color:              #666;
+	font-family:        normal Helvetica, sans-serif;
+	font-size:          16px;
+	margin-top:         -22px;
+	text-shadow:        Silver 2px 2px 2px;
+	text-transform:     capitalize;
 }
 
 h1.category  a
 {
-	text-decoration: none;
-	text-transform:capitalize;
-	color: #666;
+	color:              #666;
+	text-decoration:    none;
+	text-transform:     capitalize;
 }

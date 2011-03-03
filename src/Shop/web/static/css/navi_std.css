@@ -1,0 +1,152 @@
+/**
+ * CSS stylesheet for top-navigator.
+ *
+ * W3C-compliant version.
+ *
+ * Updated on 3.3.2011.
+ *
+ */
+#nav 
+{
+	background:         #8b8b8b;
+	border:             1px solid #6d6d6d;
+	line-height:        100%;
+	margin:             0;
+	padding:            7px 6px;
+}
+
+#nav li 
+{
+	float:              right;
+	list-style:         none;
+	margin:             0 1px;
+	padding:            0 0 8px;
+	position:           relative;
+}
+
+#nav a 
+{
+	color:              #e7e5e5;
+	display:            block;
+	font-weight:        bold;
+	margin:             0;
+	padding:            8px 20px;
+	text-decoration:    none;
+}
+
+#nav .current a, #nav li:hover > a 
+{
+	background:         #d1d1d1;
+	border-top:         solid 1px #f8f8f8;
+	color:              #444;
+}
+
+#nav ul li:hover a, #nav li:hover li a 
+{
+	background:         none;
+	border:             none;
+	color:              #666;
+}
+
+#nav ul a:hover 
+{
+	background:         #0399d4 !important;
+	color:              #fff !important;
+}
+
+#nav ul 
+{
+	background:         #ddd;
+	border:             1px solid #b4b4b4;
+	display:            none;
+	left:               0;
+	margin:             0;
+	margin-left:        -120px;
+	padding:            0;
+	position:           absolute;
+	top:                35px;
+	width:              185px;
+}
+
+#nav li:hover > ul 
+{
+	display:            block;
+}
+
+#nav ul li 
+{
+	float:              none;
+	margin:             0;
+	padding:            0;
+}
+
+#nav ul a 
+{
+	font-weight:        normal;
+}
+
+#nav:after 
+{
+	content:            ".";
+	display:            block;
+	clear:              both;
+	height:             0;
+	line-height:        0;
+	visibility:         hidden;
+}
+
+#nav 
+{
+	display:            inline-block;
+}
+
+#nav-separator 
+{
+	border-left:        1px solid #ccc; 
+	height:             25px;
+	width:              1px;
+}
+
+* html #nav 
+{
+	height:             1%;
+}
+
+#cart
+{
+	float:              left;
+	margin-top:         -8px;
+	padding-right:      5px;
+}
+
+#nav li.logo 
+{
+	float:              left;
+	list-style:         none;
+	margin:             0 15px;
+	margin-top:         -15px;
+	padding:            0 0 8px;
+	position:           relative;
+}
+
+#nav li.search 
+{
+	float:              left;
+	list-style:         none;
+	margin:             0 1px;
+	margin-left:        107px;
+	padding:            0 0 8px;
+	position:           relative;
+}
+
+#logo
+{
+	height:             1px;
+	width:              400px;
+}
+
+#logo:hover
+{
+	cursor:             pointer;
+	margin-top:         1px;
+}

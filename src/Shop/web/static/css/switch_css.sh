@@ -10,6 +10,8 @@ case $arg in
         ln -sf category_std.css category.css
         ln -sf product_std.css product.css
         ln -sf style_std.css style.css
+        ln -sf navi_std.css navi.css
+        ln -sf search_std.css search.css
     ;;
     "cool")
         echo "Switching to CSS3"
@@ -18,6 +20,8 @@ case $arg in
         ln -sf category_cool.css category.css
         ln -sf product_cool.css product.css
         ln -sf style_cool.css style.css
+        ln -sf navi_cool.css navi.css
+        ln -sf search_cool.css search.css
     ;;
     *)
         echo "Usage: $0 [std|cool]"
