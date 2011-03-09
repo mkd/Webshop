@@ -562,25 +562,20 @@ def search(request):
                 context.update({ 'login_form': login_form })
            
             # Try to get the products that validate the query.
-            try: 
-                products = Product.objects.filter(name__icontains = query)
-                    
-            except Product.DoesNotExist:
-                a=1
+            db_query = """SELECT DISTINCT web_product.* 
+                            FROM web_product, web_category 
+                            WHERE 
+                                web_product.name like '%%%%%s%%%%' or
+                                web_product.description like '%%%%%s%%%%' or
+                                (
+                                    web_product.category_id = web_category.id and 
+                                    web_category.name like '%%%%%s%%%%'
+                                )
+                            """ % (query,query,query)
+                            
+            products = Product.objects.raw(db_query)
                 
-            # Try to get the products that validate the query.
-            try: 
-                products2 = Product.objects.filter(description__icontains = query)
-
-            except Product.DoesNotExist:
-                a=1
-            
-            print products2.values()   
-            #products.concat(products2)
-            
-            products = products.values()
-            #products = products.add(products2.values())
-            if products.count() > 0:
+            if len(list(products)) > 0:
                 message = "Search results for \"%s\"." % query
                 context.update({ 
                     'products'  : products,
