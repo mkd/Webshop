@@ -1,333 +1,108 @@
 /**
- * CSS Stylesheet for Webshop
+ * Baseline CSS stylesheet for Webshop
  *
- * W3C-compliant version.
+ * Updated on 3.3.2011.
+ *
  */
+
 
 
 /*** GENERAL ***/
 body 
 {
-	font:           normal .8em/1.5em Arial, Helvetica, sans-serif;
-	background:     #ffe;
-	margin: 10px auto;
-	color: #444;
+	background:         #ffe;
+	color:              #444;
+	font-family:        normal .8em/1.5em Arial, Helvetica, sans-serif;
+	margin:             10px auto;
 }
 
 a 
 {
-	color: #222;
+	color:              #222;
 }
 
 img
 {
     border:             0;
+    vertical-align:     middle;
 }
 
 #wraper
 { 
-	text-align: left; 
-	width: 900px; 
-	margin: auto; 
+	text-align:         left; 
+	width:              900px; 
+	margin:             auto; 
 }
 
 #content
 {
-	float: left; 
-	margin: 10px;
-	width: 680px;
-	text-align: justify;
+	float:              left; 
+	margin:             10px;
+	width:              680px;
+	text-align:         justify;
 }
 
 #side_bar
 {
-	float:left; 	
+	background:         #ddd; /* non-CSS3 browsers */
 	
-	background: #ddd;
+	border:             solid 1px #b4b4b4;
 
-	margin-top:10px;
-	padding:0;
-	width: 185px;
-	
-	border: solid 1px #b4b4b4;
+	float:              left; 	
+	margin-top:         10px;
+	padding:            0;
+	width:              185px;
 
 }
 
 #side_bar ul
 {
-	margin-bottom: 0px;
-	margin-top: 0px;
-	margin-left: 0px;
-	border:0;
-	background: 0;
+	background:         0;
+
+	border:             0;
+
+	margin-bottom:      0;
+	margin-left:        0;
+	margin-top:         0;
 }
 
 #side_bar li 
 {
-	float: right;
-	position: relative;
-	list-style: none;
+	list-style:     none;
 }
 
 #side_bar a 
 {
-	font-weight: bold;
-	color: #696969;
-	text-decoration: none;
-	display: block;
-	padding:  3px 20px;
-	margin: 0;
+
+	color:              #696969;
+	display:            block;
+	font-weight:        bold;
+	margin:             0;
+	padding:            3px 20px;
+	text-decoration:    none;
 }
 
 #side_bar a:hover 
 {
-	background: #0399d4 !important; /* for non-css3 browsers */
- 
-	color: #fff !important;
-}
-
-#side_bar ul li 
-{
-	float: none;
-	margin: 0;
-	padding: 0;
-}
-
-#side_bar ul li:first-child > a 
-{
+	background:         #0399d4 !important;
+	color:              #fff !important;
 }
 
 #footer
 {
-	margin-top: 10px;
-	padding:    10px;
-    color:      #888;
-    text-align: center;
-    clear: 	    both;
-    border-top: 1px dotted #888;
+    border-top:         1px dotted #888;
+    clear: 	            both;
+    color:              #888;
+	margin-top:         10px;
+	padding:            10px;
+    text-align:         center;
 }
 
 
-/*** NAVIGATOR ***/
-#nav 
-{
-	margin: 0;
-	padding: 7px 6px 0;
-	line-height: 100%;
- 
-	background: #8b8b8b; /* for non-css3 browsers */
- 
-	border: solid 1px #6d6d6d;
-}
 
-#nav li 
-{
-	margin: 0 1px;
-	padding: 0 0 8px;
-	float: right;
-	position: relative;
-	list-style: none;
-}
-
-/* main level link */
-#nav a 
-{
-	font-weight: bold;
-	color: #e7e5e5;
-	text-decoration: none;
-	display: block;
-	padding:  8px 20px;
-	margin: 0;
-}
-
-/* main level link hover */
-#nav .current a, #nav li:hover > a 
-{
-	background: #d1d1d1; /* for non-css3 browsers */
- 
-	color: #444;
-	border-top: solid 1px #f8f8f8;
-}
-
-/* sub levels link hover */
-#nav ul li:hover a, #nav li:hover li a 
-{
-	background: none;
-	border: none;
-	color: #666;
-}
-
-#nav ul a:hover 
-{
-	background: #0399d4 !important; /* for non-css3 browsers */
- 
-	color: #fff !important;
-}
-
-/* level 2 list */
-#nav ul 
-{
-	background: #ddd; /* for non-css3 browsers */
- 
-	display: none;
-	margin: 0;
-	margin-left: -120px;
-	padding: 0;
-	width: 185px;
-	position: absolute;
-	top: 35px;
-	left: 0;
-	border: solid 1px #b4b4b4;
-}
-
-/* dropdown */
-#nav li:hover > ul 
-{
-	display: block;
-}
-
-#nav ul li 
-{
-	float: none;
-	margin: 0;
-	padding: 0;
-}
-
-#nav ul a 
-{
-	font-weight: normal;
-}
-
-/* rounded corners for first and last child */
-#nav ul li:first-child > a 
-{
-}
-
-
-/* clearfix */
-#nav:after 
-{
-	content: ".";
-	display: block;
-	clear: both;
-	visibility: hidden;
-	line-height: 0;
-	height: 0;
-}
-
-#nav 
-{
-	display: inline-block;
-}
-
-#nav-separator 
-{
-	border-left: 1px solid #ccc; 
-	width:1px;
-	height:25px;
-}
-
-html[xmlns] #nav 
-{
-	display: block;
-}
-
-* html #nav 
-{
-	height: 1%;
-}
-
-#cart
-{
-	float:left;
-	padding-right:5px;
-	margin-top:-8px;
-}
-
-#nav li.logo 
-{
-	margin: 0 15px;
-	margin-top: -15px;
-	padding: 0 0 8px;
-	float: left;
-	position: relative;
-	list-style: none;
-}
-
-#nav li.search 
-{
-	margin: 0 1px;
-	margin-left: 107px;
-	padding: 0 0 8px;
-	float: left;
-	position: relative;
-	list-style: none;
-}
-
-#logo
-{
-	width: 400px;
-	height: 1px;
-}
-
-#logo:hover
-{
-	margin-top: 1px;
-	cursor:     pointer;
-}
-
-/*** SEARCH BOX ***/
-.searchform 
-{
-	display: inline-block;
-	padding: 2px 3px;
-	
-	background: #8b8b8b; /* for non-css3 browsers */
-}
-
-.searchform input 
-{
-	font: normal 12px/100% Arial, Helvetica, sans-serif;
-	color: #2F4F4F;
-}
-
-.searchform .searchfield 
-{
-	background: #fff;
-	padding: 3px 3px 3px 4px;
-	width: 202px;
-	border: solid 1px #7a7a7a;
-	outline: none;
- 
-}
-
-.searchform .searchbutton 
-{
-	color: #fff;
-	border: solid 1px #494949;
-	font-size: 10px;
-	height: 25px;
-	width: 25px;
- 
-	background: #5f5f5f;
-}
-
-.searchbutton:hover 
-{
-	background: #d1d1d1; /* for non-css3 browsers */
- 
-	color: #444;
-	border-top: solid 1px #f8f8f8;
-	
-	border: solid 1px #494949;
-	font-size: 10px;
-	height: 25px;
-	width: 25px;
-}
 
 
 /*** EXTRA STUFF ***/
-
 .note
 {
     margin:             0 auto;
@@ -336,236 +111,256 @@ html[xmlns] #nav
 
 #products
 {
-	margin:                 0 auto; 
-	width:                  690px;	
+	margin:             0 auto; 
+	width:              690px;	
 }
 
 #products h2
 {
-	margin-top:             2em;
+	margin-top:         2em;
 }
 
 #product
 {
-	background: #fee;
-	border:  1px solid #fde;
-	width:   130px;
-	height:  160px;
-    margin:  10px;
-    padding: 10px;
-    float: left;
-    text-align: center;
-    display: inline;
+	background:         #fee;
+	border:             1px solid #fde;
+
+    display:            inline;
+    float:              left;
+	height:             160px;
+    margin:             10px;
+    padding:            10px;
+    text-align:         center;
+	width:              130px;
 }
 
 #product:hover
 {
-	background: #ded;
-	cursor: pointer;
+	background:         #ded;
+	cursor:             pointer;
 }
 
 h1.product
 {
-	text-transform:capitalize;
-	margin-top: -22px;
-	font-family: normal Helvetica, sans-serif;
-	font-size: 16px;
-	color: #666;
+	color:              #666;
+	font-family:        normal Helvetica, sans-serif;
+	font-size:          16px;
+	margin-top:         -22px;
+	text-transform:     capitalize;
 }
 
 h1.product  a
 {
-	text-decoration: none;
-	text-transform:capitalize;
-	color: #666;
+	color:              #666;
+	text-decoration:    none;
+	text-transform:     capitalize;
 }
 
 div.title
 {
-    margin-top: 0px;
-    font-weight: bold;
-	text-transform:capitalize;
-	font-family: normal Helvetica, sans-serif;
-	font-size: 16px;
-	color: #666;
+	color:              #666;
+    margin-top:         0px;
+	font-family:        normal Helvetica, sans-serif;
+	font-size:          16px;
+    font-weight:        bold;
+	text-transform:     capitalize;
 }
 
 div.title  a
 {
-	text-decoration: none;
-	text-transform:capitalize;
-	color: #666;
+	color:              #666;
+	text-decoration:    none;
+	text-transform:     capitalize;
 }
 
 div.title a:hover
 {
-	text-decoration: underline;
-	color: #444;
+	color:              #444;
+	text-decoration:    underline;
 }
 
-.product-image {
-	position: relative;
-	height: 130px;
+.product-image
+{
+	height:             130px;
+	position:           relative;
+    text-align:         center;
 }
-.price {
-    position: absolute;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 800;
-    top: 100px;
-    left: -8px;
-    padding: 3px 0;
+
+.product-image img
+{
+    margin:             0 auto;
+    max-height:         120px;
+    max-width:          120px;
+    text-align:         center;
+}
+
+
+.price
+{
+    background:         #d1d1d1; /* non-CSS3 browsers */
+
+	border-top:         1px solid #f8f8f8;
+
+	color:              #444;
+	display:            block;
+    font-size:          14px;
+    font-weight:        800;
+    left:               -8px;
+	padding:            3px 5px;
+    position:           absolute;
+    text-align:         center;
+
+    top:                100px;
+}
+
+.price-list
+{
+    text-align:         center;
+    font-size:          14px;
+    font-weight:        800;
+    padding:            3px 0;
         
-    background: #d1d1d1; /* for non-css3 browsers */
+    background:         #d1d1d1; /* non-CSS3 browsers */
  
-	color: #444;
-	border-top: solid 1px #f8f8f8;
-	
-	display: block;
-	padding:  3px 5px;
-}
+	border-top:         1px solid #f8f8f8;
 
-.price-list {
-    text-align: center;
-    font-size: 14px;
-    font-weight: 800;
-    padding: 3px 0;
-        
-    background: #d1d1d1; /* for non-css3 browsers */
- 
-	color: #444;
-	border-top: solid 1px #f8f8f8;
-
-	padding:  3px 5px;
+	color:              #444;
+	padding:            3px 5px;
 }
 
 .price-list:hover
 {
-	cursor: pointer;
-	margin-bottom: -2px;
+	cursor:             pointer;
+	margin-bottom:      -2px;
 }
 
 .middle
 {
-	display: table-cell; 
-	vertical-align: middle;
-	height: 130px;
+	display:            table-cell; 
+	height:             130px;
+	vertical-align:     middle;
 }
 
 input
 {
-    border:                 1px solid #888;
-    padding:                2px;
+    border:             1px solid #888;
+    padding:            2px;
 }
 
 textarea
 {
-    border:                 1px solid #888;
-    padding:                2px;
+    border:             1px solid #888;
+    padding:            2px;
 }
 
 .error
 {
-    color:                  red;
-    display:                block;
-    font-weight:            bold;
-    margin:                 1em 0;
+    color:              red;
+    display:            block;
+    font-weight:        bold;
+    margin:             1em 0;
 }
 
 .success
 {
-    color:                  green;
-    display:                block;
-    font-weight:            bold;
-    margin:                 1em 0;
+    color:              green;
+    display:            block;
+    font-weight:        bold;
+    margin:             1em 0;
 }
 
 td.product
 {
-	border-top: 1px solid #999;
-	padding-top: 10px;
+	border-top:         1px solid #999;
+	padding-top:        10px;
 }
 
 img.product-pic
 {
-	width: 70px;
-	height: 70px;
-	padding:2px;
-	border: solid #888 1px;
+	border:             solid #888 1px;
+	height:             70px;
+	padding:            2px;
+	width:              70px;
 }
 
 img.pic
 {
-    padding:2px;
-	border: solid #888 1px;
+	border:             1px solid #888;
+    padding:            2px;
 }
 
 div.display-options
 {
-    text-align:right; 
+    text-align:         right; 
 }
 
 .button
 {
-    cursor:         pointer;
+    cursor:             pointer;
 
-    /* button background */
-	background:     #33729a;
-    color:          white;
+	background:     #33729a; /* non-CSS3 browsers */
 
-    /* button border and layout */
-    font-size:              large;
-    font-weight:            bold;
-    padding:                4px;
-	border:                 1px ridge gray;
+	border:             1px ridge gray;
+
+    color:              white;
+    font-size:          large;
+    font-weight:        bold;
+    padding:            4px;
 }
 
 
 .button:hover
 {
-	background:     #6898b7;
+	background:         #6898b7;
 }
 
 
 .return
 {
-    cursor:         pointer;
+    cursor:             pointer;
 
-    /* button background */
-	background:     #f18300;
-    color:          #222;
+	background:         #f18300; /* non-CSS3 browsers */
 
-    /* button border and layout */
-    font-weight:            bold;
-    padding:                4px;
-	border:                 1px ridge gray;
+	border:             1px ridge gray;
+
+    color:              #222;
+    font-weight:        bold;
+    padding:            4px;
 }
 
 
 .return:hover
 {
-	background:     #f9b26d;
+	background:         #f9b26d;
 }
 
 
 .delete
 {
-    cursor:         pointer;
+    cursor:             pointer;
 
-    /* button background */
-	background:     #ec3333;
-    color:          #222;
+	background:         #ec3333; /* non-CSS3 browsers */
 
-    /* button border and layout */
-    font-weight:            bold;
-    padding:                4px;
-	border:                 1px ridge gray;
+	border:             1px ridge gray;
+
+    color:              #222;
+    font-weight:        bold;
+    padding:            4px;
 }
 
 
 .delete:hover
 {
-	background:     #ec8080;
+	background:         #ec8080;
+}
+
+.disabled
+{
+	background:         #ddd;
+	border:             1px ridge gray;
+    cursor:             pointer;
+    font-weight:        bold;
+    padding:            4px;
 }
 
 
@@ -578,4 +373,9 @@ div.display-options
 .share
 {
     font-style:         oblique;
+}
+
+.centered
+{
+    margin:             0 auto;
 }

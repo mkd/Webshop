@@ -17,10 +17,11 @@ from models import *
 from forms import *
 import datetime, hashlib, os
 
+
+
 ##
 # Render a simple registration form (sign up)
 def signup(request):
-    
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         
@@ -130,6 +131,9 @@ def signup(request):
 # If receie data from POST validate the data an login the user.
 # If not orif the user is invalid the render the form again.
 def signin(request):
+    t = loader.get_template('signin.html')
+    categories = Category.objects.all()
+    login_form = LoginForm()
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -140,18 +144,21 @@ def signin(request):
             # try to validate the user against the DB
             user = authenticate(username=username, password=password)
             if user is not None:
-                # login the user and redirect to the front page.
+                # login the user and redirect to the front page
                 login(request, user)
                 return HttpResponseRedirect('/')
-    
-    # if the input values are not correct, or direct access to this page    
-    t = loader.get_template('signin.html')
-    categories = Category.objects.all()
-    login_form = LoginForm()
-    context = RequestContext(request, { 
-        'categories' : categories,
-        'login_form': login_form
-    })
+            else:
+                context = RequestContext(request, { 
+                    'categories'   : categories,
+                    'login_form'   : login_form,
+                    'login_failed' : True,
+                })
+    else:
+        # if the input values are not correct, or direct access to this page    
+        context = RequestContext(request, { 
+            'categories'   : categories,
+            'login_form'   : login_form,
+        })
 
     # render the login page.
     return HttpResponse(t.render(context))
@@ -163,6 +170,7 @@ def signout(request):
     if is_auth(request):
         logout(request)
         return HttpResponseRedirect('/')  
+
 
 ##
 # Render the user profile page.
@@ -217,9 +225,10 @@ def saveProfile(request):
         up.postal_country = request.POST.get('country')
 
         # if pass and pass2 match, save them as the new password
-        pwd = request.POST.get('passwd', None)
-        if pwd != '' and pwd != None and (pwd == request.POST.get('pass2')):
-            u.set_password(pwd)
+        pwd1 = request.POST.get('password', None)
+        pwd2 = request.POST.get('password_again', None)
+        if pwd1 != '' and pwd1 != None and (pwd1 == pwd2) and pwd1 != '******':
+            u.set_password(pwd1)
 
         # save the avatar picture, if available
         handleUploadedPic('users', request.FILES.get('picture'), str(u.id))
@@ -252,13 +261,13 @@ def saveProfile(request):
 ##
 # Show a dummy page telling that your password has been sent to your email.
 def forgot_password(request):
-        t = loader.get_template('forgot_password.html')
-        form = PassForm()
-        context = RequestContext(request, {
-            'form' : form,
-        })
-        context.update(csrf(request))
-        return HttpResponse(t.render(context))
+    t = loader.get_template('forgot_password.html')
+    form = PassForm()
+    context = RequestContext(request, {
+        'form' : form,
+    })
+    context.update(csrf(request))
+    return HttpResponse(t.render(context))
 
 
 ##

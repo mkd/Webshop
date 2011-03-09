@@ -2,40 +2,42 @@
  * CSS Stylesheet for categories.
  *
  * W3C-compliant version.
+ *
+ * Updated on 3.3.2011.
  */
 #category-content
 {
-	width: 880px;
+	width:              880px;
 }
 
 #left-side
 {
-	width: 270px;
-	float: left;
+	float:              left;
+	width:              270px;
 }
 
 #left-side img
 {
-	width: 260px;
-	border: solid #888 1px;
+	border:             1px solid #888;
+	width:              260px;
 }
 
 #right-side
 {
-	float: left;
-	padding-left: 10px;
-	width: 600px;
+	float:              left;
+	padding-left:       10px;
+	width:              600px;
 }
 
 #headder
 {
-	float: left;
+	float:              left;
 }
 
 #clear
 {
-	clear: both;
-	text-align: left;
+	clear:              both;
+	text-align:         left;
 }
 
 .note
@@ -46,50 +48,50 @@
 
 #categories
 {
-	margin:                 0 auto; 
-	width:                  690px;	
+	margin:             0 auto; 
+	width:              690px;	
 }
 
 #categories h2
 {
-	margin-top:             2em;
+	margin-top:         2em;
 }
 
 #checkbox
 {
-	background: #fee;
-	float: left;
+	background:         #fee;
+	float:              left;
 }
 
 #category
 {
-	background: #fee;
-	border:  1px solid #fde;
-	width:   690px;
-	height:  20px;
-    float: left;
-    text-align: left;
-    display: inline;
+	background:         #fee;
+	border:             1px solid #fde;
+    display:            inline;
+	height:             20px;
+    float:              left;
+    text-align:         left;
+	width:              690px;
 }
 
 #category:hover
 {
-	background: #ded;
-	cursor: pointer;
+	background:         #ded;
+	cursor:             pointer;
 }
 
 h1.category
 {
-	text-transform:capitalize;
-	margin-top: -22px;
-	font-family: normal Helvetica, sans-serif;
-	font-size: 16px;
-	color: #666;
+	color:              #666;
+	font-family:        normal Helvetica, sans-serif;
+	font-size:          16px;
+	margin-top:         -22px;
+	text-transform:     capitalize;
 }
 
 h1.category  a
 {
-	text-decoration: none;
-	text-transform:capitalize;
-	color: #666;
+	color:              #666;
+	text-decoration:    none;
+	text-transform:     capitalize;
 }

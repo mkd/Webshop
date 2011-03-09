@@ -23,6 +23,9 @@ PROJECT_DIR = os.path.dirname(__file__)
 SID = 'keyforme'
 KEY = '8c0593199894c8135c13bf15a31240ad'
 
+
+
+
 ##
 # Render the home page. 
 def index(request):
@@ -57,15 +60,15 @@ def index(request):
 ##
 # Render the user cart page.
 def cart(request):
-    # If user is authenticated then show the products in the user's cart.
+    # if user is authenticated then show the products in the user's cart
     if is_auth(request):
-        # Get the user, the template, and any message received by GET.
+        # get the user, the template and any message received by GET
         user = request.user
         template = loader.get_template('cart.html')
         message = request.GET.get('m', '')
         userProducts = CartProduct.objects.filter(user=user)
         
-        # Calculate the total amount of money spent by the user.
+        # calculate the total amount of money spent by the user
         total = 0
         for product in userProducts:
             total += product.quantity * product.product.price
@@ -91,11 +94,11 @@ def myProducts(request, payment_id):
         template = loader.get_template('myProducts.html')
         payment = get_object_or_404(Payment, id=payment_id) 
         
-        # Check that this transaction is related to this user. [Security check]
+        # check that this transaction is related to this user (security check)
         if payment.user != request.user:
             return HttpResponseRedirect("/")
         
-        # Retreive all the products and render the page.
+        # retreive all the products and render the page
         products = Transaction.objects.filter(payment=payment)          
         number_items_in_cart = request.user.get_profile().products_in_cart
         context = RequestContext(request, {
@@ -130,23 +133,22 @@ def myTransactions(request):
 # Add a product to the user's cart.
 def addToCart(request):
     if is_auth(request):
-        # Get the user's profile and the product.
+        # get the user's profile and the product
         profile = get_object_or_404(UserProfile, user=request.user) 
         product = get_object_or_404(Product, id=request.POST['product'])
 
-        # If this product is already in the cart, then increment the number of products.
+        # if product already in the cart, then increment the number of products
         try: 
             new_prod = CartProduct.objects.get(product=product, user=request.user)
             new_prod.quantity += 1
-        
-        # If not add the new product to the cart.
+        # otherwise add the new product to the cart
         except CartProduct.DoesNotExist: 
             new_prod = CartProduct(product = product, 
                               user = request.user,
                               timestamp = datetime.datetime.now(),
                               quantity = 1)
         
-        # Finally increment the number of products in the user's profile and save the objects.
+        # increment number of products in user's profile and save the objects
         profile.products_in_cart += 1
         profile.save()
         new_prod.save()
@@ -157,7 +159,7 @@ def addToCart(request):
 
 
 ##
-# Delete a product from the user's cart.
+# Remove a product from the user's cart.
 def deleteFromCart(request):
     if is_auth(request) and request.method == 'POST':
         prod = get_object_or_404(CartProduct, id=request.POST['product'])
@@ -243,10 +245,9 @@ def updatePostalOrder(request):
     if is_auth(request) and request.method == 'POST':
         form = PostalForm(request.POST)
         
-        # Get the Payment and adds the postal info.
+        # get the Payment and adds the postal info
         pid =  request.POST.get('pid')       
         payment = get_object_or_404(Payment, pid=pid)
-        print request.POST
         if request.POST.get('postal_address') != '' and request.POST.get('postal_code') != '' and request.POST.get('postal_city') != '' and request.POST.get('postal_country') != '':
             payment.postal_address = request.POST.get('postal_address')
             payment.postal_code = request.POST.get('postal_code')
@@ -370,7 +371,7 @@ def paymentError(request):
 ##
 # Render a specific product page.    
 def product(request, product_id):
-    # Get the template and try to get the product, if not it thow a 404 error.
+    # get the template and try to get the product, if not it thow a 404 error
     template = loader.get_template('product.html')   
     product = get_object_or_404(Product, id=product_id)
     comments = Comment.objects.filter(product=product_id).order_by('timestamp')
@@ -409,13 +410,13 @@ def rateProduct(request):
         element = request.POST.get('product')
         rate    = request.POST.get('rate')
        
-        # Get the product from the transaction list of products of the user.
+        # get the product from the transaction list of products of the user
         prodTransaction = Transaction.objects.get(user=request.user, id=element)  
         product = Product.objects.get(id=prodTransaction.product.id)
        
-        # If the user already receive the product in his home.
+        # if the user already receive the product in his home
         if prodTransaction.payment.status == "Delivered":
-            # If the user did not rate the product before
+            # if the user did not rate the product before
             if prodTransaction.rate == 0:
                 product.votes += 1
                 product.points += int(rate)             
@@ -427,7 +428,6 @@ def rateProduct(request):
         prodTransaction.save()
         product.save()
         return HttpResponse(rate)
-       
     else:
         return HttpResponseRedirect("/checkout")
 
@@ -443,7 +443,7 @@ def comment(request, product_id):
     if is_auth(request) and request.method == 'POST':
         form = CommentForm(request.POST)
        
-        # If the form is valid.
+        # if the form is valid
         if form.is_valid():
             product = get_object_or_404(Product, id=product_id)
             user    = request.user
@@ -451,7 +451,7 @@ def comment(request, product_id):
             reply   = request.POST.get('in_reply')
             product.comment_count += 1
       
-            # If the comment is areply to other comment.     
+            # if the comment is areply to other comment
             if reply != '0':
                 reply = Comment.objects.get(id=reply)
                 new_comment = Comment(
@@ -470,7 +470,7 @@ def comment(request, product_id):
                     comment   = text
                     )
    
-            # Save the changes on the product ant the comment, and render the product page again.
+            # save the changes on the product ant the comment, and render the product page again.
             new_comment.save()
             product.save()
             comments = Comment.objects.filter(product=product_id).order_by('timestamp')
@@ -492,7 +492,7 @@ def rateComment(request, comment_id, option):
         
         comment.save()
 
-        # Sent by AJAX the new number of votes
+        # sent by AJAX the new number of votes
         return HttpResponse("<a onclick=\"showReplyBox('%s');\">Reply</a> | %s <img src=\"/static/images/up.png\" /> &nbsp;<img src=\"/static/images/down.png\" /> %s" % (comment.id, comment.positives, comment.negatives))
 
     return HttpResponseRedirect('/')
@@ -510,7 +510,7 @@ def category(request, category_id):
     best_products = Product.objects.filter(category=thisCategory.id).filter(stock_count__gt=0).order_by('-average_rating')[:10]
     message = "Products on " + thisCategory.name
    
-   # Generate a base context
+   # generate a base context
     context = RequestContext(request, {
         'message'           : message,
         'this'              : thisCategory,
@@ -537,13 +537,13 @@ def category(request, category_id):
 ##
 # Search for a product.
 def search(request):
-    # If get a query thorugh GET.
+    # if get a query thorugh GET
     if request.method == 'GET':
         form = SearchForm(request.GET)
         
         if form.is_valid():
             template = loader.get_template('list.html')
-            # Get clean information of the query.
+            # get clean information of the query
             query = form.cleaned_data['query']
             categories = Category.objects.all()
             
@@ -552,15 +552,15 @@ def search(request):
                 'query'       : request.GET.get('query'),
             })
            
-            # If the user is authenticated then show the number of products in their cart
+            # if the user is authenticated then show the number of products in their cart
             if request.user.is_authenticated():
                 number_items_in_cart = request.user.get_profile().products_in_cart
                 context.update({ 'products_in_cart'  : number_items_in_cart })
-            # If not the login form.
+            # if not the login form
             else:
                 login_form = LoginForm()
                 context.update({ 'login_form': login_form })
-           
+                
             # Try to get the products that validate the query.
             db_query = """SELECT DISTINCT web_product.* 
                             FROM web_product, web_category 
@@ -585,7 +585,7 @@ def search(request):
                 if request.GET.get('l') == 'icons':
                     context.update({'icons': 'OK'})
                     
-            # If the query does not return products:
+            # if the query does not return products
             else:
                 message = "Sorry, we couldn't find your product for \"%s\"." % query
                 context.update({ 'message'  : message })
