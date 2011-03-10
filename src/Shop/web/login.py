@@ -96,7 +96,7 @@ def signup(request):
             up.save()
 
             # save also avatar picture, if available
-            handleUploadedPic('users', request.FILES.get('picture'), u.id)
+            handleUploadedPic('users', request.FILES.get('picture'), str(u.id))
             
             t = loader.get_template('signin.html')
             login_form = LoginForm()
@@ -184,7 +184,7 @@ def editProfile(request):
         no_items = u.get_profile().products_in_cart
 
         # load unknown avatar if no profile picture
-        pic = 'web/static/images/users/' + str(u.id)
+        pic = 'static/images/users/' + str(u.id)
         if not os.path.exists(pic):
             pic = 'static/images/users/new_user.png'
         else:
@@ -240,7 +240,7 @@ def saveProfile(request):
         # display profile again
         form = ProfileForm(request.POST, request.FILES)
         context = RequestContext(request, {
-            'picture'        : '/static/images/users/' + str(u.id),
+            'picture'        : 'static/images/users/' + str(u.id),
             'user'           : u.username,
             'fname'          : u.first_name,
             'sname'          : u.last_name,

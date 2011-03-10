@@ -41,18 +41,18 @@ function sendPayment(){
 </script>
 
 	{% if cart %}
-	<div class="centered">
+	<div>
         <h2>My order</h2>
 		<p id="message">{{ message }}<p>
 		
-	<table>
+	<table class="centered table-cart">
 		<form action="/checkout" method="post" id="form-myCart">
 			{% csrf_token %}
 			
 			{% for product in cart %}
 			<tr class="item" id="item-{{ product.id }}">
 				<td class="picture"><img src="{{ product.product.picture }}" class="product-pic-check"/></td>
-				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }} {{ product.id }}</a></td>
+				<td class="name"><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
 				<td class="quantity"> {{ product.quantity }} items x {{ product.product.price }}</td>
 				<td class="value">{{ product.total }} &euro;</td>
 			</tr>
@@ -90,9 +90,9 @@ function sendPayment(){
 	    <input type="hidden" name="pid" value="{{ payment.pid }}" />
 	    <input type="hidden" name="sid" value="{{ sid }}" />
 	    <input type="hidden" id="id_amount" name="amount" value="{{ payment.amount }}" />
-	    <input type="hidden" name="success_url" value="http://localhost:8000/success" />
-	    <input type="hidden" name="cancel_url" value="http://localhost:8000/cancel" />
-	    <input type="hidden" name="error_url" value="http://localhost:8000/error" />
+	    <input type="hidden" name="success_url" value="http://webcourse.cs.hut.fi:8106/success" />
+	    <input type="hidden" name="cancel_url" value="http://webcourse.cs.hut.fi:8106/cancel" />
+	    <input type="hidden" name="error_url" value="http://webcourse.cs.hut.fi:8106/error" />
 		<input name="dev" type="hidden" id="id_dev">
 	    <input type="hidden" name="checksum" value="{{ payment.checksum }}" />
 	</form>

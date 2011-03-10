@@ -125,6 +125,38 @@
                     {% endif %}
                 </th>
                 <th>
+                    {% if column == 'sold' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_products?column=sold&order=d">#Sold</a>
+                            &uarr;
+                        {% else %}
+                            <a
+                            href="/myadmin_products?column=sold&order=a">#Sold</a>
+                            &darr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=sold&order=a">#Sold</a>
+                    {% endif %}
+                </th>
+                <th>
+                    {% if column == 'comments' %}
+                        {% if order == 'a' %}
+                            <a
+                            href="/myadmin_products?column=comments&order=d">#Comments</a>
+                            &uarr;
+                        {% else %}
+                            <a
+                            href="/myadmin_products?column=comments&order=a">#Comments</a>
+                            &darr;
+                        {% endif %}
+                    {% else %}
+                        <a
+                        href="/myadmin_products?column=comments&order=a">#Comments</a>
+                    {% endif %}
+                </th>
+                <th>
                     {% if column == 'average_rating' %}
                         {% if order == 'a' %}
                             <a
@@ -152,6 +184,12 @@
                 </td>
                 <td style="text-align: right;">
                     {{ p.visit_count }}
+                </td>
+	                <td style="text-align: right;">
+	                    {{ p.sold_count }}
+	                </td>
+                <td style="text-align: right;">
+                    {{ p.comment_count }}
                 </td>
                 <td style="text-align: right;">
                     {{ p.average_rating }}

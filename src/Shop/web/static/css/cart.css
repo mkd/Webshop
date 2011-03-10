@@ -1,1 +1,96 @@
-cart_cool.css
+/**
+ * CSS Stylesheet for cart views.
+ *
+ * Updated on 3.3.2011.
+ *
+ */
+img.product-pic
+{
+	border:             1px solid #888;
+    -webkit-border-radius: 1em;
+	-moz-border-radius:    1em;
+	height:             50px;
+	padding:            2px;
+	width:              50px;
+}
+
+img.product-pic-check
+{
+	border:             1px solid #888;
+    -webkit-border-radius: 1em;
+	-moz-border-radius:    1em;
+	height:             30px;
+	padding:            2px;
+	width:              30px;
+}
+
+tr.item:hover
+{
+	background:         #ded;
+}
+
+td.name a
+{
+	color:              #666;
+	font-size:          16px;
+	text-decoration:    none;
+}
+
+td.value
+{
+    text-align:         right;
+}
+
+td.quantity
+{
+    text-align:         left;
+}
+
+td.total
+{
+	border-top:         1px solid #999;  
+	font-size:          18px;
+	font-weight:        bold;
+	padding-top:        12px;
+    text-align:         right;
+}
+
+#checkout
+{
+	background:         #d1d1d1; /* non-CSS3 browsers */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* MSIE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#a1a1a1)); /* webkit */
+	background: -moz-linear-gradient(top,  #ebebeb,  #a1a1a1); /* firefox 3.6+ */
+
+	border-top:         1px solid #f8f8f8;
+	-webkit-border-radius: 1.6em;
+	-moz-border-radius:    1.6em;
+
+	color:              #444;
+    display:            inline;
+    font-size:          14px;
+    font-weight:        800;
+
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	-moz-box-shadow:    0 1px 1px rgba(0, 0, 0, .2);
+	box-shadow:         0 1px 1px rgba(0, 0, 0, .2);
+	text-shadow:        0 1px 0 rgba(255, 255, 255, .8);
+	
+	margin-left:        10px;
+	padding:            7px 30px;
+    text-align:         center;
+}
+
+#checkout:hover
+{
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#a1a1a1', endColorstr='#ebebeb'); /* MSIE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#a1a1a1), to(#ebebeb)); /* webkit */
+	background: -moz-linear-gradient(top,  #a1a1a1,  #ebebeb); /* firefox 3.6+ */
+
+	cursor:             pointer;
+}
+
+.delete_from_cart
+{
+    cursor:             pointer;
+}

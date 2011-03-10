@@ -118,7 +118,8 @@ class Product(models.Model):
     category        = models.ForeignKey(Category)
     name            = models.CharField( max_length=32 )
     short_name      = models.CharField( max_length=14, default = '' )
-    description     = models.CharField( max_length=512, default = '' )   
+    description     = models.CharField( max_length=512, default = '' )
+    short_description = models.CharField( max_length=160, default = '' )   
     picture         = models.CharField( max_length=256, default = '/static/images/products/unknown.png' )
     price           = models.FloatField( default=1 )
     stock_count     = models.IntegerField( default=0 )
@@ -137,7 +138,13 @@ class Product(models.Model):
             if len(self.name) > 10:
                 self.short_name = self.name[:10] + '...'
             else: 
-                self.short_name = self.name    
+                self.short_name = self.name
+        
+        if self.short_description[:150] != self.description[:150]:
+            if len(self.description) > 160:
+                self.short_description = self.description[:155] + '...'
+            else: 
+                self.short_description = self.description
                 
         super(Product, self).save(*args, **kwargs)
         return self

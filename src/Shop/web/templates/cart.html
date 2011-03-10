@@ -71,15 +71,22 @@
 
 		$.post("cart/edit", { product: product, quantity:newQuantity},
 		   function(data){			     
-				$('#products-in-cart').html(data);
-				$("#my-cart").hide();
-				$("#my-cart").fadeIn();;
+				if (data != "ERROR"){
+					$('#products-in-cart').html(data);
+					$("#my-cart").hide();
+					$("#my-cart").fadeIn();
+					$('#total').html(total.toFixed(2));
+					$('#before-quantity-'+product).val(newQuantity);
+					$("#total").hide();
+					$("#total").fadeIn();
+				}else{
+					alert("Sorry, there is not enough stock.")
+					$('#before-quantity-'+product).val(beforeQuantity);
+					$('#quantity-'+product).val(beforeQuantity);
+				}
+
 		   });
-		
-		$('#total').html(total.toFixed(2));
-		$('#before-quantity-'+product).val(newQuantity);
-		$("#total").hide();
-		$("#total").fadeIn();
+	
 	}
 	
 	 /*!
@@ -100,7 +107,7 @@
 	{% endif %}
 
     <!-- table containing the current cart situation -->	
-	<table>
+	<table class="centered table-cart">
 		<form action="/checkout" method="post" id="form-myCart">
 			{% csrf_token %}
 			{% for product in cart %}

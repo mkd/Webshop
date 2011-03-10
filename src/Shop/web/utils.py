@@ -50,7 +50,7 @@ def handleUploadedPic(d, f, n):
         return
 
     # if a file is provided, then save it where it belongs
-    fo = open('web/static/images/' + d + '/' + n, 'wb+')
+    fo = open('static/images/' + d + '/' + n, 'wb+')
     for chunk in f.chunks():
         fo.write(chunk)
     fo.close()

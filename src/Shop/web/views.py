@@ -23,9 +23,6 @@ PROJECT_DIR = os.path.dirname(__file__)
 SID = 'keyforme'
 KEY = '8c0593199894c8135c13bf15a31240ad'
 
-
-
-
 ##
 # Render the home page. 
 def index(request):
@@ -137,22 +134,29 @@ def addToCart(request):
         profile = get_object_or_404(UserProfile, user=request.user) 
         product = get_object_or_404(Product, id=request.POST['product'])
 
-        # if product already in the cart, then increment the number of products
-        try: 
-            new_prod = CartProduct.objects.get(product=product, user=request.user)
-            new_prod.quantity += 1
-        # otherwise add the new product to the cart
-        except CartProduct.DoesNotExist: 
-            new_prod = CartProduct(product = product, 
-                              user = request.user,
-                              timestamp = datetime.datetime.now(),
-                              quantity = 1)
+        if product.stock_count > 0: 
+            # if product already in the cart, then increment the number of products
+            try: 
+                new_prod = CartProduct.objects.get(product=product, user=request.user)
+                new_prod.quantity += 1
+                
+                
+            # otherwise add the new product to the cart
+            except CartProduct.DoesNotExist: 
+                new_prod = CartProduct(product = product, 
+                                  user = request.user,
+                                  timestamp = datetime.datetime.now(),
+                                  quantity = 1)
+                
+                
+            # increment number of products in user's profile and save the objects
+            profile.products_in_cart += 1
+            product.stock_count -= 1
+            profile.save()
+            new_prod.save()
+            product.save()
         
-        # increment number of products in user's profile and save the objects
-        profile.products_in_cart += 1
-        profile.save()
-        new_prod.save()
-        product.save()
+
         return HttpResponse("%s" % profile.products_in_cart)
 
     return HttpResponseRedirect('/')
@@ -163,9 +167,12 @@ def addToCart(request):
 def deleteFromCart(request):
     if is_auth(request) and request.method == 'POST':
         prod = get_object_or_404(CartProduct, id=request.POST['product'])
+        product = get_object_or_404(Product, id=prod.product.id)
         profile = get_object_or_404(UserProfile, user=request.user) 
         profile.products_in_cart -= prod.quantity
+        product.stock_count += prod.quantity
         profile.save()
+        product.save()
         prod.delete()
         return HttpResponse(profile.products_in_cart)
 
@@ -177,17 +184,23 @@ def deleteFromCart(request):
 def editQuantityInCart(request):
     if is_auth(request) and request.method == 'POST':
         prod = get_object_or_404(CartProduct, id=request.POST['product'])
+        product = get_object_or_404(Product, id=prod.product.id)
         profile = get_object_or_404(UserProfile, user=request.user) 
         
-        if prod.quantity > request.POST['quantity']:
-            profile.products_in_cart -= prod.quantity - int(request.POST['quantity'])
-        else:
-            profile.products_in_cart += int(request.POST['quantity']) - prod.quantity
+        if product.stock_count > request.POST['quantity']: 
+        
+            if prod.quantity > request.POST['quantity']:
+                profile.products_in_cart -= prod.quantity - int(request.POST['quantity'])
+            else:
+                profile.products_in_cart += int(request.POST['quantity']) - prod.quantity
          
-        prod.quantity = int(request.POST['quantity'])
-        profile.save()
-        prod.save()
-        return HttpResponse(profile.products_in_cart)
+            prod.quantity = int(request.POST['quantity'])
+            profile.save()
+            prod.save()
+            return HttpResponse(profile.products_in_cart)
+        
+        else:
+            return HttpResponse("ERROR")
 
     return HttpResponseRedirect('/')
 

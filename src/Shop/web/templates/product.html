@@ -53,10 +53,20 @@
     function add(){
         $.post('/cart/add', { product: '{{product.id}}' },
          function(data) {
-            $('#products-in-cart').html(data);
-            $("#my-cart").hide();
-            $("#my-cart").fadeIn();
-        });
+			stock = $("#count-sotck").html();
+			stock = stock - 1;
+			if(stock == 0) {
+				$("#count-sotck").html(0);
+				alert("Sorry, there is not enough stock.");
+			}else{
+				$('#products-in-cart').html(data);
+	            $("#my-cart").hide();
+	            $("#my-cart").fadeIn();
+				$("#count-sotck").hide();
+				$("#count-sotck").html(stock);
+	            $("#count-sotck").fadeIn();
+        	}
+		});
     }
 
     /*!
@@ -110,15 +120,15 @@
 					&nbsp;({{ product.votes }} user reviews)
 				</p>
 				<p>
-					<i>{{ product.stock_count }} products avaiable | {{ product.visit_count }} visits</i>
+					<i><span id="count-sotck">{{ product.stock_count }}</span> products avaiable | {{ product.visit_count }} visits</i>
 				</p>
 				<p>
 					{{ product.description }}
 				</p>
 				<p>
 				    <span class="share">
-                        <a href="#"><img src="/static/images/Twitter-icon.png" onclick="window.open('http://twitter.com/share?text=I want a {{ product.name}}&url=http://www.webshop.com/product/{{product.id}}&via={{user.username}}','mywindow','width=560,height=290,location=no')"/></a>
-					    <a href="#"><img src="/static/images/Facebook-icon.png" onclick="window.open('http://www.facebook.com/sharer.php?u=http://www.webshop.com/product/{{product.id}}','mywindow','width=715,height=360,location=no')"/></a>
+                        <a href="#"><img src="/static/images/Twitter-icon.png" onclick="window.open('http://twitter.com/share?text=I want a {{ product.name}}&url=http://webcourse.cs.hut.fi:8106/product/{{product.id}}&via={{user.username}}','mywindow','width=560,height=290,location=no')"/></a>
+					    <a href="#"><img src="/static/images/Facebook-icon.png" onclick="window.open('http://www.facebook.com/sharer.php?u=http://webcourse.cs.hut.fi:8106/product/{{product.id}}&t=title','Share','width=715,height=360,location=no')"/></a>
                         Share this product with your friends!
 					</span>
 				</p>

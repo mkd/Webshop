@@ -4,7 +4,7 @@
 
 ### necessary Django modules ###
 from django import forms
-from django.forms import widgets, ModelForm, ClearableFileInput
+from django.forms import widgets, ModelForm, FileInput
 from models import *
 
 
@@ -84,7 +84,7 @@ class ProductForm(ModelForm):
     class Meta:
         model = Product
         widgets = {
-            'picture'     : forms.ClearableFileInput,
+            'picture'     : forms.FileInput,
             'description' : forms.Textarea,
         }
 

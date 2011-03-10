@@ -1,1 +1,178 @@
-product_cool.css
+/*
+ * CSS Stylesheet for products.
+ *
+ * Updated on 3.3.2011.
+ *
+ */
+#product-content
+{
+	width:              880px;
+}
+
+#left-side
+{
+	float:              left;
+	width:              270px;
+}
+
+#left-side img
+{
+	border:             1px solid #888;
+    -webkit-border-radius: 1em;
+	-moz-border-radius:    1em;
+
+	-webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
+	-moz-box-shadow:    0 1px 5px rgba(0, 0, 0, .2);
+	box-shadow:         0 1px 5px rgba(0, 0, 0, .2);
+	text-shadow:        0 1px 5px rgba(255, 255, 255, .8);
+
+	width:              260px;
+}
+
+#right-side
+{
+	float:              left;
+	padding-left:       10px;
+	width:              600px;
+}
+
+#p-name
+{
+	float:              left;
+}
+
+#p-price
+{
+	background:         #d1d1d1; /* non-css3 browsers */
+	filter:     progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* MSIE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#a1a1a1)); /* webkit */
+	background: -moz-linear-gradient(top,  #ebebeb,  #a1a1a1); /* firefox 3.6+ */
+
+	border-top:        1px solid #f8f8f8;
+	-webkit-border-radius: 1.6em;
+	-moz-border-radius:    1.6em;
+
+	color:              #444;
+	float:              right;
+    font-size:          14px;
+    font-weight:        800;
+    margin:             5px 0;
+        
+ 
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+	-moz-box-shadow:    0 1px 1px rgba(0, 0, 0, .2);
+	box-shadow:         0 1px 1px rgba(0, 0, 0, .2);
+	text-shadow:        0 1px 0 rgba(255, 255, 255, .8);
+	
+	display:            block;
+	padding:            6px 10px;
+    text-align:         center;
+}
+
+#p-price:hover
+{
+	cursor:             pointer;
+    margin-top:         7px;
+}
+
+div.comment 
+{
+	font-size:          0.75em;
+	padding:            10px;
+	margin-bottom:      0px;
+	width:              580px;
+}
+
+div.comment blockquote 
+{
+	background-color:   #fff;
+	border:             1px solid #c9c2c1;
+	-webkit-border-radius: 0.6em;
+	-moz-border-radius:    0.6em;
+	font-size:          11px;
+	font-family:        Verdana;
+	margin:             0px;
+	padding:            5px;
+}
+
+div.buyer blockquote 
+{
+	background-color:   #808080;
+	border:             1px solid #404040;
+	color:              white;
+}
+
+cite.buyer 
+{
+	font-style:         normal;
+	margin:             0px;
+	padding:            7px 0px 0px 15px;
+	position:           relative;
+	top:                1px;
+}
+
+div.comment blockquote p 
+{
+	margin:             10px;
+	padding:            0px;
+}
+
+div.comment a
+{
+	text-decoration:    none;
+}
+
+div.comment a:hover
+{
+	cursor:             pointer;
+	text-decoration:    underline;
+}
+
+div.comment cite 
+{
+	background:         transparent url(/static/images/tip.gif) no-repeat 20px 0;
+	font-style:         normal;
+	margin:             0px;
+	padding:            7px 0px 0px 15px;
+	position:           relative;
+	top:                1px;
+}
+
+div.comment:hover > .rate
+{
+	display:            block;
+}
+
+div.comment:hover > blockquote
+{
+
+	border:             1px solid #A0A0A0;
+}
+
+.rate 
+{
+	display:            none;
+	font-style:         normal;
+	margin-left:        500px;
+	margin-top:         -19px;
+	position:           relative;
+	top:                1px;
+	width:              120px;
+}
+
+#clear
+{
+	clear:              both;
+	text-align:         left;
+}
+
+div.comment img:hover
+{
+	cursor:             pointer;
+}
+
+div.write_reply
+{
+	display:            none;
+	margin-left:        20px;
+}

@@ -99,7 +99,7 @@ def addProduct(request):
         handleUploadedPic('products', request.FILES.get('picture'), str(p.id))
 
         # load picture for the next view
-        pic = 'web/static/images/products/' + str(p.id)
+        pic = 'static/images/products/' + str(p.id)
         if not os.path.exists(pic):
             pic = 'static/images/products/unknown.png'
         else:
@@ -129,7 +129,7 @@ def editProduct(request, product_id):
         form = ProductForm(instance=p)
 
         # load the picture for the product
-        pic = 'web/static/images/products/' + str(product_id)
+        pic = 'static/images/products/' + str(product_id)
         if not os.path.exists(pic):
             pic = 'static/images/products/unknown.png'
         else:
@@ -176,7 +176,7 @@ def saveProduct(request, product_id):
         form = ProductForm(instance=p)
 
         # load the picture for the product
-        pic = 'web/static/images/products/' + str(p.id)
+        pic = 'static/images/products/' + str(p.id)
         if not os.path.exists(pic):
             pic = 'static/images/products/unknown.png'
         else:
@@ -277,8 +277,8 @@ def deleteProduct(request, product_id):
             product.delete()
 
         # also delete the picture of the product
-        if os.path.exists('web/static/images/products/' + str(product_id)):
-            os.remove('web/static/images/products/' + str(product_id))
+        if os.path.exists('static/images/products/' + str(product_id)):
+            os.remove('static/images/products/' + str(product_id))
 
         # return to the products page
         products = Product.objects.all()
@@ -311,8 +311,8 @@ def deleteProducts(request):
             product = Product.objects.get(pk=p)
             product.delete()
             # also delete the picture of the product
-            if os.path.exists('web/static/images/products/' + str(p)):
-                os.remove('web/static/images/products/' + str(p))
+            if os.path.exists('static/images/products/' + str(p)):
+                os.remove('static/images/products/' + str(p))
 
         # return to the products page
         products = Product.objects.all()
