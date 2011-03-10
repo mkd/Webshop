@@ -149,7 +149,6 @@ img
 
 #products
 {
-	margin:             0 auto; 
 	width:              690px;	
 }
 
@@ -474,4 +473,20 @@ div.display-options
 table.table-cart
 {
     width:              500px;
+}
+
+div.pagination
+{
+    margin:             auto;
+    text-align:         center;
+}
+
+div.pagination a
+{
+    text-decoration:    none;   
+}
+
+div.pagination a:hover
+{
+    text-decoration:    underline;   
 }

@@ -113,5 +113,15 @@
 		</table>
 		</div>
 		{% endif %}
+		<div class="pagination">
+			<br/>
+			{% for p in num_pages %}
+				{% if page == p %}
+					<strong>[{{ p }}]</strong>
+				{% else %}
+					<a href="?p={{ p }}"> {{ p }} </a>
+				{% endif %}
+			{% endfor %}
+		</div>
 	</div>
 {% endblock %}

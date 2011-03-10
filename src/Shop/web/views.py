@@ -15,6 +15,7 @@ from myadmin import *
 from utils import *
 from models import *
 from forms import *
+from math import *
 import datetime, hashlib, os
 
 ### project path settings ###
@@ -22,6 +23,7 @@ import os.path
 PROJECT_DIR = os.path.dirname(__file__)
 SID = 'keyforme'
 KEY = '8c0593199894c8135c13bf15a31240ad'
+PPP = 5 # Product Per Page
 
 ##
 # Render the home page. 
@@ -30,11 +32,29 @@ def index(request):
     
     # load the categories and the products ordered by rating
     categories = Category.objects.all()
-    best_products = Product.objects.filter(stock_count__gt=0).order_by('-average_rating')[:10]
+    
+    # Calculate the pagination
+    products =  Product.objects.all()
+    num_pages = 0.0 + products.count()
+    num_pages /= 5
+    num_pages = int(ceil(num_pages))
+    page = request.GET.get('p')
+    
+    try: 
+        if 0 < int(page) <= num_pages:
+            page = int(page)
+        else:
+            page = 1
+    except:
+        page = 1
+        
+    best_products = products.filter(stock_count__gt=0).order_by('-average_rating')[PPP*(page-1):PPP*(page)]
     
     context = RequestContext(request, {
         'categories'  : categories,
         'products'    : best_products,
+        'page'        : page,
+        'num_pages'   : range(1,num_pages+1),
     })
     
     # if the user is authenticated, then send info about the card in the request
